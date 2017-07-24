@@ -1,16 +1,11 @@
-/* eslint-disable spaced-comment */
-/*env node*/
+/* eslint-env node */
 /**
  * Created by vmt on 20/07/2017.
  */
-import mongoose from 'mongoose';
-import User from '../models/User';
-import bcrypt from 'bcrypt-nodejs';
+import mongoose from "mongoose";
+import User from "../models/User";
 
-export const getDashboard = (req, res) => {
-    res.render('admin/dashboard');
-}
-export const getManagementAccount = async function(req, res) {
+export const getManagementAccount = async function (req, res) {
     const role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
@@ -28,7 +23,7 @@ export const getManagementAccount = async function(req, res) {
         res.render('admin/management-account', {models: results});
     } catch (e) {
         req.flash('errors', e.toString());
-        return res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
     }
 };
 
@@ -36,7 +31,7 @@ export const getManagementAccount = async function(req, res) {
 /**
  * updateAccount
  */
-export const updateAccount = async function(req, res, next) {
+export const updateAccount = async function(req, res) {
     let role = (req.params.role );
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
@@ -50,12 +45,13 @@ export const updateAccount = async function(req, res, next) {
         const Model = mongoose.model(stringModel);
         if (errors) throw new Error(errors);
         let { email, password, name, id } = req.body;
-        await Model.findOneAndUpdate({_id: id}, { email, password, name });
-        req.flash('success', 'Update success!');
+        let model = await Model.findOneAndUpdate({_id: id}, { email, password, name });
+
+        req.flash('success', `Update ${model.email} success!`);
     } catch (e) {
         req.flash('errors', e.toString());
     } finally {
-        return res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
     }
 };
 /**
@@ -72,7 +68,7 @@ export const deleteAccount = async function (req, res){
     } catch (err) {
         req.flash('errors', err);
     } finally {
-        return res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
     }
 };
 /**
@@ -94,10 +90,11 @@ export const postAccount = async function (req, res) {
         if (errors) throw new Error(errors);
         let user = await new User({email, password, role: stringModel }).save();
         let model = await new Model({_id: user.id, name}).save();
-        req.flash('success', 'Create success!');
+
+        req.flash('success',`Create ${model.name}success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     }finally {
-        return res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
     }
 };

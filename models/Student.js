@@ -35,7 +35,7 @@ var SinhVienSchema =new  mongoose.Schema({
     }]
 },{
     timestamps : true
-})
+});
 
 
 SinhVienSchema.methods.findOneJoinAll = (params) => {

@@ -12,7 +12,7 @@ var FileSchema = mongoose.Schema({
     }
 },{
     timestamps : true
-})
+});
 
 module.exports = mongoose.model('File',FileSchema);
 

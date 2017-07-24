@@ -16,7 +16,7 @@ var LopChinhSchema = mongoose.Schema({
 },{
     timestamps : true,
     strict :true
-})
+});
 
 
 module.exports = mongoose.model('MainClass',LopChinhSchema);

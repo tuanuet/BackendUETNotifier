@@ -16,7 +16,7 @@ var PhongBanSchema = mongoose.Schema({
 
 },{
     timestamps : true
-})
+});
 
 PhongBanSchema.statics.update = (id, params) => {
     return PhongBanSchema.findByIdAndUpdate(id,params,{new: true});

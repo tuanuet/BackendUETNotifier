@@ -31,7 +31,7 @@ var TinTucSchema = new mongoose.Schema({
     }
 },{
     timestamps : true
-})
+});
 TinTucSchema.methods.findLimitOffset = (param,offset,limit = 10) => {
     return TinTucSchema
         .find(param)

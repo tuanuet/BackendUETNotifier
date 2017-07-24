@@ -19,7 +19,7 @@ var LecturerSchema = mongoose.Schema({
     }
 },{
     timestamps : true
-})
+});
 
 LecturerSchema.statics.findJoinAll = (params) => {
     return LecturerSchema.find(params).populate([
