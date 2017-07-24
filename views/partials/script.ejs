@@ -1,0 +1,44 @@
+
+<script>
+    var resizefunc = [];
+</script>
+
+<!-- jQuery  -->
+<script src="/vendor/purple/assets/js/jquery.min.js"></script>
+<script src="/vendor/purple/assets/js/bootstrap.min.js"></script>
+<script src="/vendor/purple/assets/js/detect.js"></script>
+<script src="/vendor/purple/assets/js/fastclick.js"></script>
+<script src="/vendor/purple/assets/js/jquery.slimscroll.js"></script>
+<script src="/vendor/purple/assets/js/jquery.blockUI.js"></script>
+<script src="/vendor/purple/assets/js/waves.js"></script>
+<script src="/vendor/purple/assets/js/wow.min.js"></script>
+<script src="/vendor/purple/assets/js/jquery.nicescroll.js"></script>
+<script src="/vendor/purple/assets/js/jquery.scrollTo.min.js"></script>
+
+
+<script src="/vendor/purple/assets/js/jquery.core.js"></script>
+<script src="/vendor/purple/assets/js/jquery.app.js"></script>
+
+<!-- Modal-Effect -->
+<script src="/vendor/purple/assets/plugins/custombox/js/custombox.min.js"></script>
+<script src="/vendor/purple/assets/plugins/custombox/js/legacy.min.js"></script>
+
+<!-- admin page js-->
+<script src="/js/toastr.min.js"></script>
+<script>
+
+    <% if (messages.info ) {%>
+        <% messages.info.forEach(function (info) {%>
+            toastr.info('<%= info.msg || info.toString() %>');
+        <%})%>
+    <%}%>
+    <% if (messages.errors ) {%>
+        <% messages.errors.forEach(function (error) {%>
+            toastr.error('<%= error.msg || error.toString()%>');
+        <%})%>
+    <%}%>
+    <% if (messages.success) {%>
+        toastr.success('<%= messages.success%>');
+    <%}%>
+
+</script>
