@@ -37,13 +37,15 @@ const app = express();
 /**
  * Connect to MongoDB.
  */
+
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGODB_URI,{useMongoClient: true,poolSize:1});
 mongoose.connection.on('error', (err) => {
     console.error(err);
     console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
     process.exit();
 });
+
 /**
  * initial Schema for mongodb
  */
@@ -53,6 +55,8 @@ require('./models/index');
  */
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
+
+app.engine('ejs',require('ejs-locals'));
 app.set('view engine', 'ejs');
 app.use(expressStatusMonitor());
 app.use(compression());
@@ -141,7 +145,6 @@ app.use(errorHandler());
  */
 app.listen(app.get('port'), () => {
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
-
     console.log('  Press CTRL-C to stop\n');
 });
 

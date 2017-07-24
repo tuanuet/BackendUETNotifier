@@ -2,9 +2,13 @@
 /**
  * Created by vmt on 20/07/2017.
  */
-import mongoose from "mongoose";
-import User from "../models/User";
+import mongoose from 'mongoose';
+import User from '../models/User';
 
+
+export const getDashboard = async (req,res) => {
+    res.render('admin/dashboard');
+};
 export const getManagementAccount = async function (req, res) {
     const role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);

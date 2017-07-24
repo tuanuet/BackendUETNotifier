@@ -38,11 +38,11 @@ exports.postLogin = (req, res, next) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash('errors', info);
-            return res.redirect('/login');
+            return res.redirect('/user/login');
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
-            req.flash('success', { msg: 'Success! You are logged in.' });
+            req.flash('success', 'Success! You are logged in.');
             res.redirect(req.session.returnTo || '/');
         });
     })(req, res, next);
@@ -54,7 +54,7 @@ exports.postLogin = (req, res, next) => {
  */
 exports.logout = (req, res) => {
     req.logout();
-    res.redirect('/');
+    res.redirect('/user/login');
 };
 
 /**

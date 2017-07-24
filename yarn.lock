@@ -1230,6 +1230,16 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+ejs-locals@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ejs-locals/-/ejs-locals-1.0.2.tgz#b9b320ff6933154105fa0eed683ea64d678088ce"
+  dependencies:
+    ejs "0.8.x"
+
+ejs@0.8.x:
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-0.8.8.tgz#ffdc56dcc35d02926dd50ad13439bbc54061d598"
+
 ejs@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.6.tgz#479636bfa3fe3b1debd52087f0acb204b4f19c88"

@@ -1,5 +1,5 @@
 /* eslint-env node */
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 
