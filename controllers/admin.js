@@ -4,13 +4,17 @@
  */
 import mongoose from 'mongoose';
 import User from '../models/User';
-
+import Class from '../models/Class';
+import Course from '../models/Course';
 
 export const getDashboard = async (req,res) => {
     res.render('admin/dashboard');
 };
+/**
+ * manage
+ */
 export const getManagementAccount = async function (req, res) {
-    const role = (req.params.role);
+    const role = (req.query.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
         const Model = mongoose.model(stringModel);
@@ -27,19 +31,14 @@ export const getManagementAccount = async function (req, res) {
         res.render('admin/management-account', {models: results});
     } catch (e) {
         req.flash('errors', e.toString());
-        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
     }
 };
-
-
-/**
- * updateAccount
- */
 export const updateAccount = async function(req, res) {
-    let role = (req.params.role );
+    let role = (req.query.role );
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
-    req.assert('name', 'Email is not valid').len(1);
+    req.assert('name', 'Name is not valid').len(1);
     req.assert('email', 'Email is not valid').isEmail();
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -49,20 +48,19 @@ export const updateAccount = async function(req, res) {
         const Model = mongoose.model(stringModel);
         if (errors) throw new Error(errors);
         let { email, password, name, id } = req.body;
-        let model = await Model.findOneAndUpdate({_id: id}, { email, password, name });
 
-        req.flash('success', `Update ${model.email} success!`);
+        await User.findOneAndUpdate({_id : id}, { email, password, name },{new: true});
+        let model = await Model.findOneAndUpdate({_id: id}, { email, password, name },{new: true});
+
+        req.flash('success', `Update ${model.name} success!`);
     } catch (e) {
         req.flash('errors', e.toString());
     } finally {
-        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
     }
 };
-/**
- * delete account by id
- */
 export const deleteAccount = async function (req, res){
-    const role = (req.params.role);
+    const role = (req.query.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
         const { id } = req.body;
@@ -72,17 +70,14 @@ export const deleteAccount = async function (req, res){
     } catch (err) {
         req.flash('errors', err);
     } finally {
-        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
     }
 };
-/**
- * create model method post
- */
 export const postAccount = async function (req, res) {
-    const role = (req.params.role);
+    const role = (req.query.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
-    req.assert('name', 'Email is not valid').len(1);
+    req.assert('name', 'Name is not valid').len(1);
     req.assert('email', 'Email is not valid').isEmail();
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -99,6 +94,102 @@ export const postAccount = async function (req, res) {
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     }finally {
-        res.redirect(`/admin/manage/${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
+    }
+};
+
+/**
+ * get html manage class
+ */
+export const getClasses = async (req,res) => {
+    let classes = await Class.find({});
+    res.render('admin/management-class',{classes});
+};
+export const postClass = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name } = req.body;
+        let clas = await new Class({name}).save();
+        req.flash('success',`Create ${clas.name}success!`);
+    }catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/class');
+    }
+};
+export const updateClass = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id } = req.body;
+        let clas = await Class.findOneAndUpdate({_id : id},{name},{new : true});
+        req.flash('success',`Update ${clas.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/class');
+    }
+};
+export const deleteClass = async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let clas = await Class.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${clas.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/class');
+    }
+};
+
+/**
+ * get html manage course
+ */
+export const getCourses = async (req,res) => {
+    let courses = await Course.find({});
+    res.render('admin/management-course',{courses});
+};
+export const postCourse = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name } = req.body;
+        let course = await new Course({name}).save();
+        req.flash('success',`Create ${course.name} success!`);
+    }catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/course');
+    }
+};
+export const updateCourse = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id } = req.body;
+        let course = await Course.findOneAndUpdate({_id : id},{name},{new : true});
+        req.flash('success',`Update ${course.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/course');
+    }
+};
+export const deleteCourse = async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let course = await Course.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${course.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/course');
     }
 };

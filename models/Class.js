@@ -15,5 +15,5 @@ var LopChinhSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('MainClass',LopChinhSchema);
+module.exports = mongoose.model('Class',LopChinhSchema);
 

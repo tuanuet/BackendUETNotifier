@@ -16,7 +16,7 @@
                             <a href="#">Manage</a>
                         </li>
                         <li class="active">
-                            <%= models[0].role%>
+                            Classes
                         </li>
                     </ol>
                 </div>
@@ -52,14 +52,13 @@
                                     </th>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Email</th>
                                     <th>Created at</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
 
                                 <tbody>
-                                <% models.forEach(function(model){ %>
+                                <% classes.forEach(function(clas){ %>
                                 <tr>
                                     <td>
                                         <div class="checkbox checkbox-primary">
@@ -67,16 +66,15 @@
                                             <label for="checkbox14"></label>
                                         </div>
                                     </td>
-                                    <td class="id"><%= model.id %></td>
-                                    <td class="name"><%= model.name %></td>
-                                    <td class="email"><%= model.email %></td>
+                                    <td class="id"><%= clas.id %></td>
+                                    <td class="name"><%= clas.name %></td>
                                     <td>
-                                        14/11/2003
+                                        <%= clas.createdAt%>
                                     </td>
                                     <td>
-                                        <a href="#custom-modal" data-id=<%= model.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"
+                                        <a href="#custom-modal" data-id=<%= clas.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"
                                            data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-edit open-modal-edit"></i></a>
-                                        <a href="#dialog" data-id=<%= model.id%> data-from="admin" class="table-action-btn btn-delete" data-animation="fadein" data-plugin="custommodal"
+                                        <a href="#dialog" data-id=<%= clas.id%> data-from="admin" class="table-action-btn btn-delete" data-animation="fadein" data-plugin="custommodal"
                                            data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-close"></i></a>
                                     </td>
                                 </tr>
@@ -111,22 +109,6 @@
                 <input type="text" class="form-control" id="form-name" name="name" placeholder="Enter name">
             </div>
 
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="form-email" name="email" placeholder="Enter email">
-            </div>
-
-            <div class="form-group">
-                <label for="position">Password</label>
-                <input type="password" class="form-control" id="password_modal" name="password" placeholder="Enter password">
-            </div>
-
-            <div class="form-group">
-                <label for="position">Confirm password</label>
-                <input type="password" class="form-control" id="confirm_password_modal" name="confirmPassword" placeholder="Confirm password">
-                <span id="warning-message"></span>
-            </div>
-
             <button type="submit" data-from= id="add-admin" class="btn btn-default waves-effect waves-light">Save</button>
             <button type="button" class="btn btn-danger waves-effect waves-light m-l-10" onclick="Custombox.close();">Cancel</button>
             <span id="message"></span>
@@ -155,27 +137,22 @@
 
     $('.btn-edit').click(function () {
         var from = $(this).data('from');
-        $('#form_modal').attr('action','/admin/manage/account?role=<%= models[0].role.toLocaleLowerCase() %>&_method=PUT');
-        $('.custom-modal-title').html('Edit <%= models[0].role %>');
+        $('#form_modal').attr('action','/admin/manage/class?_method=PUT');
+        $('.custom-modal-title').html('Edit class');
         var id = $(this).attr('data-id');
         $('#form_id').val(id);
         var name = $(this).parent().parent().find('.name').html();
-        var email = $(this).parent().parent().find('.email').html();
 
         $('#form-name').val(name.trim());
-        $('#form-email').val(email.trim());
     });
 
 
     $('#btn-add-admin').click(function () {
         resetForm();
         var from = $(this).attr('data-from');
-        $('#form_modal').attr('action','/admin/manage/account?role=<%= models[0].role.toLocaleLowerCase() %>');
+        $('#form_modal').attr('action','/admin/manage/class');
         $('.custom-modal-title').attr('method','post');
         $('#form-name').val('');
-        $('#form-email').val('');
-        $('#password_modal').val('');
-        $('#confirm_password_modal').val('');
     });
 
     resetForm = function () {
@@ -186,7 +163,7 @@
     $('.btn-delete').click(function () {
         var from = $(this).attr('data-from');
         $('.modal-delete').html("Delete row");
-        $('#delete_modal').attr('action','/admin/manage/account?role=<%= models[0].role.toLocaleLowerCase() %>&_method=DELETE');
+        $('#delete_modal').attr('action','/admin/manage/class?_method=DELETE');
         $('#delete_modal').attr('method','post');
         var id = $(this).attr('data-id');
         $('#delete_id').val(id);

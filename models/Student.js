@@ -14,9 +14,9 @@ var SinhVienSchema =new  mongoose.Schema({
         required: true,
         index:true
     },
-    mainClass:{
+    class:{
         type: mongoose.Schema.ObjectId,
-        ref :'MainClass'
+        ref :'Class'
     },
     course:[{
         type: mongoose.Schema.ObjectId,

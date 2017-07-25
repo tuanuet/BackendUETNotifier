@@ -8,12 +8,10 @@ var LopMonHocSchema = mongoose.Schema({
     },
     term : {
         type: mongoose.Schema.ObjectId,
-        required: true,
         ref : 'Term'
     },
-    lecturer : [{
-        type: Number,
-        required : true,
+    lecturers : [{
+        type: mongoose.Schema.ObjectId,
         ref :'Lecturer'
     }],
     major :{

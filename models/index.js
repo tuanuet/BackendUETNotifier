@@ -9,7 +9,7 @@ require('./Faculty');
 require('./File');
 require('./KindOfNew');
 require('./Leturer');
-require('./MainClass');
+require('./Class');
 require('./New');
 require('./PriorityNotify');
 require('./Term');
