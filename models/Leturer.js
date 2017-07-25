@@ -12,24 +12,16 @@ var LecturerSchema = mongoose.Schema({
     name:{
         type:String,
         required: true
-    },
-    faculty:{
-        type:String,
-        ref:'Faculty'
     }
 },{
     timestamps : true
 });
 
 LecturerSchema.statics.findJoinAll = (params) => {
-    return LecturerSchema.find(params).populate([
-        { path:'faculty' }
-    ]);
+    return LecturerSchema.find(params);
 };
 LecturerSchema.statics.findOneJoinAll = (params) => {
-    return LecturerSchema.findOne(params).populate([
-        { path:'faculty' }
-    ]);
+    return LecturerSchema.findOne(params);
 };
 
 module.exports = mongoose.model('Lecturer',LecturerSchema);

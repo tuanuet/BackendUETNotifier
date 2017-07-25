@@ -27,7 +27,7 @@ dotenv.load({ path: '.env' });
 /**
  * API keys and Passport configuration.
  */
-require('./config/passport');
+const middlewarePassport = require('./config/passport');
 
 /**
  * Create Express server.
@@ -122,7 +122,7 @@ const faculty = require('./router/faculty');
 const lecturer = require('./router/lecturer');
 const user = require('./router/user');
 
-app.get('/', (req,res) => {
+app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
     res.render('index', {
         title : 'Home'
     });

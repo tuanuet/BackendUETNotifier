@@ -1,6 +1,6 @@
 /* eslint-env node */
 var mongoose   = require('mongoose');
-
+// User of Major
 var KhoaSchema = new mongoose.Schema({
     _id:{
         type: mongoose.Schema.ObjectId,
@@ -12,6 +12,9 @@ var KhoaSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+    },
+    major :{
+        type: mongoose.Schema.ObjectId
     }
 },{
     timestamps : true

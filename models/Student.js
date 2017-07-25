@@ -27,7 +27,7 @@ var SinhVienSchema =new  mongoose.Schema({
     },
     kindOfAnnouncement:[{
         type:Number,
-        ref:'KindOfAnnouncement.js'
+        ref:'KindOfAnnouncement'
     }],
     kindOfNew:[{
         type: Number,

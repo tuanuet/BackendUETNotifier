@@ -39,9 +39,40 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 /**
  * Login Required middleware.
  */
-exports.isAuthenticated = (req, res, next) => {
+export const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/login');
+    req.flash('errors','You don\'t have permission');
+    res.redirect('/user/login');
+};
+
+export const reqIsAdmin= function (req,res,next) {
+    if (req.user.role === 'Admin')
+        return next();
+    req.flash('errors','You don\'t have permission');
+    res.redirect('/user/login');
+};
+
+export const reqIsLecture = function (req,res,next) {
+    if (req.user.role === 'Lecturer')
+        return next();
+
+    req.flash('errors','You don\'t have permission');
+    res.redirect('/user/login');
+};
+export const reqIsDepartment = function (req,res,next) {
+    if (req.user.role === 'Department')
+        return next();
+
+    req.flash('errors','You don\'t have permission');
+    res.redirect('/user/login');
+
+};
+export const reqIsFaculty = function (req,res,next) {
+    if (req.user.role === 'Faculty')
+        return next();
+    req.flash('errors','You don\'t have permission');
+    res.redirect('/user/login');
+
 };

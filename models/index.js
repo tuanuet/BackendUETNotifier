@@ -14,3 +14,4 @@ require('./New');
 require('./PriorityNotify');
 require('./Term');
 require('./KindOfAnnouncement');
+require('./Major');

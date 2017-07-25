@@ -15,7 +15,10 @@ var LopMonHocSchema = mongoose.Schema({
         type: Number,
         required : true,
         ref :'Lecturer'
-    }]
+    }],
+    major :{
+        type: mongoose.Schema.ObjectId
+    }
 },{timestamps : true});
 
 LopMonHocSchema.methods.findJoinAll =  (params) => {

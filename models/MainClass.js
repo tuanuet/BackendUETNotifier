@@ -8,10 +8,6 @@ var LopChinhSchema = mongoose.Schema({
     master: {
         type: mongoose.Schema.ObjectId,
         ref : 'Lecturer'
-    },
-    faculty:{
-        type: String,
-        ref :'Faculty'
     }
 },{
     timestamps : true,
