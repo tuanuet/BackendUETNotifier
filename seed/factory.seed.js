@@ -16,11 +16,11 @@ const seedMainClass = async () => {
     for (let i=0;i<10;i++) {
         let cla = new Class({
             name: `Class ${i + 1}`
-        })
+        });
         classes.push(cla);
     }
     return Class.create(classes);
-}
+};
 
 
 const createUser = (role,length) => {
@@ -35,7 +35,7 @@ const createUser = (role,length) => {
     }
     return users;
 
-}
+};
 const seedUser = async (model,length) => {
     const users = createUser(model,length);
     const Model = mongoose.model(model);
@@ -73,7 +73,7 @@ let seedCourse = async (number,majors,terms,lec) => {
         courses.push(course);
     }
     return Course.create(courses);
-}
+};
 /**
  * Seed khoa
  * @returns {Promise.<majors>}
@@ -93,7 +93,7 @@ let seedMajor = async () => {
 
     return Major.create(majors);
 
-}
+};
 /**
  * seed kif hoc
  * @returns {Promise.<*>}
@@ -102,7 +102,7 @@ let seedTerm = async () => {
     return new Term({
         name: 'Học kì I năm học 2016-2017'
     }).save();
-}
+};
 
 const seed = async () => {
     try {

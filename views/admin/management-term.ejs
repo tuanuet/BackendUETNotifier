@@ -16,7 +16,7 @@
                             <a href="#">Manage</a>
                         </li>
                         <li class="active">
-                            Courses
+                            terms
                         </li>
                     </ol>
                 </div>
@@ -58,7 +58,7 @@
                                 </thead>
 
                                 <tbody>
-                                <% courses.forEach(function(course){ %>
+                                <% terms.forEach(function(term){ %>
                                 <tr>
                                     <td>
                                         <div class="checkbox checkbox-primary">
@@ -66,15 +66,15 @@
                                             <label for="checkbox14"></label>
                                         </div>
                                     </td>
-                                    <td class="id hidden"><%= course.id %></td>
-                                    <td class="name"><%= course.name %></td>
+                                    <td class="id hidden"><%= term.id %></td>
+                                    <td class="name"><%= term.name %></td>
                                     <td>
-                                        <%= course.createdAt%>
+                                        <%= term.createdAt%>
                                     </td>
                                     <td>
-                                        <a href="#custom-modal" data-id=<%= course.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"
+                                        <a href="#custom-modal" data-id=<%= term.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"
                                            data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-edit open-modal-edit"></i></a>
-                                        <a href="#dialog" data-id=<%= course.id%> data-from="admin" class="table-action-btn btn-delete" data-animation="fadein" data-plugin="custommodal"
+                                        <a href="#dialog" data-id=<%= term.id%> data-from="admin" class="table-action-btn btn-delete" data-animation="fadein" data-plugin="custommodal"
                                            data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-close"></i></a>
                                     </td>
                                 </tr>
@@ -137,7 +137,7 @@
 
     $('.btn-edit').click(function () {
         var from = $(this).data('from');
-        $('#form_modal').attr('action','/admin/manage/course?_method=PUT');
+        $('#form_modal').attr('action','/admin/manage/term?_method=PUT');
         $('.custom-modal-title').html('Edit class');
         var id = $(this).attr('data-id');
         $('#form_id').val(id);
@@ -150,7 +150,7 @@
     $('#btn-add-admin').click(function () {
         resetForm();
         var from = $(this).attr('data-from');
-        $('#form_modal').attr('action','/admin/manage/course');
+        $('#form_modal').attr('action','/admin/manage/term');
         $('.custom-modal-title').attr('method','post');
         $('#form-name').val('');
     });
@@ -163,7 +163,7 @@
     $('.btn-delete').click(function () {
         var from = $(this).attr('data-from');
         $('.modal-delete').html("Delete row");
-        $('#delete_modal').attr('action','/admin/manage/course?_method=DELETE');
+        $('#delete_modal').attr('action','/admin/manage/term?_method=DELETE');
         $('#delete_modal').attr('method','post');
         var id = $(this).attr('data-id');
         $('#delete_id').val(id);

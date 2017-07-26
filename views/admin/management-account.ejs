@@ -50,7 +50,7 @@
                                             <label for="action-checkbox"></label>
                                         </div>
                                     </th>
-                                    <th>ID</th>
+                                    <th class="hidden">ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Created at</th>
@@ -67,11 +67,11 @@
                                             <label for="checkbox14"></label>
                                         </div>
                                     </td>
-                                    <td class="id"><%= model.id %></td>
+                                    <td class="id hidden"><%= model.id %></td>
                                     <td class="name"><%= model.name %></td>
                                     <td class="email"><%= model.email %></td>
                                     <td>
-                                        14/11/2003
+                                        <%= model.createdAt%>
                                     </td>
                                     <td>
                                         <a href="#custom-modal" data-id=<%= model.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"

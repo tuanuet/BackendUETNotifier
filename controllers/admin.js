@@ -6,6 +6,11 @@ import mongoose from 'mongoose';
 import User from '../models/User';
 import Class from '../models/Class';
 import Course from '../models/Course';
+import Term from '../models/Term';
+import Major from '../models/Major';
+import KindOfNew from '../models/KindOfNew';
+import KindOfAnnouncement from '../models/KindOfAnnouncement';
+import moment from 'moment';
 
 export const getDashboard = async (req,res) => {
     res.render('admin/dashboard');
@@ -25,7 +30,8 @@ export const getManagementAccount = async function (req, res) {
                 name: item.name,
                 email: item._id.email,
                 password: item._id.password,
-                role: item._id.role
+                role: item._id.role,
+                createdAt : moment(item.createdAt).format('YYYY-DD-MM')
             };
         });
         res.render('admin/management-account', {models: results});
@@ -99,7 +105,7 @@ export const postAccount = async function (req, res) {
 };
 
 /**
- * get html manage class
+ * get,post,put,delete manage class
  */
 export const getClasses = async (req,res) => {
     let classes = await Class.find({});
@@ -147,7 +153,7 @@ export const deleteClass = async (req,res) => {
 };
 
 /**
- * get html manage course
+ * get,post,put,delete manage course
  */
 export const getCourses = async (req,res) => {
     let courses = await Course.find({});
@@ -191,5 +197,203 @@ export const deleteCourse = async (req,res) => {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/course');
+    }
+};
+/**
+ * get,post,put,delete manage term
+ */
+export const getTerms = async (req,res) => {
+    let terms = await Term.find({});
+    res.render('admin/management-term',{terms});
+};
+export const postTerm = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name } = req.body;
+        let term = await new Term({name}).save();
+        req.flash('success',`Create ${term.name} success!`);
+    }catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/term');
+    }
+};
+export const updateTerm = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id } = req.body;
+        let term = await Term.findOneAndUpdate({_id : id},{name},{new : true});
+        req.flash('success',`Update ${term.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/term');
+    }
+};
+export const deleteTerm = async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let term = await Term.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${term.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/term');
+    }
+};
+
+/**
+ * get,post,put,delete manage Major
+ */
+export const getMajors= async (req,res) => {
+    let majors = await Major.find({});
+    res.render('admin/management-major',{majors});
+};
+export const postMajor = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name } = req.body;
+        let major = await new Major({name}).save();
+        req.flash('success',`Create ${major.name} success!`);
+    }catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/major');
+    }
+};
+export const updateMajor = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id } = req.body;
+        let major = await Major.findOneAndUpdate({_id : id},{name},{new : true});
+        req.flash('success',`Update ${major.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/major');
+    }
+};
+export const deleteMajor= async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let major = await Major.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${major.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/major');
+    }
+};
+
+/**
+ * get,post,put,delete manage Kind of New
+ */
+const UrlReg = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?');
+export const getKindOfNews= async (req,res) => {
+    let kindofnews = await KindOfNew.find({});
+    res.render('admin/management-kindofnew',{kindofnews});
+};
+export const postKindOfNew = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    req.assert('link', 'Link is not valid').len(5);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, link } = req.body;
+        if(!UrlReg.test(link)) throw new Error('link is not valid');
+        let kindofnew = await new KindOfNew({name,link}).save();
+        req.flash('success',`Create ${kindofnew.name} success!`);
+    }catch (err) {
+        console.log(err)
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofnew');
+    }
+};
+export const updateKindOfNew = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    req.assert('link', 'Link is not valid').len(5);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id ,link } = req.body;
+        if(!UrlReg.test(link)) throw new Error('link is not valid');
+        let kindofnew = await KindOfNew.findOneAndUpdate({_id : id},{name,link},{new : true});
+        req.flash('success',`Update ${kindofnew.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofnew');
+    }
+};
+export const deleteKindOfNew= async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let kindofnew = await KindOfNew.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${kindofnew.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofnew');
+    }
+};
+
+/**
+ * get,post,put,delete manage Kind of New
+ */
+
+export const getKindOfAnnouncements= async (req,res) => {
+    let kindofannouncements = await KindOfAnnouncement.find({});
+    res.render('admin/management-kindofannouncement',{kindofannouncements});
+};
+export const postKindOfAnnouncement = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name } = req.body;
+        let kindofannouncement = await new KindOfAnnouncement({name}).save();
+        req.flash('success',`Create ${kindofannouncement.name} success!`);
+    }catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofannouncement');
+    }
+};
+export const updateKindOfAnnouncement = async (req,res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
+    try {
+        if (errors) throw new Error(errors);
+        let { name, id } = req.body;
+        let kindofannouncement = await KindOfAnnouncement.findOneAndUpdate({_id : id},{name},{new : true});
+        req.flash('success',`Update ${kindofannouncement.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofannouncement');
+    }
+};
+export const deleteKindOfAnnouncement= async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let kindofannouncement = await KindOfAnnouncement.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${kindofannouncement.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofannouncement');
     }
 };
