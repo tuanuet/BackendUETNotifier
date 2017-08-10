@@ -11,7 +11,8 @@ var LoaiTinTuc = new mongoose.Schema({
     },
     link: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     }
 },{
     timestamps : true

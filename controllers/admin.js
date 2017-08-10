@@ -11,6 +11,8 @@ import Major from '../models/Major';
 import KindOfNew from '../models/KindOfNew';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import moment from 'moment';
+import New from '../models/New';
+
 
 export const getDashboard = async (req,res) => {
     res.render('admin/dashboard');
@@ -314,7 +316,7 @@ export const postKindOfNew = async (req,res) => {
         let kindofnew = await new KindOfNew({name,link}).save();
         req.flash('success',`Create ${kindofnew.name} success!`);
     }catch (err) {
-        console.log(err)
+        console.log(err);
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/kindofnew');
@@ -348,7 +350,26 @@ export const deleteKindOfNew= async (req,res) => {
         res.redirect('/admin/manage/kindofnew');
     }
 };
-
+/**
+ * get,post,put,delete manage New
+ */
+export const getNews = async (req,res) => {
+    console.log('Body getNews: ',req.body);
+    let news = await New.find({});
+    res.render('admin/management-new',{news});
+};
+export const deleteNew = async (req,res) => {
+    try {
+        let { id } = req.body;
+        if (!id) throw new Error('Invalid id');
+        let _new = await New.findOneAndRemove({_id : id});
+        req.flash('success',`Delete ${_new.title} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/new');
+    }
+};
 /**
  * get,post,put,delete manage Kind of New
  */

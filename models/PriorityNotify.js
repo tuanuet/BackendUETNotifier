@@ -6,8 +6,7 @@ var MucDoThongBaoSchema = new mongoose.Schema({
         required : true
     }
 },{
-    timestamps : true,
-    _id : false
+    timestamps : true
 });
 
 

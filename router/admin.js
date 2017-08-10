@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/admin');
 
-router.route('/dashboard')
+router.route('/')
     .get(adminController.getDashboard);
 /**
  * edit, post, delete user
@@ -57,6 +57,12 @@ router.route('/manage/kindofnew')
     .post(adminController.postKindOfNew)
     .put(adminController.updateKindOfNew)
     .delete(adminController.deleteKindOfNew);
+/**
+ * get, edit, post, delete kindofnew
+ */
+router.route('/manage/new')
+    .get(adminController.getNews)
+    .delete(adminController.deleteNew);
 
 /**
  * get, edit, post, delete kindofannouncement

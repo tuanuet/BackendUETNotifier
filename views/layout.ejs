@@ -8,8 +8,7 @@
     <!-- Begin page -->
     <div id="wrapper">
         <%- partial('./partials/navbar')%>
-        <%- partial('./partials/leftbar')%>
-
+        <%- partial(`./${user.role.toLowerCase()}/leftbar`)%>
         <%- body -%>
     </div>
     <%- partial('./partials/script')%>

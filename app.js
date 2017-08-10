@@ -23,7 +23,7 @@ var methodOverride = require('method-override');
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env' });
+dotenv.load({ path: '.env.exam' });
 /**
  * API keys and Passport configuration.
  */
@@ -39,7 +39,7 @@ const app = express();
  */
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI,{useMongoClient: true,poolSize:1});
+mongoose.connect(process.env.MONGODB_URI,{useMongoClient: true,poolSize:10});
 mongoose.connection.on('error', (err) => {
     console.error(err);
     console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -53,7 +53,7 @@ require('./models/index');
 /**
  * Express configuration.
  */
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 
 app.engine('ejs',require('ejs-locals'));
@@ -111,7 +111,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 /**
  * Router
@@ -147,6 +147,9 @@ app.listen(app.get('port'), () => {
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
     console.log('  Press CTRL-C to stop\n');
     // require('./seed/factory.seed');
+    // require('./seed/new.seed').seed();
+    // require('./seed/priority.seed').seed();
+    // require('./seed/kindAnnouncement.seed').seed();
 });
 
 module.exports = app;

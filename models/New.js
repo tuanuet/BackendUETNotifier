@@ -25,7 +25,7 @@ var TinTucSchema = new mongoose.Schema({
         default :Date.now()
     },
     kind : {
-        type : Number,
+        type : mongoose.Schema.ObjectId,
         required : true,
         ref : 'KindOfNew'
     }
