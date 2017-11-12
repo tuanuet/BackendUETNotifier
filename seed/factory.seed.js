@@ -49,7 +49,7 @@ const seedUser = async (model,length) => {
     return Model.create(results);
 };
 function getRandomInt(min = 0, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 /**
  * seed lop mon hoc
@@ -104,16 +104,24 @@ let seedTerm = async () => {
     }).save();
 };
 
+async function seedStudent(classes, courses, number) {
+    let users = createUser('Student',number);
+    let userStudents = await User.create(users);
+    let students = userStudents.map((user) => {
+        return new Student({
+            _id:user._id,
+            name: faker.name.lastName(),
+            class : classes[getRandomInt(0,classes.length)].id,
+            courses : [courses[getRandomInt(0,courses.length)].id]
+        });
+    });
+    return Student.create(students);
+}
+
 const seed = async () => {
     try {
-        let classes = await seedMainClass();
-        console.log('seed success class');
-
-        let students = await seedUser('Student',10);
-        console.log('seed success student');
-
-        let lecturers =  await seedUser('Lecturer',10);
-        console.log('seed success lecturer');
+        let admins = await seedUser('Admin',10);
+        console.log('seed success admin');
 
         let departments = await seedUser('Department',10);
         console.log('seed success department');
@@ -121,8 +129,11 @@ const seed = async () => {
         let faculties = await seedUser('Faculty',10);
         console.log('seed success faculty');
 
-        let admins = await seedUser('Admin',10);
-        console.log('seed success admin');
+        let classes = await seedMainClass();
+        console.log('seed success class');
+
+        let lecturers =  await seedUser('Lecturer',10);
+        console.log('seed success lecturer');
 
         let majors = await seedMajor();
         console.log('seed success major');
@@ -130,8 +141,11 @@ const seed = async () => {
         let terms = await seedTerm();
         console.log('seed success term');
 
-        let courses = await seedCourse(100,majors,terms,lecturers);
+        let courses = await seedCourse(4,majors,terms,lecturers);
         console.log('seed success course');
+
+        let students = await seedStudent(classes,courses,10);
+        console.log('seed success student');
 
     } catch (err) {
         console.log(err);

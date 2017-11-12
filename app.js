@@ -11,7 +11,6 @@ const dotenv = require('dotenv');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
@@ -19,7 +18,9 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 var methodOverride = require('method-override');
-
+const mongoose = require('mongoose');
+const dataTable = require('mongoose-datatable');
+mongoose.plugin(dataTable.init);
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
@@ -143,13 +144,13 @@ app.use(errorHandler());
 /**
  * Start Express server.
  */
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), async () => {
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
     console.log('  Press CTRL-C to stop\n');
-    // require('./seed/factory.seed');
-    // require('./seed/new.seed').seed();
-    // require('./seed/priority.seed').seed();
-    // require('./seed/kindAnnouncement.seed').seed();
+    // await require('./seed/factory.seed');
+    // await require('./seed/priority.seed').seed();
+    // await require('./seed/kindAnnouncement.seed').seed();
+    // await require('./seed/new.seed').seed();
 });
 
 module.exports = app;

@@ -13,4 +13,4 @@ var KindOfAnnoucement = new mongoose.Schema({
     timestamps : true
 });
 
-module.exports = mongoose.model('KindOfAnnoucement', KindOfAnnoucement);
+module.exports = mongoose.model('KindOfAnnouncement', KindOfAnnoucement);

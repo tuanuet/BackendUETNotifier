@@ -18,29 +18,21 @@ var SinhVienSchema =new  mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref :'Class'
     },
-    course:[{
+    courses:[{
         type: mongoose.Schema.ObjectId,
         ref: 'Course'
     }],
     token:{
         type: String
-    },
-    kindOfAnnouncement:[{
-        type:Number,
-        ref:'KindOfAnnouncement'
-    }],
-    kindOfNew:[{
-        type: Number,
-        ref:'KindOfNew'
-    }]
+    }
 },{
     timestamps : true
 });
 
 
-SinhVienSchema.methods.findOneJoinAll = (params) => {
+SinhVienSchema.statics.findOneJoinAll = function(params) {
     return(
-        SinhVienSchema
+        this
         .findOne(params)
         .populate([
             {
@@ -57,10 +49,12 @@ SinhVienSchema.methods.findOneJoinAll = (params) => {
     );
 };
 
-SinhVienSchema.methods.update = (id, params) => {
-    return SinhVienSchema.findByIdAndUpdate(id,params,{new: true});
+SinhVienSchema.statics.findStudentByClasses = function (idClasses) {
+    return this.find({ class : { $in: idClasses}});
 };
-
+SinhVienSchema.statics.findStudentByCourses = function (idCourses) {
+    return this.find({ courses : { $in: idCourses }});
+};
 
 module.exports = mongoose.model('Student',SinhVienSchema);
 

@@ -8,11 +8,12 @@ router.route('/')
 /**
  * edit, post, delete user
  */
-router.route('/manage/account')
+router.route('/manage/account/:role')
     .get(adminController.getManagementAccount)
     .post(adminController.postAccount)
     .put(adminController.updateAccount)
     .delete(adminController.deleteAccount);
+router.get('/manage/account/:role/datatable',adminController.accountDatatable);
 /**
  * get, edit, post, delete class
  */

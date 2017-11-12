@@ -22,12 +22,12 @@ router.route('/announce/all')
     .get(departmentController.getAnnounceAll)
     .post(upload.single('file'),departmentController.postAnnounceAll);
 
-router.route('/announce/class')
-    .get()
-    .post();
-router.route('/announce/course')
-    .get()
-    .post();
+router.route('/announce/classes')
+    .get(departmentController.getAnnounceClasses)
+    .post(upload.single('file'),departmentController.postAnnounceClasses);
+router.route('/announce/courses')
+    .get(departmentController.getAnnounceCourses)
+    .post(upload.single('file'),departmentController.postAnnounceCourses);
 router.route('/announce/student')
     .get()
     .post();

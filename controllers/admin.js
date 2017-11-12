@@ -12,7 +12,7 @@ import KindOfNew from '../models/KindOfNew';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import moment from 'moment';
 import New from '../models/New';
-
+const datatablesQuery = require('datatables-query');
 
 export const getDashboard = async (req,res) => {
     res.render('admin/dashboard');
@@ -21,25 +21,12 @@ export const getDashboard = async (req,res) => {
  * manage
  */
 export const getManagementAccount = async function (req, res) {
-    const role = (req.query.role);
-    const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
-        const Model = mongoose.model(stringModel);
-        let models = await Model.find({}).populate({ path: '_id' });
-        const results = models.map( item => {
-            return {
-                id: item._id.id,
-                name: item.name,
-                email: item._id.email,
-                password: item._id.password,
-                role: item._id.role,
-                createdAt : moment(item.createdAt).format('YYYY-DD-MM')
-            };
-        });
-        res.render('admin/management-account', {models: results});
+        const role = (req.params.role.toLocaleLowerCase());
+        res.render('admin/management-account', {role});
     } catch (e) {
         req.flash('errors', e.toString());
-        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account/${role}`);
     }
 };
 export const updateAccount = async function(req, res) {
@@ -105,7 +92,18 @@ export const postAccount = async function (req, res) {
         res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
     }
 };
+export const accountDatatable = async function (req,res) {
 
+    const role = (req.params.role.toLocaleLowerCase());
+    const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
+    const Model = mongoose.model(stringModel);
+
+    Model.dataTable(req.query,function (err,data) {
+        res.json(data);
+    })
+
+
+};
 /**
  * get,post,put,delete manage class
  */

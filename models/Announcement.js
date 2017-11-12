@@ -3,12 +3,8 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 var ThongBaoSchema = Schema({
     kindOfSender:{
-        type: mongoose.Schema.ObjectId,
+        type: String,
         enum: ['Department','Faculty','Lecturer']
-    },
-    kindOfReceiver:{
-        type: mongoose.Schema.ObjectId,
-        enum:['Student','Faculty','Course','MainClass','All']
     },
     title:{
         type: String,
@@ -19,31 +15,30 @@ var ThongBaoSchema = Schema({
         required: true
     },
     sender:{
-        type: String,
-        refPath: 'kindOfSender'
+        type: mongoose.Schema.ObjectId,
+        refPath: 'kindOfSender',
+        required: true
     },
     receiver:{
-        type: String,
-        refPath: 'kindOfReceiver'
-    },
-    //file đính kèm
-    file:[{
         type: mongoose.Schema.ObjectId,
-        ref : 'File'
-    }],
+        ref: 'Student'
+    },
+    file: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'File'
+    },
     kindOfAnnouncement:{
-        type: Number,
-        ref: 'KindOfAnnouncement'
+        type: mongoose.Schema.ObjectId,
+        ref: 'KindOfAnnouncement',
+        required: true
     },
     priorityNotify:{
-        type: Number,
+        type: mongoose.Schema.ObjectId,
         ref:'PriorityNotify',
-        required: true,
-        default : '0'
+        required: true
     },
     link:{
         type: String,
-        unique: true,
         sparse: true
     },
     feedback:[
@@ -73,8 +68,8 @@ var ThongBaoSchema = Schema({
 });
 
 
-ThongBaoSchema.methods.findJoinAll = (params) => {
-    return ThongBaoSchema.find(params).populate([
+ThongBaoSchema.statics.findJoinAll = function(params) {
+    return this.find(params).populate([
         { path:'file' },
         { path:'kindOfAnnouncement' },
         { path: 'priorityNotify' },
@@ -84,10 +79,10 @@ ThongBaoSchema.methods.findJoinAll = (params) => {
     ]);
 };
 
-ThongBaoSchema.methods.findOneJoinAll = (params) => {
-    return ThongBaoSchema.findOne(params).populate([
+ThongBaoSchema.statics.findOneJoinAll = function (params){
+    return this.findOne(params).populate([
         { path:'file'  },
-        { path:'kindOfAnnouncement' },
+        { path: 'kindOfAnnouncement' },
         { path: 'priorityNotify' },
         { path:'feedback.senderFeedback'},
         { path:'sender' },
@@ -95,9 +90,12 @@ ThongBaoSchema.methods.findOneJoinAll = (params) => {
     ]);
 };
 
+ThongBaoSchema.methods.getMessage = async function() {
+    return mongoose.model('Announcement').findOneJoinAll({_id : this._id});
+};
 //no feedback
-ThongBaoSchema.methods.findJoinAllLimitOffset = (params,limit = 10,offset = 0) => {
-    return ThongBaoSchema
+ThongBaoSchema.statics.findJoinAllLimitOffset = function(params,limit = 10,offset = 0) {
+    return this
         .find(params)
         .limit(limit)
         .skip(offset)
