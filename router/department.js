@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         callback(null,path.join(__dirname,'../uploads/department'));
     },
     filename : function (req, file, callback) {
-        callback(null,Date.now()+file.originalname)
+        callback(null,Date.now()+file.originalname);
     },
 });
 const upload = multer({storage});
@@ -33,5 +33,9 @@ router.route('/announce/courses')
 router.route('/announce/student')
     .get()
     .post();
+
+router.get('/manage/announce/history',departmentController.getHistoryAnnounce);
+router.get('/manage/announce/history/data-table',departmentController.getHistoryAnnounceDatatable);
+router.get('/manage/announce/:idAnnounce',departmentController.getAnnounce);
 
 module.exports = router;

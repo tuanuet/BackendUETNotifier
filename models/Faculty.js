@@ -5,7 +5,6 @@ var KhoaSchema = new mongoose.Schema({
     _id:{
         type: mongoose.Schema.ObjectId,
         ref : 'User',
-        unique: true,
         required:true,
         index:true
     },

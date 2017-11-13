@@ -28,7 +28,7 @@
                             <table id="datatable" class="table table-hover mails m-0 table table-actions-bar">
                                 <thead>
                                 <tr>
-                                    <th >ID</th>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Created at</th>
@@ -90,38 +90,6 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div id="custom-modal" class="modal-demo">
-    <button type="button" class="close" onclick="Custombox.close();">
-        <span>&times;</span><span class="sr-only">Close</span>
-    </button>
-    <h4 class="custom-modal-title">Add</h4>
-    <div class="custom-modal-text text-left">
-
-        <form role="form" class="form_modal" id="form_admin" method="post" action="/customers/add">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="id" id="form_id" value="">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="form-name" name="name" placeholder="Enter name">
-            </div>
-
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email address</label>
-                <input type="email" class="form-control" id="form-email" name="email" placeholder="Enter email">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Phone number</label>
-                <input type="tel" class="form-control" id="form-phone" name="phone" placeholder="Enter phone number">
-            </div>
-
-            <button type="submit" data-from="admin" id="btn-submit" class="btn btn-default waves-effect waves-light">Save</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10" onclick="Custombox.close();">Cancel</button>
-            <span id="message"></span>
-        </form>
-    </div>
-</div>
 
 
 <script>
@@ -138,81 +106,11 @@
             }],
             columns:[
                 {data: '_id._id', name: '_id',},
-                {data: 'name', name: 'name',searchable: true},
-                {data: '_id.email',name :'email',searchable: true},
+                {data: 'name', name: 'name'},
+                {data: '_id.email',name :'email'},
                 {data: 'createdAt', name: 'createdAt'},
                 {data: 'action', name: 'action'},
             ],
-        });
-
-        $('tbody').on('click', '.btn-edit', function (e) {
-            // console.log("ok");
-            //var tr = $(this).closest('tr');
-            //console.log(tr);
-            var id = $(this).closest('tr').find('td')[0].innerHTML;
-            var name = $(this).closest('tr').find('td')[1].innerHTML;
-            var email = $(this).closest('tr').find('td')[2].innerHTML;
-            // console.log(id);
-            $('#form_edit').attr('action', '/admin/manage/account/<%=role%>');
-            $('#editName').val(name);
-            $('#editEmail').val(email);
-        });
-
-        function resetFormModal() {
-            $('#form-name').val('');
-            $('#form-email').val('');
-            $('#message').text('');
-            $('#warning-message').text('');
-        }
-
-        $('#btn-add-customer').on('click', function (e) {
-            e.preventDefault();
-            resetFormModal();
-        });
-
-        $('#form-name, #form-email').on('keyup', function () {
-            $('#message').html('');
-        });
-
-        /**
-         * validate data before submit
-         */
-        $('#form_edit').submit(function (e) {
-            //console.log("Validating form...");
-            if ($('#editName').val() === '') {
-                $('#messageE').html('Invalid name').css('color', 'red');
-                e.preventDefault();
-                return;
-            } else {
-                $('#messageE').html('');
-            }
-
-            if ($('#editEmail').val() === '') {
-                $('#messageE').html('Invalid email').css('color', 'red');
-                e.preventDefault();
-                return;
-            } else {
-                $('#messageE').html('');
-            }
-        });
-
-        $('#form_admin').submit(function (e) {
-            //console.log("Validating form...");
-            if ($('#form-name').val() === '') {
-                $('#message').html('Invalid name').css('color', 'red');
-                e.preventDefault();
-                return;
-            } else {
-                $('#message').html('');
-            }
-
-            if ($('#form-email').val() === '') {
-                $('#message').html('Invalid email').css('color', 'red');
-                e.preventDefault();
-                return;
-            } else {
-                $('#message').html('');
-            }
         });
     });
 

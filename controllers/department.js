@@ -189,3 +189,17 @@ export const postAnnounceCourses = async (req,res) => {
     }
     res.redirect('/department/announce/courses');
 };
+
+export const getHistoryAnnounce = (req, res) => {
+    res.render('department/announce-history');
+};
+
+export const getHistoryAnnounceDatatable = (req, res) => {
+    Announcement.dataTable(req.query,function (err,data) {
+        res.json(data);
+    });
+};
+
+export const getAnnounce = (req,res) => {
+    res.send(req.url);
+};

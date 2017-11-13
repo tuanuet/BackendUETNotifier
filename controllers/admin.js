@@ -12,7 +12,7 @@ import KindOfNew from '../models/KindOfNew';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import moment from 'moment';
 import New from '../models/New';
-const datatablesQuery = require('datatables-query');
+
 
 export const getDashboard = async (req,res) => {
     res.render('admin/dashboard');
@@ -100,7 +100,7 @@ export const accountDatatable = async function (req,res) {
 
     Model.dataTable(req.query,function (err,data) {
         res.json(data);
-    })
+    });
 
 
 };

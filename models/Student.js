@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var SinhVienSchema =new  mongoose.Schema({
     _id:{
         type: mongoose.Schema.ObjectId,
-        unique: true,
         ref: 'User',
         required:true,
         index :true
