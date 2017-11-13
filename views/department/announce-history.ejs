@@ -65,10 +65,11 @@
     $(document).ready(function () {
 
         var table = $('#datatable-fixed-col').dataTable({
+            searching: true,
             processing:true,
             serverSide: true,
             autoWidth: true,
-            ajax: '/department/manage/announce/history/data-table?sender=<%= user._id%>',
+            ajax: '/department/manage/announce/history/data-table',
             columnDefs: [{
                 "targets": -1,
                 "data": null,
@@ -89,10 +90,6 @@
 
             ],
         });
-        table
-            .columns( '.sender' )
-            .search( '<%= user._id%>' )
-            .draw();
     });
 
 </script>
