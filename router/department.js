@@ -25,9 +25,11 @@ router.route('/announce/all')
 router.route('/announce/classes')
     .get(departmentController.getAnnounceClasses)
     .post(upload.single('file'),departmentController.postAnnounceClasses);
+
 router.route('/announce/courses')
     .get(departmentController.getAnnounceCourses)
     .post(upload.single('file'),departmentController.postAnnounceCourses);
+
 router.route('/announce/student')
     .get()
     .post();

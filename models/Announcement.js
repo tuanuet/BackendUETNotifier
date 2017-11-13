@@ -1,6 +1,7 @@
 /* eslint-env node */
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+import { KINDOFRECEIVER } from '../constant';
 var ThongBaoSchema = Schema({
     kindOfSender:{
         type: String,
@@ -19,9 +20,14 @@ var ThongBaoSchema = Schema({
         refPath: 'kindOfSender',
         required: true
     },
-    receiver:{
+    receiver:[{
         type: mongoose.Schema.ObjectId,
-        ref: 'Student'
+        refPath: 'kindOfReceiver',
+    }],
+    kindOfReceiver:{
+        type: String,
+        enum: KINDOFRECEIVER,
+        require :true
     },
     file: {
         type: mongoose.Schema.ObjectId,

@@ -8,7 +8,8 @@
   "author": "Tuấn V",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node cluster.js",
+    "start": "babel-node app.js",
+    "start:seed": "babel-node ./seed/dropdb.js && babel-node app.js seed",
     "postinstall": "npm rebuild node-sass",
     "eslint": "eslint **/*.js --fix"
   },

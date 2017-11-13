@@ -7,7 +7,7 @@ const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const lusca = require('lusca');
-const dotenv = require('dotenv');
+
 const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
@@ -15,10 +15,9 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
-const multer = require('multer');
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
 var methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const dataTable = require('mongoose-datatable');
 mongoose.plugin(dataTable.init);
 /**
@@ -147,10 +146,13 @@ app.use(errorHandler());
 app.listen(app.get('port'), async () => {
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
     console.log('  Press CTRL-C to stop\n');
-    // await require('./seed/factory.seed');
-    // await require('./seed/priority.seed').seed();
-    // await require('./seed/kindAnnouncement.seed').seed();
-    // await require('./seed/new.seed').seed();
+    if(process.argv[2] === 'seed'){
+        await require('./seed/factory.seed');
+        await require('./seed/priority.seed').seed();
+        await require('./seed/kindAnnouncement.seed').seed();
+        // await require('./seed/new.seed').seed();
+    }
+
 });
 
 module.exports = app;

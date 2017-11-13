@@ -7,9 +7,12 @@ import {sendClass, sendTopic} from '../config/gcm';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
-
+import {KINDOFRECEIVER} from '../constant';
+var RECEIVER = {
+    ALL : 0, COURSE : 1, CLASS : 2, STUDENT : 3
+};
 export const getDashboard = (req, res) => {
-    res.render('department/dashboard')
+    res.render('department/dashboard');
 };
 export const getAnnounceAll = async (req, res) => {
     const kindOfAnnouncement = await KindOfAnnouncement.find({});
@@ -17,7 +20,7 @@ export const getAnnounceAll = async (req, res) => {
     res.render('department/announce-all', {
         kindOfAnnouncement,
         priority
-    })
+    });
 };
 
 /**
@@ -46,7 +49,8 @@ export const postAnnounceAll = async (req, res) => {
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
-            file : file ? file.id : null
+            file : file ? file.id : null,
+            kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
         }).save();
 
         const message = await announce.getMessage();
@@ -54,12 +58,12 @@ export const postAnnounceAll = async (req, res) => {
         const response = await sendTopic(message,message.kindOfAnnouncement.id,1);
         console.log('response',response);
 
-        req.flash('success',`Push Announcement success!`);
+        req.flash('success','Push Announcement success!');
     } catch (err) {
         req.flash('errors', err.message || err.toString());
-        console.log(err.message)
+        console.log(err.message);
     }
-    res.redirect('/department/announce/all')
+    res.redirect('/department/announce/all');
 };
 
 /**
@@ -76,7 +80,7 @@ export const getAnnounceClasses = async (req,res) => {
         kindOfAnnouncement,
         priority,
         classes
-    })
+    });
 };
 
 export const postAnnounceClasses = async (req,res) => {
@@ -96,10 +100,14 @@ export const postAnnounceClasses = async (req,res) => {
         let sender = req.user.id;
         let kindOfSender = req.user.role;
 
+        console.log(req.body);
+
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
-            file : file ? file.id : null
+            file : file ? file.id : null,
+            receiver : classes,
+            kindOfReceiver: KINDOFRECEIVER[RECEIVER.CLASS]
         }).save();
 
         const message = await announce.getMessage();
@@ -108,17 +116,17 @@ export const postAnnounceClasses = async (req,res) => {
         let students = await Student.findStudentByClasses(classes);
         //todo : get token in student
         let tokens = students.map(item =>{
-            return item.token
+            return item.token;
         });
         const response = await sendClass(message,tokens,1);
         console.log('response',response);
 
-        req.flash('success',`Push Announcement success!`);
+        req.flash('success','Push Announcement success!');
     } catch (err) {
         req.flash('errors', err.message || err.toString());
-        console.log(err.message)
+        console.log(err.message);
     }
-    res.redirect('/department/announce/classes')
+    res.redirect('/department/announce/classes');
 };
 
 /**
@@ -135,12 +143,11 @@ export const getAnnounceCourses = async (req,res) => {
         kindOfAnnouncement,
         priority,
         courses
-    })
+    });
 };
 
 export const postAnnounceCourses = async (req,res) => {
-    console.log(req.body)
-    /// lưu ten file vao db
+    //lưu ten file vao db
     let file = null;
     try {
         if(req.file){
@@ -159,7 +166,9 @@ export const postAnnounceCourses = async (req,res) => {
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
-            file : file ? file.id : null
+            file : file ? file.id : null,
+            receiver : courses,
+            kindOfReceiver : KINDOFRECEIVER[RECEIVER.COURSE]
         }).save();
 
         const message = await announce.getMessage();
@@ -168,15 +177,15 @@ export const postAnnounceCourses = async (req,res) => {
         let students = await Student.findStudentByCourses(courses);
         // get token in student
         let tokens = students.map(item =>{
-            return item.token
+            return item.token;
         });
         const response = await sendClass(message,tokens,1);
         console.log('response',response);
 
-        req.flash('success',`Push Announcement success!`);
+        req.flash('success','Push Announcement success!');
     } catch (err) {
         req.flash('errors', err.message || err.toString());
-        console.log(err.message)
+        console.log(err.message);
     }
-    res.redirect('/department/announce/courses')
+    res.redirect('/department/announce/courses');
 };

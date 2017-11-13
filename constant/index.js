@@ -1,0 +1,1 @@
+export const KINDOFRECEIVER = ['All', 'Course', 'Class', 'Student'];

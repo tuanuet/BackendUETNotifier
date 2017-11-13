@@ -3,9 +3,6 @@ import faker from 'faker';
 import User from '../models/User';
 import Student from '../models/Student';
 import Class from '../models/Class';
-import Faculty from '../models/Faculty';
-import Lecturer from  '../models/Leturer';
-import Department from '../models/Department';
 import mongoose from 'mongoose';
 import Course from '../models/Course';
 import Major from '../models/Major';
@@ -27,8 +24,8 @@ const createUser = (role,length) => {
     let users = [];
     for(let i=0;i<length;i++){
         let user = new User({
-            email : faker.internet.email(),
-            password : '1234',
+            email : `${role[0]}${i}@gmail.com` ,
+            password : '1',
             role
         });
         users.push(user);
