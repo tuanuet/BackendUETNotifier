@@ -190,12 +190,85 @@ export const postAnnounceCourses = async (req,res) => {
     res.redirect('/department/announce/courses');
 };
 
+
+/**
+ * get notification for courses
+ * @param req
+ * @param res
+ * @returns {Promise.<void>}
+ */
+export const getAnnounceStudents = async (req,res) => {
+    const kindOfAnnouncement = await KindOfAnnouncement.find({});
+    const priority = await Priority.find({});
+    res.render('department/announce-students', {
+        kindOfAnnouncement,
+        priority,
+    });
+};
+
+export const postAnnounceStudents = async (req,res) => {
+    //lưu ten file vao db
+    let file = null;
+    console.log(req.body);
+    try {
+        if(req.file){
+            file = await new File({
+                name: req.file.originalname,
+                link: `/department/${req.file.filename}`
+            }).save();
+        }
+        // save announcement
+
+        let studentCodes = req.body.students.split(',');
+        let studentInDbs = await Student.findByArrayId(studentCodes);
+        let students = studentInDbs.map(stu => stu.id);
+
+        let {
+            title, content, link, kindOfAnnouncement, priorityNotify
+        } = req.body;
+        let sender = req.user.id;
+        let kindOfSender = req.user.role;
+
+        //create annouce
+        const announce = await new Announcement({
+            title,content,link,kindOfAnnouncement,
+            priorityNotify,sender,kindOfSender,
+            file : file ? file.id : null,
+            receiver : students,
+            kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
+        }).save();
+
+        const message = await announce.getMessage();
+        // announce for student by courses
+
+        // get token in student
+        let tokens = studentInDbs.map(student =>{
+            return student.token;
+        });
+        //send fcm
+        const response = await sendClass(message,tokens,1);
+        console.log('response',response);
+
+        req.flash('success','Push Announcement success!');
+    } catch (err) {
+        req.flash('errors', err.message || err.toString());
+        console.log(err);
+    }
+    res.redirect('/department/announce/courses');
+};
+
+
 export const getHistoryAnnounce = (req, res) => {
     res.render('department/announce-history');
 };
 
 export const getHistoryAnnounceDatatable = (req, res) => {
-    Announcement.dataTable(req.query,function (err,data) {
+    let opts = {
+        conditions: {
+            sender : req.user._id
+        }
+    };
+    Announcement.dataTable(req.query,opts,function (err,data) {
         res.json(data);
     });
 };

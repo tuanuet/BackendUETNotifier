@@ -104,12 +104,13 @@ let seedTerm = async () => {
 async function seedStudent(classes, courses, number) {
     let users = createUser('Student',number);
     let userStudents = await User.create(users);
-    let students = userStudents.map((user) => {
+    let students = userStudents.map((user,index) => {
         return new Student({
             _id:user._id,
             name: faker.name.lastName(),
             class : classes[getRandomInt(0,classes.length)].id,
-            courses : [courses[getRandomInt(0,courses.length)].id]
+            courses : [courses[getRandomInt(0,courses.length)].id],
+            code : index
         });
     });
     return Student.create(students);

@@ -30,9 +30,9 @@ router.route('/announce/courses')
     .get(departmentController.getAnnounceCourses)
     .post(upload.single('file'),departmentController.postAnnounceCourses);
 
-router.route('/announce/student')
-    .get()
-    .post();
+router.route('/announce/students')
+    .get(departmentController.getAnnounceStudents)
+    .post(upload.single('file'),departmentController.postAnnounceStudents);
 
 router.get('/manage/announce/history',departmentController.getHistoryAnnounce);
 router.get('/manage/announce/history/data-table',departmentController.getHistoryAnnounceDatatable);

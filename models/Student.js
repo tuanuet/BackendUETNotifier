@@ -21,6 +21,11 @@ var SinhVienSchema =new  mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Course'
     }],
+    code :{
+        type : String,
+        index :true,
+        required : true
+    },
     token:{
         type: String
     }
@@ -53,6 +58,9 @@ SinhVienSchema.statics.findStudentByClasses = function (idClasses) {
 };
 SinhVienSchema.statics.findStudentByCourses = function (idCourses) {
     return this.find({ courses : { $in: idCourses }});
+};
+SinhVienSchema.statics.findByArrayId = function (studentIds) {
+    return this.find({ code: {$in : studentIds}});
 };
 
 module.exports = mongoose.model('Student',SinhVienSchema);
