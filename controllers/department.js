@@ -273,6 +273,13 @@ export const getHistoryAnnounceDatatable = (req, res) => {
     });
 };
 
+export const getMark = (req ,res) => {
+    res.render('department/announce-mark-class');
+};
+
+export const postMark = (req ,res) => {
+    res.render('department/announce-mark-class');
+};
 export const getAnnounce = (req,res) => {
     res.send(req.url);
 };

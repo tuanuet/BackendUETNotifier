@@ -38,4 +38,9 @@ router.get('/manage/announce/history',departmentController.getHistoryAnnounce);
 router.get('/manage/announce/history/data-table',departmentController.getHistoryAnnounceDatatable);
 router.get('/manage/announce/:idAnnounce',departmentController.getAnnounce);
 
+
+router.route('/announce/mark')
+    .get(departmentController.getMark)
+    .post(upload.single('file'),departmentController.postMark);
+
 module.exports = router;

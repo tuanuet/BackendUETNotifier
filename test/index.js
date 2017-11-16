@@ -2,6 +2,8 @@
 // var bodyParser = require('body-parser');
 // var async = require('async');
 import XLSX from 'xlsx';
+import fs from 'fs';
+import path from 'path';
 
 function retnum(str) {
     var num = str.replace(/[^0-9]/g, '');
@@ -12,11 +14,12 @@ function process(workbook) {
 
     var sheet_name_list = workbook.SheetNames;
     sheet_name_list.forEach(function (y) { /* iterate through sheets */
-        var worksheet = workbook.Sheets[y];
-        var numberRow = 0;
-        var begin; //cot dau tien chua so STT cua sinh vien
-        var beginFromNumberRow; // hang dau tien chua tu 'STT'
-        var result;
+        let worksheet = workbook.Sheets[y];
+        let numberRow = 0;
+        let begin; //cot dau tien chua so STT cua sinh vien
+        let beginFromNumberRow; // hang dau tien chua tu 'STT'
+        let result;
+        let z;
         for (z in worksheet) {
             /* all keys that do not begin with "!" correspond to cell addresses */
             if (z[0] === '!') continue;
@@ -133,6 +136,11 @@ function process(workbook) {
 //fuction lay gia tri number tu string
 }
 (function () {
-    var workbook = XLSX.readFile('./BangDiem_int2204 1_Final.xls', {type: 'binary'});
-    process(workbook);
+    try{
+        var workbook = XLSX.readFile(path.join(__dirname,'diem.xls'));
+        process(workbook);
+
+    }catch(err){
+        console.log(err);
+    }
 })();

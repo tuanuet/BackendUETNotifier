@@ -1,0 +1,85 @@
+<% layout('../layout') -%>
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container">
+
+            <!-- Page-Title -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="page-title">Customers</h4>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="#">Admin</a>
+                        </li>
+                        <li>
+                            <a href="#">Manage</a>
+                        </li>
+                        <li class="active">
+                            <%= user.role%>
+                        </li>
+                        <li class="active">
+                            Announce
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-box table-responsive">
+                        <h4 class="m-t-0 header-title"><b>History</b></h4>
+                        <p class="text-muted font-13 m-b-30">
+                            In this example the column index is prefixed to the column title.
+                        </p>
+                        <div class="form-group m-b-0">
+                            <label class="control-label">File xlsx or xls</label>
+                            <input id="file" type="file" name="file" class="filestyle" multiple data-placeholder="No file">
+                        </div>
+                        <div class="form-group m-b-0">
+                            <button type="button" class="btn btn-primary" name="file">Submit</button>
+                        </div>
+
+                        <div id="table"></div>
+
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+    <footer class="footer text-right">
+        © 2017. All rights reserved.
+    </footer>
+</div>
+<script src="/js/lib/xlsx.min.js"></script>
+<script src="/js/parseXLSX.js"></script>
+<script src="/js/lib/lodash.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#file").change(function(e) {
+            for (let  i = 0; i < this.files.length; ++i) {
+                var reader = new FileReader();
+                let name = this.files[i].name.toLowerCase().trim();
+                reader.onload = function (e) {
+
+                    var data = e.target.result;
+                    var workbook = XLSX.read(data, {type: 'binary'});
+
+                    /* DO SOMETHING WITH workbook HERE */
+                    process(workbook, function (thead, tbody, json) {
+                        $('#table').append('<table id="datatable-fixed-col" class="table table-striped table-bordered file'+ i +'"></table>')
+                        $(".file"+i).append(thead)
+                        $(".file"+i).append(tbody)
+                        console.log(json);
+                    });
+                };
+                reader.readAsBinaryString(this.files[i]);
+            }
+        })
+    })
+</script>
+
+
+
+<!--</script>-->
