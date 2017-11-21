@@ -95,7 +95,9 @@
 
         $(document).on('click',"#pushnotification", function(){
             //todo : push notification
-            console.log(course)
+            $.post('/department/announce/mark',{data : course},function (res) {
+                console.log(res)
+            });
         });
     })
 

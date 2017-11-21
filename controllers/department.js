@@ -9,7 +9,7 @@ import Student from '../models/Student';
 import Course from '../models/Course';
 import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import service from '../service';
-
+import RedisCourse from '../redis/Course';
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
@@ -277,9 +277,16 @@ export const getMark = (req ,res) => {
     res.render('department/announce-mark-class');
 };
 
-export const postMarks = (req ,res) => {
-    console.log(req.body.data);
-    res.render('department/announce-mark-class');
+export const postMarks = async (req ,res) => {
+    let classes = req.body.data;
+    let classA = classes[0];
+
+    let course = new RedisCourse(classA.infomationClass.idCourse,classA.headers,classA.points);
+    let status = await course.save();
+    console.log(status);
+    res.status(200).json({
+        success :  true
+    });
 };
 export const getAnnounce = (req,res) => {
     res.send(req.url);
