@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     email: {
         type: String,
         unique: true,
+        index : true,
         required: true
     },
     password:{
@@ -41,8 +42,14 @@ UserSchema.pre('save', function (next) {
     });
 });
 
-UserSchema.methods.comparePassword =  function(passw, cb){
-    bcrypt.compare(passw,this.password, cb);
+UserSchema.methods.comparePassword =  function(passw){
+    return new Promise((resolve,reject) => {
+        bcrypt.compare(passw,this.password,(err,isMatch) => {
+            if(err) reject(err);
+            resolve(isMatch);
+        });
+    });
+
 };
 
 UserSchema.statics.update = function(id, newparams) {

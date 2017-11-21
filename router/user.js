@@ -29,4 +29,5 @@ router.post('/account/profile', passportConfig.isAuthenticated, userController.p
 router.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 router.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 
+
 module.exports = router;
