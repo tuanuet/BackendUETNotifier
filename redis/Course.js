@@ -10,11 +10,17 @@ export default class Course{
         this.points = points;
     }
     async save(){
-        let data = _(this.points).map(row => {
-            return Object.assign({}, ...this.headers.map((n, index) => ({[n]: row[index]})));
-        }).value();
-        let status = await redisClient.set(this.getKeyCourse(),JSON.stringify(data));
-        return status;
+        try{
+            let data = _(this.points).map(row => {
+                return Object.assign({}, ...this.headers.map((n, index) => ({[n]: row[index]})));
+            }).value();
+
+            await redisClient.set(this.getKeyCourse(),JSON.stringify(data));
+
+            return this.getKeyCourse();
+        } catch (err) {
+            throw err;
+        }
     }
     getKeyCourse(){
         return this.id.replace(' ','_');

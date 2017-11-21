@@ -148,7 +148,7 @@ var process = function process(workbook, cb) {
     var sheets = workbook.SheetNames;
     var worksheet = workbook.Sheets[sheets[0]];
     var matrix = getMatrixInWorksheet(worksheet);
-    var infomationClass = void 0;
+    var informationClass = void 0;
     var thead = void 0;
     var tbody = void 0;
     var headersLabel = getLabelThead(worksheet, matrix);
@@ -163,7 +163,7 @@ var process = function process(workbook, cb) {
     tbody = '<tbody>' + rows.join('') + '</tbody>';
 
     //================================================================
-    infomationClass = getInfoClass(worksheet);
+    informationClass = getInfoClass(worksheet);
 
     //================================================================
     var points = _(rowBody).map(function (row) {
@@ -175,7 +175,7 @@ var process = function process(workbook, cb) {
             return worksheet[item].v;
         }).value(),
         points : points,
-        infomationClass : infomationClass
+        informationClass : informationClass
     }
     cb(thead, tbody, data);
 };

@@ -68,7 +68,7 @@ app.use(sass({
 }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true ,parameterLimit: 1000000 }));
 app.use(expressValidator());
 app.use(session({
     resave: true,

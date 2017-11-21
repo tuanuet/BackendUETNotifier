@@ -10,6 +10,7 @@ import Course from '../models/Course';
 import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import service from '../service';
 import RedisCourse from '../redis/Course';
+import _ from 'lodash'
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
@@ -278,15 +279,25 @@ export const getMark = (req ,res) => {
 };
 
 export const postMarks = async (req ,res) => {
-    let classes = req.body.data;
-    let classA = classes[0];
+    try{
+        let courses = req.body.data;
+        console.log(courses.length);
+        let idCoursePromises = _(courses).map(async c => {
+            let course = new RedisCourse(c.informationClass.idCourse,c.headers,c.points);
+            return await course.save();
+        });
 
-    let course = new RedisCourse(classA.infomationClass.idCourse,classA.headers,classA.points);
-    let status = await course.save();
-    console.log(status);
-    res.status(200).json({
-        success :  true
-    });
+        let idCourses = await Promise.all(idCoursePromises);
+        res.status(200).json({
+            success :  true,
+            idCourses
+        });
+    } catch (err){
+        console.log(err);
+        res.status(500).json({
+            success :  false
+        });
+    }
 };
 export const getAnnounce = (req,res) => {
     res.send(req.url);
