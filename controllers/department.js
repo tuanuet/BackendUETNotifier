@@ -7,10 +7,10 @@ import {sendClass, sendTopic} from '../config/gcm';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
-import {KINDOFRECEIVER} from '../constant';
-var RECEIVER = {
-    ALL : 0, COURSE : 1, CLASS : 2, STUDENT : 3
-};
+import {KINDOFRECEIVER,RECEIVER} from '../constant';
+import service from '../service';
+
+
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
 };
@@ -277,7 +277,8 @@ export const getMark = (req ,res) => {
     res.render('department/announce-mark-class');
 };
 
-export const postMark = (req ,res) => {
+export const postMarks = (req ,res) => {
+    console.log(req.body.data);
     res.render('department/announce-mark-class');
 };
 export const getAnnounce = (req,res) => {

@@ -41,6 +41,6 @@ router.get('/manage/announce/:idAnnounce',departmentController.getAnnounce);
 
 router.route('/announce/mark')
     .get(departmentController.getMark)
-    .post(upload.single('file'),departmentController.postMark);
+    .post(upload.single('file'),departmentController.postMarks);
 
 module.exports = router;

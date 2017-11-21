@@ -63,5 +63,22 @@ SinhVienSchema.statics.findByArrayId = function (studentIds) {
     return this.find({ code: {$in : studentIds}});
 };
 
+//retrieve token by id
+SinhVienSchema.statics.findTokenByIdClass = function (idClass) {
+    return this.find({class : idClass}).select({
+        token : 1
+    });
+};
+SinhVienSchema.statics.findTokenByIdCourse = function (idCourse) {
+    return this.find({class : idCourse}).select({
+        token : 1
+    });
+};
+SinhVienSchema.statics.findTokenByCode = function (code) {
+    return this.find({code}).select({
+        token : 1
+    });
+};
+
 module.exports = mongoose.model('Student',SinhVienSchema);
 
