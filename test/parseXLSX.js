@@ -132,6 +132,13 @@ let process = (workbook,cb) => {
 
     //================================================================
     infomationClass = getInfoClass(worksheet);
+    let dataJson = {
+        head : headersLabel,
+        body : rows,
+        info : infomationClass
+    }
+    console.log(dataJson);
 
-    cb(thead,tbody,infomationClass);
+
+    cb(thead,tbody,dataJson);
 };

@@ -101,6 +101,12 @@ function retnum(str) {
     return num;
 }
 
+/**
+ * courseName: courseName, lecturer: lecturer, idCourse: idCourse, nameTerm: nameTerm
+ * @param worksheet
+ * @param matrix
+ * @returns {{courseName: *, lecturer: *, idCourse: *, nameTerm: *}}
+ */
 var getInfoClass = function getInfoClass(worksheet, matrix) {
 
     var courseName = void 0,
@@ -126,10 +132,10 @@ var getInfoClass = function getInfoClass(worksheet, matrix) {
         if (JSON.stringify(worksheet[z].v).indexOf('Lớp môn học') > -1) {
             var columnLopmh = String.fromCharCode(67 + (z.charCodeAt(0) - 65)); //tinh them 2 o nua
             var row = parseInt(retnum(z));
-            nameTerm = worksheet[columnLopmh + row].v;
+            idCourse = worksheet[columnLopmh + row].v;
         }
         if (JSON.stringify(worksheet[z].v).indexOf('Năm học') > -1) {
-            idCourse = worksheet[z].v;
+            nameTerm = worksheet[z].v;
         }
     }
 
@@ -165,6 +171,9 @@ var process = function process(workbook, cb) {
     }).value();
 
     let data = {
+        headers : _(headersLabel).map(function (item) {
+            return worksheet[item].v;
+        }).value(),
         points : points,
         infomationClass : infomationClass
     }
