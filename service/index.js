@@ -3,7 +3,7 @@ import {
     sendClass,
     sendCourse,
     sendStudent
-} from './fcm';
+} from './firebaseService';
 
 export {
     sendTopic,

@@ -3,14 +3,13 @@ import Priority from '../models/PriorityNotify';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
-import {sendClass, sendTopic} from '../config/gcm';
+import {sendClass, sendTopic} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
-import {KINDOFRECEIVER,RECEIVER} from '../constant';
-import service from '../service';
+import {KINDOFRECEIVER,RECEIVER,KIND_ANNOUNCEMENT} from '../constant';
 import RedisCourse from '../redis/Course';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
@@ -56,11 +55,12 @@ export const postAnnounceAll = async (req, res) => {
 
         const message = await announce.getMessage();
         //todo : announce for student by kindOfAnnouncement
-        const response = await sendTopic(message,message.kindOfAnnouncement.id,1);
+        const response = await sendTopic(message,message.kindOfAnnouncement._id, KIND_ANNOUNCEMENT);
         console.log('response',response);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {
+        console.log(err);
         req.flash('errors', err.message || err.toString());
         console.log(err.message);
     }
