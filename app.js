@@ -23,7 +23,7 @@ mongoose.plugin(dataTable.init);
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.exam' });
+dotenv.load({ path: '.env' });
 /**
  * API keys and Passport configuration.
  */

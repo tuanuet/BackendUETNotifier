@@ -3,7 +3,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 let JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
-require('dotenv').load({ path: '.env.exam' });
+require('dotenv').load({ path: '.env' });
 
 const User = require('../models/User');
 

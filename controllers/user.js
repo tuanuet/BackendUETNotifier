@@ -6,8 +6,7 @@ const passport = require('passport');
 import User from '../models/User';
 import Student from '../models/Student';
 var jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-dotenv.load({ path: '.env.exam' });
+require('dotenv').load({ path: '.env' });
 /**
  * GET /login
  * Login page.
