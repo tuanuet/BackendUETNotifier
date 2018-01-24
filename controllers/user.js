@@ -59,29 +59,34 @@ exports.postAuthenticate = async (req,res) => {
  * POST /login
  * Sign in using email and password.
  */
-exports.postLogin = (req, res, next) => {
-    req.assert('email', 'Email is not valid').isEmail();
-    req.assert('password', 'Password cannot be blank').notEmpty();
+exports.postLogin = async (req, res, next) => {
+    try {
+        req.assert('email', 'Email is not valid').isEmail();
+        req.assert('password', 'Password cannot be blank').notEmpty();
 
-    const errors = req.validationErrors();
+        const errors = await req.getValidationResult();
 
-    if (errors) {
-        req.flash('errors', errors);
-        return res.redirect('/user/login');
-    }
-
-    passport.authenticate('local', (err, user, info) => {
-        if (err) { return next(err); }
-        if (!user) {
-            req.flash('errors', info);
+        if (errors.array().length !== 0) {
+            req.flash('errors', errors.array());
             return res.redirect('/user/login');
         }
-        req.logIn(user, (err) => {
+
+        passport.authenticate('local', (err, user, info) => {
             if (err) { return next(err); }
-            req.flash('success', 'Success! You are logged in.');
-            res.redirect(`/${user.role.toLowerCase()}`);
-        });
-    })(req, res, next);
+            if (!user) {
+                req.flash('errors', info);
+                return res.redirect('/user/login');
+            }
+            req.logIn(user, (err) => {
+                if (err) { return next(err); }
+                req.flash('success', 'Success! You are logged in.');
+                res.redirect(`/${user.role.toLowerCase()}`);
+            });
+        })(req, res, next);
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
 /**
@@ -115,7 +120,7 @@ exports.postSignup = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -163,7 +168,7 @@ exports.postUpdateProfile = (req, res, next) => {
     req.assert('email', 'Please enter a valid email address.').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -199,7 +204,7 @@ exports.postUpdatePassword = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -262,7 +267,7 @@ exports.postReset = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long.').len(4);
     req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -337,7 +342,7 @@ exports.postForgot = (req, res, next) => {
     req.assert('email', 'Please enter a valid email address.').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);

@@ -17,3 +17,7 @@ export const saveToken = async (req,res) => {
         });
     }
 };
+
+export const getSubcribe = async (req,res) => {
+
+};

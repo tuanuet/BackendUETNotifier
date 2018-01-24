@@ -135,7 +135,7 @@ app.use('/lecturer',lecturer);
 app.use('/faculty',faculty);
 app.use('/user',user);
 app.use('/api',api);
-app.use('/student',student);
+app.use('/student',passport.authenticate('jwt', {session: false}),student);
 
 /**
  * Error Handler.

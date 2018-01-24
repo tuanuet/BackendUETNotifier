@@ -23,22 +23,24 @@ passport.deserializeUser((id, done) => {
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     User.findOne({ email: email }, (err, user) => {
         if (err) { return done(err); }
+
         if (!user) {
             return done(null, false, { msg: `Email ${email} not found.` });
         }
-        user.comparePassword(password, (err, isMatch) => {
-            if (err) { return done(err); }
-            if (isMatch) {
-                return done(null, user);
-            }
-            return done(null, false, { msg: 'Invalid email or password.' });
-        });
+        user.comparePassword(password)
+            .then(isMatch => {
+                if (isMatch) {
+                    return done(null, user);
+                }
+                return done(null, false, { msg: 'Invalid email or password.' });
+            }).catch(done);
     });
 }));
 
-let opts = {};
-opts.jwtFromRequest = ExtractJwt.fromHeader('authorization'); ;
-opts.secretOrKey = process.env.SESSION_SECRET;
+let opts = {
+    jwtFromRequest : ExtractJwt.fromHeader('authorization'),
+    secretOrKey : process.env.SESSION_SECRET
+};
 
 passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     User.findOne({_id: jwt_payload._doc._id}, function(err, user) {
