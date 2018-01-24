@@ -3,9 +3,11 @@ const bluebird = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
-const User = require('../models/User');
-
-
+import User from '../models/User';
+import Student from '../models/Student';
+var jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.load({ path: '.env.exam' });
 /**
  * GET /login
  * Login page.
@@ -18,34 +20,73 @@ exports.getLogin = (req, res) => {
         title: 'Login'
     });
 };
+/**
+ * client login
+ * @param req
+ * @param res
+ */
+exports.postAuthenticate = async (req,res) => {
+    try {
+        let user = await User.findOne({email: req.body.username});
+        if (!user)
+            return res.json({
+                success: false,
+                message: 'Authentication failed ,User not Found.'
+            });
 
+        let isMatch = await user.comparePassword(req.body.password);
+        if(!isMatch) throw new Error('Not match user');
+
+        let token = jwt.sign(user, process.env.SESSION_SECRET);
+        // return the information including token as JSON
+        let sinhvien = await Student.findById(user._id);
+        return res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token,
+            sinhvien: sinhvien
+        });
+    }catch (err) {
+        return res.status(500).json({
+            succsess: false,
+            message: 'Authentication failed.Password did not match',
+            error : err.message
+        });
+    }
+
+};
 /**
  * POST /login
  * Sign in using email and password.
  */
-exports.postLogin = (req, res, next) => {
-    req.assert('email', 'Email is not valid').isEmail();
-    req.assert('password', 'Password cannot be blank').notEmpty();
+exports.postLogin = async (req, res, next) => {
+    try {
+        req.assert('email', 'Email is not valid').isEmail();
+        req.assert('password', 'Password cannot be blank').notEmpty();
 
-    const errors = req.validationErrors();
+        const errors = await req.getValidationResult();
 
-    if (errors) {
-        req.flash('errors', errors);
-        return res.redirect('/user/login');
-    }
-
-    passport.authenticate('local', (err, user, info) => {
-        if (err) { return next(err); }
-        if (!user) {
-            req.flash('errors', info);
+        if (errors.array().length !== 0) {
+            req.flash('errors', errors.array());
             return res.redirect('/user/login');
         }
-        req.logIn(user, (err) => {
+
+        passport.authenticate('local', (err, user, info) => {
             if (err) { return next(err); }
-            req.flash('success', 'Success! You are logged in.');
-            res.redirect(`/${user.role.toLowerCase()}`);
-        });
-    })(req, res, next);
+            if (!user) {
+                req.flash('errors', info);
+                return res.redirect('/user/login');
+            }
+            req.logIn(user, (err) => {
+                if (err) { return next(err); }
+                req.flash('success', 'Success! You are logged in.');
+                res.redirect(`/${user.role.toLowerCase()}`);
+            });
+        })(req, res, next);
+    } catch (err) {
+        console.log(err);
+    }
+
 };
 
 /**
@@ -79,7 +120,7 @@ exports.postSignup = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -127,7 +168,7 @@ exports.postUpdateProfile = (req, res, next) => {
     req.assert('email', 'Please enter a valid email address.').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -163,7 +204,7 @@ exports.postUpdatePassword = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long').len(4);
     req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -226,7 +267,7 @@ exports.postReset = (req, res, next) => {
     req.assert('password', 'Password must be at least 4 characters long.').len(4);
     req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);
@@ -301,7 +342,7 @@ exports.postForgot = (req, res, next) => {
     req.assert('email', 'Please enter a valid email address.').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-    const errors = req.validationErrors();
+    const errors = req.getValidationResult();
 
     if (errors) {
         req.flash('errors', errors);

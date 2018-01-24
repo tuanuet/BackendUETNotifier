@@ -121,7 +121,8 @@ const department = require('./router/department');
 const faculty = require('./router/faculty');
 const lecturer = require('./router/lecturer');
 const user = require('./router/user');
-
+const api = require('./router/api');
+const student = require('./router/student');
 app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
     res.render('index', {
         title : 'Home'
@@ -133,7 +134,8 @@ app.use('/department',department);
 app.use('/lecturer',lecturer);
 app.use('/faculty',faculty);
 app.use('/user',user);
-
+app.use('/api',api);
+app.use('/student',passport.authenticate('jwt', {session: false}),student);
 
 /**
  * Error Handler.
