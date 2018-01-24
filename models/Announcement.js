@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 import { KINDOFRECEIVER } from '../constant';
-var ThongBaoSchema = Schema({
+const ThongBaoSchema = Schema({
     kindOfSender:{
         type: String,
         enum: ['Department','Faculty','Lecturer']
@@ -106,6 +106,18 @@ ThongBaoSchema.statics.findJoinAllLimitOffset = function(params,limit = 10,offse
         .limit(limit)
         .skip(offset)
         .populate([
+            { path:'file'  },
+            { path:'kindOfAnnouncement'},
+            { path:'sender' },
+            { path:'receiver'}
+        ]);
+};
+
+ThongBaoSchema.statics.findByIdJoinAll = function(id) {
+    return this
+        .findById(id)
+        .populate([
+            {path : 'priorityNotify'},
             { path:'file'  },
             { path:'kindOfAnnouncement'},
             { path:'sender' },

@@ -23,6 +23,8 @@ router.route('/loaithongbao')
 router.route('/mucdothongbao')
     .get(apiController.getPriorities);
 
+router.get('/thongbao/:id',apiController.getAnnouncementById);
+
 /**
  * Primary router smartPhone.
  */
