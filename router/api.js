@@ -29,5 +29,7 @@ router.get('/thongbao/:id',apiController.getAnnouncementById);
  * Primary router smartPhone.
  */
 router.post('/authenticate', userController.postAuthenticate);
+router.get('/news',apiController.getNewsPagination);
+router.get('/new/detail',apiController.getDetailNew);
 
 module.exports = router;

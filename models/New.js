@@ -24,10 +24,9 @@ var TinTucSchema = new mongoose.Schema({
         require :true,
         default :Date.now()
     },
-    kind : {
-        type : mongoose.Schema.ObjectId,
+    tags : {
+        type : [String],
         required : true,
-        ref : 'KindOfNew'
     }
 },{
     timestamps : true
@@ -47,6 +46,5 @@ TinTucSchema.methods.find = (param,limit = 10) => {
         .find(param)
         .limit(limit)
         .sort({'postAt': -1})
-        .populate('kind');
 };
 module.exports = mongoose.model('New',TinTucSchema);
