@@ -60,7 +60,18 @@ function parseContainerPagePromise(url) {
 								//time post
 			        const month = parseInt(trimSpace($(row).find('.month').text().substr(2)));
 			        const day = parseInt(trimSpace($(row).find('.day').text()));
-			        const year = (month >= (moment().month() + 1)  && day > moment().date()) ? 2017 : 2018;
+                    let year = 2018;
+			        if(month > (moment().month() + 1)){
+			            year = 2017;
+                    } else if(month === (moment().month() + 1)){
+			            if(day > moment().date()){
+			                year = 2017;
+                        }else {
+			                year = 2018;
+                        }
+                    } else {
+			            year = 2018;
+                    }
 			        const postAt = moment(`${month}-${day}-${year}`, 'MM-DD-YYYY');
 								//footer tag and user post
 			        const tags = [];

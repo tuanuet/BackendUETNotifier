@@ -1,3 +1,5 @@
-import NotificationResponse from './Notification';
+import AnnouncementNotification from './AnnouncementNotification';
+import NewNotification from './NewNotification';
 
-module.exports.NotificationResponse = NotificationResponse;
+module.exports.AnnouncementNotification = AnnouncementNotification;
+module.exports.NewNotification = NewNotification;

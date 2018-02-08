@@ -1,6 +1,6 @@
 import * as firebaseService from '../config/firebase';
 import request from 'request';
-import { NotificationResponse } from '../response';
+import { AnnouncementNotification } from '../response';
 const dotenv = require('dotenv');
 dotenv.load({path: '.env'});
 
@@ -8,7 +8,7 @@ dotenv.load({path: '.env'});
 export const sendTopic = (announcement, topic, kind) => {
 
     let {title, content, _id, file, priorityNotify, kindOfAnnouncement, sender} = announcement;
-    const data = NotificationResponse(
+    const data = AnnouncementNotification(
         title, content, _id, priorityNotify._id, kindOfAnnouncement._id, kind, file ? 1 : 0, sender._id, sender.name
     );
     return firebaseService.toTopic(topic,data);

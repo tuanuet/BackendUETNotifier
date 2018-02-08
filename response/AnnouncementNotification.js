@@ -1,3 +1,4 @@
+import {KIND_ANNOUNCEMENT_NOTIFICATION} from '../constant';
 export default (tieuDe, noiDung, id, idmucDoThongBao, idloaiThongBaos, kind, hasfile, idSender, nameSender) => {
     return {
         tieuDe: tieuDe,
@@ -8,7 +9,8 @@ export default (tieuDe, noiDung, id, idmucDoThongBao, idloaiThongBaos, kind, has
         kind: kind,
         hasfile: hasfile,
         idSender: idSender,
-        nameSender: nameSender
+        nameSender: nameSender,
+        typeNotification: KIND_ANNOUNCEMENT_NOTIFICATION
     };
 
 };
