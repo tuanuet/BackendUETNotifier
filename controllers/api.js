@@ -4,9 +4,11 @@ import Priority from '../models/PriorityNotify';
 import Announcement from '../models/Announcement';
 import New from '../models/New';
 import * as service from '../service';
+import * as helper from '../helper';
+import {KIND_OF_NEW_LIST,NEW_LIMIT} from '../constant';
 
 export const getKindOfNews = async (req,res) => {
-    let loaiTinTucs = await KindOfNew.find({});
+    let loaiTinTucs = KIND_OF_NEW_LIST();
     res.json(loaiTinTucs);
 };
 
@@ -29,10 +31,19 @@ export const getAnnouncementById = async (req, res, next) => {
  *  API FOR ANDROID
  */
 export const getNewsPagination = async (req,res) => {
-    const loaiTinTuc = parseInt(req.query.tags);
-    const offset = parseInt(req.query.offset);
-    let news = await New.find();
-    res.json(news);
+    try {
+        const idTag = req.query.loaitintuc;
+        const offset = parseInt(req.query.offset);
+        if(idTag === 'tat_ca_tin_tuc'){
+            return res.json(await New.find().skip(offset).limit(NEW_LIMIT));
+        }
+        const tag = helper.getNameTagBySnake(idTag);
+        let news = await New.findByTagName(tag.name).skip(offset).limit(NEW_LIMIT);
+        res.json(news);
+    } catch (err) {
+        res.status(404).json([]);
+    }
+
 };
 
 export const getDetailNew = async (req,res) => {

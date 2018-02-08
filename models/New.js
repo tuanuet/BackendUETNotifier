@@ -1,5 +1,8 @@
 /* eslint-env node */
+import {NewNotification} from '../response';
+import * as helper from '../helper';
 var mongoose = require('mongoose');
+
 //model crawl dũ liệu trên sevêr cũ
 var TinTucSchema = new mongoose.Schema({
     link:{
@@ -45,6 +48,20 @@ TinTucSchema.methods.find = (param,limit = 10) => {
     return TinTucSchema
         .find(param)
         .limit(limit)
-        .sort({'postAt': -1})
+        .sort({'postAt': -1});
 };
+
+TinTucSchema.methods.getDataNotification = function () {
+    return NewNotification({...{_id: this.id},...this._doc,...{tags : helper.getTagsOfNews(this.tags)}});
+};
+
+TinTucSchema.statics.findByTagName = function (tagName) {
+    return this.find({
+        tags : {
+            $in : [tagName]
+        }
+    })
+        .sort({'postAt': -1});
+};
+
 module.exports = mongoose.model('New',TinTucSchema);
