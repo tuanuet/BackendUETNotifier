@@ -152,7 +152,7 @@ app.listen(app.get('port'), async () => {
         await require('./seed/factory.seed');
         await require('./seed/priority.seed').seed();
         await require('./seed/kindAnnouncement.seed').seed();
-        // await require('./seed/new.seed').seed();
+        await require('./seed/new.seed').seed();
     }
 
 });
