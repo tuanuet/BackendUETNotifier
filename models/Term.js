@@ -1,7 +1,7 @@
 /* eslint-env node */
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var KiHocSchema = mongoose.Schema({
+const KiHocSchema = mongoose.Schema({
     name: {
         type: String,
         required: true

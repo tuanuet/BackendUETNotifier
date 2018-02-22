@@ -7,18 +7,27 @@ import mongoose from 'mongoose';
 import Course from '../models/Course';
 import Major from '../models/Major';
 import Term from '../models/Term';
-
+const jsonfile = require('jsonfile');
+const _ = require('lodash');
+import path from 'path';
+const PATH_JSON_FILE_RESOURCE = path.resolve(__dirname,'./data/crawler.json');
 const seedMainClass = async () => {
-    let classes = [];
-    for (let i=0;i<10;i++) {
-        let cla = new Class({
-            name: `Class ${i + 1}`
+    const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
+    const classes = _(crawler).unionBy('class').map(e => {
+        return new Class({
+            _id: e.class,
+            name: e.class
         });
-        classes.push(cla);
-    }
+    }).value();
+    // let classes = [];
+    // for (let i=0;i<10;i++) {
+    //     let cla = new Class({
+    //         name: `Class ${i + 1}`
+    //     });
+    //     classes.push(cla);
+    // }
     return Class.create(classes);
 };
-
 
 const createUser = (role,length) => {
     let users = [];
@@ -31,8 +40,8 @@ const createUser = (role,length) => {
         users.push(user);
     }
     return users;
-
 };
+
 const seedUser = async (model,length) => {
     const users = createUser(model,length);
     const Model = mongoose.model(model);
@@ -45,6 +54,7 @@ const seedUser = async (model,length) => {
     });
     return Model.create(results);
 };
+
 function getRandomInt(min = 0, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -54,21 +64,31 @@ function getRandomInt(min = 0, max) {
  * @param majors
  * @param terms
  * @param lecturers
- * @returns {Promise.<void>}
+ * @returns {Promise<courses>}
  */
 let seedCourse = async (number,majors,terms,lec) => {
-    let courses = [];
-    for (let i=0;i<number;i++){
-        let lecturer = lec[getRandomInt(0,lec.length)];
-        let lecturers = [...[],lecturer];
-        let course = new Course({
-            name : `INT${getRandomInt(0,2000)}`,
-            lecturers: lecturers,
+    // let courses = [];
+    // for (let i=0;i<number;i++){
+    //     let lecturer = lec[getRandomInt(0,lec.length)];
+    //     let lecturers = [...[],lecturer];
+    //     let course = new Course({
+    //         name : `INT${getRandomInt(0,2000)}`,
+    //         lecturers: lecturers,
+    //         major: majors[0]._id,
+    //         term: terms._id,
+    //     });
+    //     courses.push(course);
+    // }
+    //all course in a term
+    const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
+    const courses = _(crawler).unionBy('course').map(e => {
+        return new Course({
+            _id: e.course,
+            name: e.courseName,
             major: majors[0]._id,
             term: terms._id,
         });
-        courses.push(course);
-    }
+    }).value();
     return Course.create(courses);
 };
 /**
@@ -97,23 +117,51 @@ let seedMajor = async () => {
  */
 let seedTerm = async () => {
     return new Term({
-        name: 'Học kì I năm học 2016-2017'
+        name: 'Học kì II năm học 2017-2018'
     }).save();
 };
 
-async function seedStudent(classes, courses, number) {
-    let users = createUser('Student',number);
-    let userStudents = await User.create(users);
-    let students = userStudents.map((user,index) => {
+async function seedStudent() {
+    const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
+    const groupByStudent = _(crawler)
+        .groupBy('msv')
+        .value();
+    // code student => courses
+    const coursesByMsv = _.reduce(groupByStudent, (result, rows, msv) => {
+        const courses = _(rows).map(row => row.course).value();
+        result[msv] = courses;
+        return result;
+    }, {});
+    //create user
+    const users = _(groupByStudent)
+        .map((rows, msv) => {
+            return new User({
+                email : `${msv}@vnu.edu.vn` ,
+                password : msv,
+                role: 'Student'
+            });
+        }).value();
+
+    const userIdByCode = _(users).reduce((result,user) => {
+        const msv = user.email.split('@')[0];
+        result[msv] = user._id;
+        return result;
+    },{});
+    //create student with id User
+    const students = _.map(groupByStudent, (rows, msv) => {
         return new Student({
-            _id:user._id,
-            name: faker.name.lastName(),
-            class : classes[getRandomInt(0,classes.length)].id,
-            courses : [courses[getRandomInt(0,courses.length)].id],
-            code : index
+            _id: userIdByCode[msv],
+            code: msv,
+            name: rows[0].name,
+            courses: coursesByMsv[msv],
+            class: rows[0].class
         });
     });
-    return Student.create(students);
+
+    return Promise.all([
+        User.create(users),
+        Student.create(students)
+    ]);
 }
 
 const seed = async () => {
@@ -142,7 +190,7 @@ const seed = async () => {
         let courses = await seedCourse(4,majors,terms,lecturers);
         console.log('seed success course');
 
-        let students = await seedStudent(classes,courses,10);
+        let students = await seedStudent();
         console.log('seed success student');
 
     } catch (err) {

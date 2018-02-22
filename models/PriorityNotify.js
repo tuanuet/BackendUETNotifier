@@ -1,7 +1,11 @@
 /* eslint-env node */
 var mongoose= require('mongoose');
 var MucDoThongBaoSchema = new mongoose.Schema({
-    name :{
+    code : {
+        type: String,
+        required: true,
+    },
+    name : {
         type: String,
         required : true
     }

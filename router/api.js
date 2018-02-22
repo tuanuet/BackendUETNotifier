@@ -24,7 +24,7 @@ router.route('/mucdothongbao')
     .get(apiController.getPriorities);
 
 router.get('/thongbao/:id',apiController.getAnnouncementById);
-
+router.get('/avatar/:userId',apiController.getAvatarByUserId);
 /**
  * Primary router smartPhone.
  */

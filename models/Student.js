@@ -14,11 +14,11 @@ var SinhVienSchema =new  mongoose.Schema({
         index:true
     },
     class:{
-        type: mongoose.Schema.ObjectId,
+        type: String,
         ref :'Class'
     },
     courses:[{
-        type: mongoose.Schema.ObjectId,
+        type: String,
         ref: 'Course'
     }],
     code :{
