@@ -6,7 +6,7 @@ import New from '../models/New';
 import * as service from '../service';
 import * as helper from '../helper';
 import {KIND_OF_NEW_LIST,NEW_LIMIT} from '../constant';
-
+import path from 'path';
 export const getKindOfNews = async (req,res) => {
     let loaiTinTucs = KIND_OF_NEW_LIST();
     res.json(loaiTinTucs);
@@ -27,6 +27,10 @@ export const getAnnouncementById = async (req, res, next) => {
     res.json(announce);
 };
 
+export const getAvatarByUserId = async (req,res,next) => {
+    console.log(path.resolve(__dirname,'../public/assets/images/avatar-1.jpg'));
+    res.sendFile(path.resolve(__dirname,'../public/assets/images/avatar-1.jpg'));
+};
 /**
  *  API FOR ANDROID
  */

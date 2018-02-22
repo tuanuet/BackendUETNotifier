@@ -9,7 +9,7 @@ export const sendTopic = (announcement, topic, kind) => {
 
     let {title, content, _id, file, priorityNotify, kindOfAnnouncement, sender} = announcement;
     const data = AnnouncementNotification(
-        title, content, _id, priorityNotify._id, kindOfAnnouncement._id, kind, file ? 1 : 0, sender._id, sender.name
+        title, content, _id, priorityNotify._id, kindOfAnnouncement._id, kind, file ? 1 : 0, sender._id, sender.name, priorityNotify.code
     );
     return firebaseService.toTopic(topic,data);
 };

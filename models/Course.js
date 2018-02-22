@@ -2,6 +2,10 @@
 var mongoose = require('mongoose');
 
 var LopMonHocSchema = mongoose.Schema({
+    _id: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
