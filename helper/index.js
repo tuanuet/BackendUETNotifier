@@ -16,6 +16,10 @@ export const changeAlias = (alias) => {
     return str;
 };
 
+export const snakeCaseArray = (strings) => {
+    return _(strings).map(tag => _.snakeCase(changeAlias(tag))).value();
+};
+
 export const getTagsOfNews = (tags) => {
     return _(tags).map(tag => {
         return {

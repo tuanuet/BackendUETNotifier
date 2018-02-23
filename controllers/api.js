@@ -3,21 +3,23 @@ import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import Priority from '../models/PriorityNotify';
 import Announcement from '../models/Announcement';
 import New from '../models/New';
+import Student from '../models/Student';
 import * as service from '../service';
 import * as helper from '../helper';
-import {KIND_OF_NEW_LIST,NEW_LIMIT} from '../constant';
+import {KIND_OF_NEW_LIST, NEW_LIMIT} from '../constant';
 import path from 'path';
-export const getKindOfNews = async (req,res) => {
+
+export const getKindOfNews = async (req, res) => {
     let loaiTinTucs = KIND_OF_NEW_LIST();
     res.json(loaiTinTucs);
 };
 
-export const getKindOfAnnouncements = async (req,res) => {
+export const getKindOfAnnouncements = async (req, res) => {
     let kindOfAnnouncements = await KindOfAnnouncement.find({});
     res.json(kindOfAnnouncements);
 };
 
-export const getPriorities = async (req,res) => {
+export const getPriorities = async (req, res) => {
     let priorities = await Priority.find({});
     res.json(priorities);
 };
@@ -27,18 +29,18 @@ export const getAnnouncementById = async (req, res, next) => {
     res.json(announce);
 };
 
-export const getAvatarByUserId = async (req,res,next) => {
-    console.log(path.resolve(__dirname,'../public/assets/images/avatar-1.jpg'));
-    res.sendFile(path.resolve(__dirname,'../public/assets/images/avatar-1.jpg'));
+export const getAvatarByUserId = async (req, res, next) => {
+    console.log(path.resolve(__dirname, '../public/assets/images/avatar-1.jpg'));
+    res.sendFile(path.resolve(__dirname, '../public/assets/images/avatar-1.jpg'));
 };
 /**
  *  API FOR ANDROID
  */
-export const getNewsPagination = async (req,res) => {
+export const getNewsPagination = async (req, res) => {
     try {
         const idTag = req.query.loaitintuc;
         const offset = parseInt(req.query.offset);
-        if(idTag === 'tat_ca_tin_tuc'){
+        if (idTag === 'tat_ca_tin_tuc') {
             return res.json(await New.find().skip(offset).limit(NEW_LIMIT));
         }
         const tag = helper.getNameTagBySnake(idTag);
@@ -50,9 +52,18 @@ export const getNewsPagination = async (req,res) => {
 
 };
 
-export const getDetailNew = async (req,res) => {
+export const getDetailNew = async (req, res) => {
     const url = req.query.url;
-    res.render('api/detail-new',{
-        result : await service.parseDetailNew(url)
+    res.render('api/detail-new', {
+        result: await service.parseDetailNew(url)
     });
+};
+
+export const getCourse = async (req, res) => {
+    let student = await Student.findById(req.user._id);
+    res.json(helper.snakeCaseArray(student.courses));
+};
+
+export const getMark = async (req, res) => {
+    //todo: return mark
 };

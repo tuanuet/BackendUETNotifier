@@ -132,7 +132,7 @@ var getInfoClass = function getInfoClass(worksheet, matrix) {
         if (JSON.stringify(worksheet[z].v).indexOf('Lớp môn học') > -1) {
             var columnLopmh = String.fromCharCode(67 + (z.charCodeAt(0) - 65)); //tinh them 2 o nua
             var row = parseInt(retnum(z));
-            idCourse = worksheet[columnLopmh + row].v;
+            idCourse = _.snakeCase(worksheet[columnLopmh + row].v);
         }
         if (JSON.stringify(worksheet[z].v).indexOf('Năm học') > -1) {
             nameTerm = worksheet[z].v;

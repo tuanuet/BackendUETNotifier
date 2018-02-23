@@ -54,7 +54,7 @@
 
     $(document).ready(function () {
         function getLabelCourse(idCourse){
-            return idCourse.replace(' ','_')
+            return _.snakeCase(idCourse)
         }
 
         let courses = [];
@@ -64,7 +64,6 @@
 
             $("#btn-submit").append('<button id="pushnotification" type="button" class="btn btn-primary" name="file">Push Notification All</button>')
             for (let  i = 0; i < this.files.length; ++i) {
-                console.log(i);
                 var reader = new FileReader();
                 let name = this.files[i].name.toLowerCase().trim();
                 reader.onload = function (e) {
@@ -133,5 +132,4 @@
     })
 
 </script>
-
 
