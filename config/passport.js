@@ -67,6 +67,20 @@ export const isAuthenticated = (req, res, next) => {
     res.redirect('/user/login');
 };
 
+/**
+ * Login Required middleware.
+ */
+export const mobileIsAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.status(501).json({
+        success: false,
+        message: 'Error authenticate!'
+    });
+};
+
+
 export const reqIsAdmin= function (req,res,next) {
     if (req.user.role === 'Admin')
         return next();

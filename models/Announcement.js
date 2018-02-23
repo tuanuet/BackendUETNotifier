@@ -36,7 +36,6 @@ const ThongBaoSchema = Schema({
     kindOfAnnouncement:{
         type: mongoose.Schema.ObjectId,
         ref: 'KindOfAnnouncement',
-        required: true
     },
     priorityNotify:{
         type: mongoose.Schema.ObjectId,
@@ -99,6 +98,7 @@ ThongBaoSchema.statics.findOneJoinAll = function (params){
 ThongBaoSchema.methods.getMessage = async function() {
     return mongoose.model('Announcement').findOneJoinAll({_id : this._id});
 };
+
 //no feedback
 ThongBaoSchema.statics.findJoinAllLimitOffset = function(params,limit = 10,offset = 0) {
     return this

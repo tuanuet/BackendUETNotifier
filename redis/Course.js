@@ -1,12 +1,13 @@
 import Redis from '../config/redis';
 const redisClient = Redis();
-
+import {snakeCaseArray} from '../helper';
 import _ from 'lodash';
 
 export default class Course{
     constructor(idCourse,headers,points){
         this.id = idCourse.toString().trim();
-        this.headers = headers;
+
+        this.headers =snakeCaseArray(headers);
         this.points = points;
     }
     async save(){
@@ -23,6 +24,6 @@ export default class Course{
         }
     }
     getKeyCourse(){
-        return this.id.replace(' ','_');
+        return _.snakeCase(this.id);
     }
 }

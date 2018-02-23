@@ -3,7 +3,7 @@ import Priority from '../models/PriorityNotify';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
-import {sendClass, sendTopic} from '../service';
+import {sendClass, sendCourse, sendTopic,sendMark} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
@@ -55,7 +55,7 @@ export const postAnnounceAll = async (req, res) => {
 
         const message = await announce.getMessage();
         //todo : announce for student by kindOfAnnouncement
-        const response = await sendTopic(message,message.kindOfAnnouncement._id, KIND_ANNOUNCEMENT);
+        const response = await sendTopic(message,message.kindOfAnnouncement._id);
         console.log('response',response);
 
         req.flash('success','Push Announcement success!');
@@ -100,8 +100,6 @@ export const postAnnounceClasses = async (req,res) => {
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
-
-        console.log(req.body);
 
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
@@ -279,12 +277,32 @@ export const getMark = (req ,res) => {
 };
 
 export const postMarks = async (req ,res) => {
+    let sender = req.user.id;
+    let kindOfSender = req.user.role;
     try{
         let courses = req.body.data;
-        console.log(courses.length);
         let idCoursePromises = _(courses).map(async c => {
             let course = new RedisCourse(c.informationClass.idCourse,c.headers,c.points);
-            return await course.save();
+            // create Announcement
+            let notifiMarkData = await (new Announcement({
+                title : 'Thông báo điểm thi',
+                content : `Đã có điểm thi môn ${c.informationClass.courseName}`,
+                link: `${course.getKeyCourse()}`,
+                kindOfAnnouncement : null,
+                priorityNotify: (await Priority.findOne({code : 'canh_bao'}))._id,
+                sender,
+                kindOfSender,
+                file : null,
+                kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
+            }).save()).then(a => a.getMessage());
+            // sendTo topic
+
+            const results = await Promise.all([
+                //todo:sendMark(announce,course.getKeyCourse()),
+                sendMark(notifiMarkData,'int_4050'),
+                course.save()
+            ]);
+            return results[1];
         });
 
         let idCourses = await Promise.all(idCoursePromises);
@@ -293,7 +311,6 @@ export const postMarks = async (req ,res) => {
             idCourses
         });
     } catch (err){
-        console.log(err);
         res.status(500).json({
             success :  false
         });

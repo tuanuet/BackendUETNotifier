@@ -1,9 +1,12 @@
 /* eslint-env node */
+import passport from 'passport';
+
 const express = require('express');
 const router = express.Router();
 const apiController = require('../controllers/api');
 const multer = require('multer');
 import path from 'path';
+import * as passportMiddleware from '../config/passport';
 const userController = require('../controllers/user');
 
 const storage = multer.diskStorage({
@@ -31,5 +34,6 @@ router.get('/avatar/:userId',apiController.getAvatarByUserId);
 router.post('/authenticate', userController.postAuthenticate);
 router.get('/news',apiController.getNewsPagination);
 router.get('/new/detail',apiController.getDetailNew);
-
+router.get('/courses',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getCourse);
+router.get('/mark/:idCourse',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getMark);
 module.exports = router;
