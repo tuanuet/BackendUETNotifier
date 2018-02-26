@@ -83,12 +83,13 @@ let seedCourse = async (number,majors,terms,lec) => {
     const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
     const courses = _(crawler).unionBy('course').map(e => {
         return new Course({
-            _id: e.course,
+            _id: _.snakeCase(e.course),
             name: e.courseName,
             major: majors[0]._id,
             term: terms._id,
         });
-    }).value();
+    }).unionBy('_id').value();
+
     return Course.create(courses);
 };
 /**

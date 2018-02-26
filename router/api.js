@@ -32,6 +32,7 @@ router.get('/avatar/:userId',apiController.getAvatarByUserId);
  * Primary router smartPhone.
  */
 router.post('/authenticate', userController.postAuthenticate);
+router.post('/logout',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.postLogout);
 router.get('/news',apiController.getNewsPagination);
 router.get('/new/detail',apiController.getDetailNew);
 router.get('/courses',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getCourse);

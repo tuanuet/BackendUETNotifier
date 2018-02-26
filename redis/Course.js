@@ -6,7 +6,6 @@ import _ from 'lodash';
 export default class Course{
     constructor(idCourse,headers,points){
         this.id = idCourse.toString().trim();
-
         this.headers =snakeCaseArray(headers);
         this.points = points;
     }

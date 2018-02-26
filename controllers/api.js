@@ -8,6 +8,18 @@ import * as service from '../service';
 import * as helper from '../helper';
 import {KIND_OF_NEW_LIST, NEW_LIMIT} from '../constant';
 import path from 'path';
+import Course from '../models/Course';
+import * as response from '../response';
+import Mark from '../redis/Mark';
+
+export const postLogout = async (req,res) => {
+    req.logout();
+    res.status(200).json({
+        success: true,
+        message: 'Bạn đã đăng xuất thành công!'
+    });
+
+};
 
 export const getKindOfNews = async (req, res) => {
     let loaiTinTucs = KIND_OF_NEW_LIST();
@@ -60,10 +72,28 @@ export const getDetailNew = async (req, res) => {
 };
 
 export const getCourse = async (req, res) => {
-    let student = await Student.findById(req.user._id);
-    res.json(helper.snakeCaseArray(student.courses));
+    try {
+        let student = await Student.findById(req.user._id);
+        res.json(helper.snakeCaseArray(student.courses));
+    } catch (err) {
+        res.status(500).json({
+            success : false,
+            message : err.message
+        });
+    }
 };
 
 export const getMark = async (req, res) => {
-    //todo: return mark
+    const idCourse = req.params.idCourse;
+    // let course = await Course.findOne({
+    //     _id : idCourse
+    // });
+
+    //todo : test
+    let course = await Course.find({});
+    let data = await Mark.getMarkByKeyCourse(idCourse);
+    // let data = _(redisData).map();
+
+    return res.json(response.MarkResponse(course[0],data));
+
 };
