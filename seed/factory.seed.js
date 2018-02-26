@@ -5,12 +5,15 @@ import Student from '../models/Student';
 import Class from '../models/Class';
 import mongoose from 'mongoose';
 import Course from '../models/Course';
+import Lecturer from '../models/Leturer';
 import Major from '../models/Major';
 import Term from '../models/Term';
 const jsonfile = require('jsonfile');
 const _ = require('lodash');
+const helper = require('../helper');
 import path from 'path';
 const PATH_JSON_FILE_RESOURCE = path.resolve(__dirname,'./data/crawler.json');
+const PATH_JSON_LECTURER_FILE_RESOURCE = path.resolve(__dirname,'./data/lecturer.json');
 const seedMainClass = async () => {
     const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
     const classes = _(crawler).unionBy('class').map(e => {
@@ -19,13 +22,7 @@ const seedMainClass = async () => {
             name: e.class
         });
     }).value();
-    // let classes = [];
-    // for (let i=0;i<10;i++) {
-    //     let cla = new Class({
-    //         name: `Class ${i + 1}`
-    //     });
-    //     classes.push(cla);
-    // }
+
     return Class.create(classes);
 };
 
@@ -66,25 +63,28 @@ function getRandomInt(min = 0, max) {
  * @param lecturers
  * @returns {Promise<courses>}
  */
-let seedCourse = async (number,majors,terms,lec) => {
-    // let courses = [];
-    // for (let i=0;i<number;i++){
-    //     let lecturer = lec[getRandomInt(0,lec.length)];
-    //     let lecturers = [...[],lecturer];
-    //     let course = new Course({
-    //         name : `INT${getRandomInt(0,2000)}`,
-    //         lecturers: lecturers,
-    //         major: majors[0]._id,
-    //         term: terms._id,
-    //     });
-    //     courses.push(course);
-    // }
+let seedCourse = async (number,majors,terms,lecturers) => {
     //all course in a term
     const crawler = jsonfile.readFileSync(PATH_JSON_FILE_RESOURCE);
+    const lecturerCrawler = jsonfile.readFileSync(PATH_JSON_LECTURER_FILE_RESOURCE);
+
+    const groupByCourseId = _(lecturerCrawler)
+        .groupBy('courseId')
+        .value();
+
+    const getLecturerByCourseId = courseId => {
+        let lecturerNames = _.map(groupByCourseId[courseId], item => item.lecturerName);
+
+        return lecturers.filter(lecturer => {
+            return _.some(lecturerNames,name => name === lecturer.name);
+        }).map(lecturer => lecturer._id);
+    };
     const courses = _(crawler).unionBy('course').map(e => {
         return new Course({
             _id: _.snakeCase(e.course),
             name: e.courseName,
+            lecturers: getLecturerByCourseId(e.course),
+
             major: majors[0]._id,
             term: terms._id,
         });
@@ -154,7 +154,7 @@ async function seedStudent() {
             _id: userIdByCode[msv],
             code: msv,
             name: rows[0].name,
-            courses: coursesByMsv[msv],
+            courses: helper.snakeCaseArray(coursesByMsv[msv]),
             class: rows[0].class
         });
     });
@@ -165,6 +165,37 @@ async function seedStudent() {
     ]);
 }
 
+async function seedLecturer() {
+
+    const lecturerCrawler = jsonfile.readFileSync(path.resolve(__dirname,'./data/lecturer.json'));
+    const groupByLecture = _(lecturerCrawler).groupBy('lecturerName').value();
+    const lecturers = _(groupByLecture).map((items, name) => name.split(';')[0]).union().value();
+
+    const nameLecturers = helper.getNameLecturerArray(lecturers);
+    const snakeCaseEmails = helper.snakeCaseArray(nameLecturers);
+
+    const users = _(snakeCaseEmails).map(email => {
+        return new User({
+            email : `${email}@vnu.edu.vn` ,
+            password : '1',
+            role: 'Lecturer'
+        });
+    }).value();
+
+    const lecs = _(users).map((user,pos) => {
+        return new Lecturer({
+            _id: user._id,
+            name: lecturers[pos]
+        });
+    }).value();
+
+    const dataSave = await Promise.all([
+        User.create(users),
+        Lecturer.create(lecs)
+    ]);
+
+    return dataSave[1];
+}
 const seed = async () => {
     try {
         let admins = await seedUser('Admin',10);
@@ -179,8 +210,10 @@ const seed = async () => {
         let classes = await seedMainClass();
         console.log('seed success class');
 
-        let lecturers =  await seedUser('Lecturer',10);
+        //seed lectuer ========================================================
+        let lecturers = await seedLecturer();
         console.log('seed success lecturer');
+
 
         let majors = await seedMajor();
         console.log('seed success major');

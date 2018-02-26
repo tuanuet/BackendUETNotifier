@@ -1,6 +1,7 @@
 /* eslint-env node */
 
 import Student from '../models/Student';
+import * as helper from '../helper';
 
 export const saveToken = async (req,res) => {
     try {
@@ -18,6 +19,16 @@ export const saveToken = async (req,res) => {
     }
 };
 
-export const getSubcribe = async (req,res) => {
-
+export const getProfile = async (req,res) => {
+    const student = await Student.findOne({
+        _id : req.user._id
+    })
+        .populate({
+            path :'courses' ,
+            populate : {
+                path : 'lecturers'
+            }
+        })
+        .populate('class');
+    res.json(helper.renameKeys(student._doc,{class : 'myClass'}));
 };

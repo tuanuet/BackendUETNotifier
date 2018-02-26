@@ -18,6 +18,9 @@ var LopMonHocSchema = mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref :'Lecturer'
     }],
+    sizeClass : {
+        type: Number
+    },
     major :{
         type: mongoose.Schema.ObjectId
     }

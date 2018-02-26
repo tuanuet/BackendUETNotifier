@@ -6,7 +6,4 @@ import * as studentController from '../controllers/student';
 
 router.post('/savetoken',studentController.saveToken);
 
-router.get('/subscribe',studentController.getSubcribe);
-
-
 module.exports = router;

@@ -4,6 +4,7 @@ import passport from 'passport';
 const express = require('express');
 const router = express.Router();
 const apiController = require('../controllers/api');
+const studentController = require('../controllers/student');
 const multer = require('multer');
 import path from 'path';
 import * as passportMiddleware from '../config/passport';
@@ -32,9 +33,11 @@ router.get('/avatar/:userId',apiController.getAvatarByUserId);
  * Primary router smartPhone.
  */
 router.post('/authenticate', userController.postAuthenticate);
-router.post('/logout',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.postLogout);
+router.post('/logout',apiController.postLogout);
 router.get('/news',apiController.getNewsPagination);
 router.get('/new/detail',apiController.getDetailNew);
 router.get('/courses',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getCourse);
 router.get('/mark/:idCourse',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getMark);
+router.get('/student/profile',passport.authenticate('jwt',{session: false}),passportMiddleware.mobileIsAuthenticated,studentController.getProfile);
+
 module.exports = router;
