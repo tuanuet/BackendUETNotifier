@@ -3,17 +3,18 @@ import Priority from '../models/PriorityNotify';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
-import {sendClass, sendCourse, sendTopic,sendMark} from '../service';
+import {sendClass, sendTopic,sendMark} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
-import {KINDOFRECEIVER,RECEIVER,KIND_ANNOUNCEMENT} from '../constant';
+import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import RedisCourse from '../redis/Course';
 import _ from 'lodash';
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
 };
+
 export const getAnnounceAll = async (req, res) => {
     const kindOfAnnouncement = await KindOfAnnouncement.find({});
     const priority = await Priority.find({});
@@ -189,7 +190,6 @@ export const postAnnounceCourses = async (req,res) => {
     res.redirect('/department/announce/courses');
 };
 
-
 /**
  * get notification for courses
  * @param req
@@ -256,7 +256,6 @@ export const postAnnounceStudents = async (req,res) => {
     res.redirect('/department/announce/courses');
 };
 
-
 export const getHistoryAnnounce = (req, res) => {
     res.render('department/announce-history');
 };
@@ -316,6 +315,7 @@ export const postMarks = async (req ,res) => {
         });
     }
 };
+
 export const getAnnounce = (req,res) => {
     res.send(req.url);
 };

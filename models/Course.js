@@ -10,35 +10,57 @@ var LopMonHocSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    term : {
+    term: {
         type: mongoose.Schema.ObjectId,
-        ref : 'Term'
+        ref: 'Term'
     },
-    lecturers : [{
+    lecturers: [{
         type: mongoose.Schema.ObjectId,
-        ref :'Lecturer'
+        ref: 'Lecturer'
     }],
-    sizeClass : {
+    sizeClass: {
         type: Number
     },
-    major :{
+    major: {
         type: mongoose.Schema.ObjectId
     }
-},{timestamps : true});
+}, {timestamps: true});
 
-LopMonHocSchema.methods.findJoinAll =  (params) => {
+LopMonHocSchema.methods.findJoinAll = (params) => {
     return LopMonHocSchema.find(params).populate([
         {
-            path:'term'
+            path: 'term'
         },
         {
-            path:'lecturer',
-            populate:{
-                path:'faculty'
+            path: 'lecturer',
+            populate: {
+                path: 'faculty'
             }
         }
     ]);
 };
 
+LopMonHocSchema.statics.getCoursesByIdLecturer = function (idLecturer) {
+    return this.find({
+        lecturers: idLecturer
+    });
+};
 
-module.exports = mongoose.model('Course',LopMonHocSchema);
+LopMonHocSchema.statics.updateLecturerById = function (_id, idLecturer, isPush) {
+
+    if (isPush == 'true') {
+        return this.update(
+            {_id},
+            {$push: {lecturers: idLecturer}},
+        );
+    } else if (isPush == 'false'){
+        return this.update(
+            {_id},
+            {$pull: {lecturers: idLecturer}},
+        );
+    }
+
+};
+
+
+module.exports = mongoose.model('Course', LopMonHocSchema);
