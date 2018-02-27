@@ -64,4 +64,10 @@ TinTucSchema.statics.findByTagName = function (tagName) {
         .sort({'postAt': -1});
 };
 
+TinTucSchema.statics.findTenNews = function () {
+    return this.find({})
+        .limit(10)
+        .sort({'postAt': -1});
+};
+
 module.exports = mongoose.model('New',TinTucSchema);

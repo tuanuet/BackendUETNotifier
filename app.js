@@ -130,7 +130,6 @@ app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
         title : 'Home'
     });
 });
-
 app.use('/admin',admin);
 app.use('/department',department);
 app.use('/lecturer',lecturer);
@@ -143,6 +142,11 @@ app.use('/test',testAPI);
  * Error Handler.
  */
 app.use(errorHandler());
+/**
+ * start cronjob
+ */
+const job = require('./cron/news');
+job.start();
 
 /**
  * Start Express server.

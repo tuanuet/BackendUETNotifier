@@ -11,4 +11,9 @@ router.get('/sendNewsNotification',async (req,res) => {
     res.json();
 });
 
+router.get('/ten-news',async (req,res) => {
+    let news = await New.findTenNews();
+    res.json(news);
+});
+
 module.exports = router;

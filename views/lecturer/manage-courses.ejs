@@ -24,9 +24,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card-box">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#modal-my-course" data-animation="fadein">Lớp môn học của tôi</button>
                         <div class="table-responsive">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modal-my-course" data-animation="fadein">Lớp môn học của tôi</button>
-                            <table id="datatable" class="table table-hover mails m-0 table table-actions-bar">
+                            <table id="datatable" class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
@@ -93,16 +93,19 @@
         });
     }
     $(document).ready(function () {
-        var myCourseModal = $("#modal-my-course").modal();
+        var myCourses= [];
         $(document).on("click",'#modal-my-course table button',function () {
             var idCourse = $(this).attr('data-value');
             var _that = this;
             postRegisterCourse(idCourse,false,function (data) {
                 if(data.ok === 1){
+                    myCourses = myCourses.filter(function (course) {
+                        return course._id !== idCourse;
+                    });
+
                     $(_that).parent().parent().empty();
-                    console.log($('#datatable').find('tr button[data-value="'+idCourse+'"]'));
                     $('#datatable').find('tr button[data-value="'+idCourse+'"]')
-                        .addClass("btn-primary").removeClass("btn-danger").find("i").addClass("fa-paint-brush").removeClass("fa-pencil")
+                        .addClass("btn-primary").removeClass("btn-danger").attr("disabled",false).find("i").addClass("fa-paint-brush").removeClass("fa-pencil")
                 }
             })
         })
@@ -111,6 +114,7 @@
             method: 'GET',
             url: `/lecturer/courses`,
             success: function (courses) {
+                myCourses = courses;
                 _.each(courses,function(course,index){
                     $("#modal-my-course").find('tbody').append(
                         "<tr>\n" +
@@ -132,42 +136,45 @@
                         {data: '_id', name: '_id',},
                         {data: 'name', name: 'name'},
                         {data: 'term.name', name: 'term'},
-                        {data: 'action', name: 'action',render : function (data, type, row) {
-                                function isRegister(row){
-                                    return _.some(courses,function (course) {
-                                        return course._id === row._id
-                                    })
-                                }
-                                if (!isRegister(row)) {
-                                    return '<button class="btn btn-primary waves-effect waves-light btn-edit" data-value="'+ row._id+'"><i class="fa fa-paint-brush"></i></button>'
-                                } else {
-                                    return '<button class="btn btn-danger waves-effect waves-light btn-edit" data-value="'+ row._id+'"><i class="fa fa-pencil"></i></button>'
-                                }
-
+                        {data: 'action', name: 'action',render: function (data, type, row) {
+                                return '<button class="btn btn-primary waves-effect waves-light btn-edit" data-value="'+ row._id+'"><i class="fa fa-paint-brush"></i></button>'
                             }},
                     ],
-                    "initComplete": function () {
-                        var api = this.api();
-                        api.$('button').click( function () {
-                            $(this).removeClass("btn-primary").addClass("btn-danger").find("i").removeClass("fa-paint-brush").addClass("fa-pencil")
-                            var _data = api.row($(this).parents('tr')).data();
-                            postRegisterCourse(_data._id,true,function (data) {
-                                if(data.ok === 1){
-                                    var _length = $("#modal-my-course").find('tbody tr').length;
-                                    $("#modal-my-course").find('tbody').append(
-                                        "<tr>\n" +
-                                        "  <td>"+ _data._id +"</td>\n" +
-                                        "  <td>"+ _data.name +"</td>\n" +
-                                        "  <td>" +
-                                        "       <button class=\"btn btn-danger waves-effect waves-light btn-edit\" data-value=\""+  _data._id + "\">" +
-                                        "           <i class=\"fa fa-pencil\"></i>" +
-                                        "       </button>" +
-                                        "  </td>\n" +
-                                        "</tr>")
-                                }
+                    drawCallback: function (setting) {
+                        function isRegister(row){
+                            return _.some(myCourses,function (course) {
+                                return course._id === row._id
                             })
-                        } );
+                        }
+                        _.each(setting.json.data,function (row) {
+                            if (isRegister(row)) {
+                                $('#datatable').find('tr button[data-value="'+row._id+'"]')
+                                    .removeClass('btn-primary').addClass('btn-danger').attr("disabled","disabled").find('i').removeClass("fa-paint-brush").addClass("fa-pencil")
+                            }
+                        })
+
                     }
+                });
+                $(document).on('click','#datatable button',function () {
+                    $(this).removeClass("btn-primary").addClass("btn-danger").attr("disabled","disabled").find("i").removeClass("fa-paint-brush").addClass("fa-pencil")
+                    var _data = table.api().row($(this).parents('tr')).data();
+
+                    myCourses.push(_data)
+
+                    postRegisterCourse(_data._id,true,function (data) {
+                        if(data.ok === 1){
+                            $("#modal-my-course").find('tbody').append(
+                                "<tr>\n" +
+                                "  <td>"+ _data._id +"</td>\n" +
+                                "  <td>"+ _data.name +"</td>\n" +
+                                "  <td>" +
+                                "       <button class=\"btn btn-danger waves-effect waves-light btn-edit\" data-value=\""+  _data._id + "\">" +
+                                "           <i class=\"fa fa-pencil\"></i>" +
+                                "       </button>" +
+                                "  </td>\n" +
+                                "</tr>")
+                        }
+                    })
                 });
             }
         });
