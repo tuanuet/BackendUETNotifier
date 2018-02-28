@@ -4,6 +4,7 @@ import Priority from '../models/PriorityNotify';
 import Announcement from '../models/Announcement';
 import New from '../models/New';
 import Student from '../models/Student';
+import Lecturer from  '../models/Leturer';
 import * as service from '../service';
 import * as helper from '../helper';
 import {KIND_OF_NEW_LIST, NEW_LIMIT} from '../constant';
@@ -95,5 +96,19 @@ export const getMark = async (req, res) => {
     // let data = _(redisData).map();
 
     return res.json(response.MarkResponse(course[0],data));
+
+};
+
+export const getInformationCourseById = async (req,res) => {
+    try {
+        const course = await Course.findCourseAndLecturerById(req.params.courseId);
+        const students = await Student.findByCourseId(req.params.courseId);
+        res.json({
+            course,
+            students
+        });
+    } catch (err) {
+        console.log(err)
+    }
 
 };

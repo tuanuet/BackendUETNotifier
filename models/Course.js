@@ -62,5 +62,8 @@ LopMonHocSchema.statics.updateLecturerById = function (_id, idLecturer, isPush) 
 
 };
 
+LopMonHocSchema.statics.findCourseAndLecturerById = function (courseId) {
+    return this.findById(courseId).populate('lecturers');
+};
 
 module.exports = mongoose.model('Course', LopMonHocSchema);

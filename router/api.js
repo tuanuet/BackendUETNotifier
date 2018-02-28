@@ -40,4 +40,5 @@ router.get('/courses',passport.authenticate('jwt', {session: false}),passportMid
 router.get('/mark/:idCourse',passport.authenticate('jwt', {session: false}),passportMiddleware.mobileIsAuthenticated,apiController.getMark);
 router.get('/student/profile',passport.authenticate('jwt',{session: false}),passportMiddleware.mobileIsAuthenticated,studentController.getProfile);
 
+router.get('/info/course/:courseId',apiController.getInformationCourseById);
 module.exports = router;

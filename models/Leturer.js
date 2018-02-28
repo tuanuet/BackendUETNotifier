@@ -22,7 +22,9 @@ LecturerSchema.statics.findJoinAll = (params) => {
 LecturerSchema.statics.findOneJoinAll = (params) => {
     return LecturerSchema.findOne(params);
 };
-
+LecturerSchema.statics.findByCourseId = function (courseId) {
+    return this.find({ courses : { $in: [courseId] }});
+};
 module.exports = mongoose.model('Lecturer',LecturerSchema);
 
 

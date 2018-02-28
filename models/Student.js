@@ -80,5 +80,33 @@ SinhVienSchema.statics.findTokenByCode = function (code) {
     });
 };
 
+SinhVienSchema.statics.findByCourseId = function (idCourse) {
+    return this
+        .aggregate([
+            {$match : { courses : { $in: [idCourse] }}},
+            {$sort : {code : 1}},
+            {
+                $lookup: {
+                    from: 'classes',
+                    localField: 'class',
+                    foreignField: '_id',
+                    as: 'myClass'
+                }
+            },
+            // Unwind the result arrays ( likely one or none )
+            { $unwind: '$myClass' },
+            {
+                $project: {
+                    class: 0,
+                    courses: 0
+                }
+            }
+        ]);
+        // .populate('class')
+        // .sort('code')
+        // .select('-courses');
+        //
+};
+
 module.exports = mongoose.model('Student',SinhVienSchema);
 
