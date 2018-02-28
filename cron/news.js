@@ -7,8 +7,9 @@ const PAGE_CHECK = 'https://uet.vnu.edu.vn/category/tin-tuc/tin-sinh-vien/';
 const New = require('../models/New');
 
 let job = new CronJob({
-    cronTime: '* */30 * * * 1-5',
+    cronTime: '* 15 * * * 1-5',
     onTick: function () {
+        console.log('run here!');
         Promise.all([
             service.getNewsInpage(PAGE_CHECK),
             New.findTenNews()
