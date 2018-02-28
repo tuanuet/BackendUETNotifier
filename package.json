@@ -12,6 +12,7 @@
     "start:w": "nodemon app.js --exec babel-node --presets es2015,stage-0",
     "start:seed": "babel-node ./seed/dropdb.js && babel-node app.js seed",
     "postinstall": "npm rebuild node-sass",
+    "start:prod": "pm2 start app.js --interpreter ./node_modules/.bin/babel-node",
     "eslint": "eslint **/*.js --fix"
   },
   "dependencies": {

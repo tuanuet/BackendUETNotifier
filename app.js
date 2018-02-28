@@ -160,7 +160,6 @@ app.listen(app.get('port'), async () => {
         await require('./seed/kindAnnouncement.seed').seed();
         await require('./seed/new.seed').seed();
     }
-
 });
 
 module.exports = app;
