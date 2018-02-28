@@ -34,7 +34,7 @@ const ThongBaoSchema = Schema({
         ref: 'File'
     },
     kindOfAnnouncement:{
-        type: mongoose.Schema.ObjectId,
+        type: String,
         ref: 'KindOfAnnouncement',
     },
     priorityNotify:{

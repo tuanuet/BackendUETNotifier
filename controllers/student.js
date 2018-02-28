@@ -8,7 +8,7 @@ export const saveToken = async (req,res) => {
         var tokenFirebase = req.body.tokenFirebase;
         if (!tokenFirebase) throw new Error('no have token in params');
 
-        await Student.findByIdAndUpdate(req.user._id, { $set: {token: tokenFirebase}}, { new: true })
+        await Student.findByIdAndUpdate(req.user._id, { $set: {token: tokenFirebase}}, { new: true });
         return res.json({success: true, message: 'ok'});
     } catch (err) {
         console.log(err);

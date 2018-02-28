@@ -11,4 +11,4 @@ export default (course,data) => {
         course,
         data
     };
-}
+};

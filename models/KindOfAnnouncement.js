@@ -5,6 +5,11 @@
 var mongoose = require('mongoose');
 
 var KindOfAnnoucement = new mongoose.Schema({
+    _id:{
+        type: String,
+        require:true,
+        unique: true,
+    },
     name: {
         type: String,
         require: true

@@ -136,7 +136,7 @@ let process = (workbook,cb) => {
         head : headersLabel,
         body : rows,
         info : infomationClass
-    }
+    };
     console.log(dataJson);
 
 
