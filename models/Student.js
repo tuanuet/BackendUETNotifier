@@ -101,7 +101,9 @@ SinhVienSchema.statics.findByCourseId = function (idCourse) {
                     courses: 0
                 }
             }
-        ]);
+        ])
+        .allowDiskUse(true);
+
         // .populate('class')
         // .sort('code')
         // .select('-courses');
