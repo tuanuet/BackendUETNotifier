@@ -98,3 +98,23 @@ export const toTopic = (topic,data) => {
         });
     });
 };
+
+export const toTokens = (tokens,data) => {
+    return new Promise((resolve, reject) => {
+        request({
+            url: 'https://gcm-http.googleapis.com/gcm/send',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `key=${process.env.SERVER_KEY}`
+            },
+            body: JSON.stringify({
+                'data': data,
+                'registration_ids': tokens
+            })
+        }, function (error, response, body) {
+            if (error) return reject(error);
+            return resolve(body);
+        });
+    });
+};

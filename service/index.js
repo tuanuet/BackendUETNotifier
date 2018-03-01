@@ -1,6 +1,6 @@
 import {
     sendTopic,
-    sendClass,
+    sendToTokens,
     sendCourse,
     sendStudent,
     sendMark
@@ -15,7 +15,7 @@ import {
 
 export {
     sendTopic,
-    sendClass,
+    sendToTokens,
     sendCourse,
     sendStudent,
     getAllNews,

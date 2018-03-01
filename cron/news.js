@@ -23,7 +23,8 @@ let job = new CronJob({
             .then( news => {
                 let promises = _.map(news,(n) => {
                     const data = n.getDataNotification();
-                    return firebaseService.toTopic(helper.getTagsOfNews(n.tags)[0]._id,data);
+                    const topics = helper.snakeCaseArray(n.tags);
+                    return firebaseService.toSomeTopicList(topics,data);
                 });
                 return Promise.all(promises);
             })
