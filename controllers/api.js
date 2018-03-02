@@ -54,7 +54,7 @@ export const getNewsPagination = async (req, res) => {
         const idTag = req.query.loaitintuc;
         const offset = parseInt(req.query.offset);
         if (idTag === 'tat_ca_tin_tuc') {
-            return res.json(await New.find().skip(offset).limit(NEW_LIMIT));
+            return res.json(await New.find().sort({'postAt': -1}).skip(offset).limit(NEW_LIMIT));
         }
         const tag = helper.getNameTagBySnake(idTag);
         let news = await New.findByTagName(tag.name).skip(offset).limit(NEW_LIMIT);
