@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {changeAlias} from '../helper';
+import * as helper from '../helper';
 export const KINDOFRECEIVER = ['All', 'Course', 'Class', 'Student'];
 export const RECEIVER = {ALL : 0, COURSE : 1, CLASS : 2, STUDENT : 3};
 
@@ -25,7 +25,7 @@ export const KIND_OF_NEW_LIST = () => {
         'Tin tức' ];
     return _(KIND_OF_NEW_LIST).map(item => {
         return {
-            _id: _.snakeCase(changeAlias(item)),
+            _id: helper.masterSnakeCase(item),
             name: item
         };
     }).value();

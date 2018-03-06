@@ -29,6 +29,9 @@ const removeChucVi = alias => {
     str = str.trim();
     return str;
 };
+export const masterSnakeCase = (string) => {
+    return _.snakeCase(changeAlias(string));
+};
 
 export const snakeCaseArray = (strings) => {
     return _(strings).map(tag => _.snakeCase(changeAlias(tag))).value();

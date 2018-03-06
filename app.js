@@ -66,7 +66,8 @@ app.use(sass({
     src: path.join(__dirname, 'public'),
     dest: path.join(__dirname, 'public')
 }));
-app.use(logger('dev'));
+
+app.use(logger(':date[iso] :method :url :status :response-time'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true ,parameterLimit: 1000000 }));
 app.use(expressValidator());
