@@ -2,6 +2,7 @@
 <html>
 <head>
     <%- partial('./partials/header')%>
+    <%- stylesheets%>
 </head>
 <body class="fixed-left">
 
@@ -11,7 +12,7 @@
         <%- partial(`./${user.role.toLowerCase()}/leftbar`)%>
         <%- body -%>
     </div>
+    <%- scripts%>
     <%- partial('./partials/script')%>
-
 </body>
 </html>

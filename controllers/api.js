@@ -12,6 +12,8 @@ import path from 'path';
 import Course from '../models/Course';
 import * as response from '../response';
 import Mark from '../redis/Mark';
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
 export const postLogout = async (req,res) => {
     req.logout();
@@ -38,7 +40,11 @@ export const getPriorities = async (req, res) => {
 };
 
 export const getAnnouncementById = async (req, res, next) => {
+    const view = 'api/detail-notification';
     let announce = await Announcement.findByIdJoinAll(req.params.id);
+    const decode = entities.decode(announce.content);
+    announce['content'] = await helper.renderPromise(res, view, decode);
+    console.log(announce);
     res.json(announce);
 };
 
@@ -108,7 +114,13 @@ export const getInformationCourseById = async (req,res) => {
             students
         });
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
+};
 
+export const fetchingNewsAndAnnouncement = async (req,res) => {
+    const time = null;
+    const topics = ['lich_thi'];
+    let announcements =await Announcement.fetching(topics,time);
+    res.jsonp(announcements);
 };

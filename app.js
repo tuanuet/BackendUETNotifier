@@ -124,6 +124,7 @@ const lecturer = require('./router/lecturer');
 const user = require('./router/user');
 const api = require('./router/api');
 const student = require('./router/student');
+const upload = require('./router/upload');
 const testAPI = require('./router/test');
 
 app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
@@ -138,6 +139,7 @@ app.use('/faculty',faculty);
 app.use('/user',user);
 app.use('/api',api);
 app.use('/student',passport.authenticate('jwt', {session: false}),student);
+app.use('/upload',upload);
 app.use('/test',testAPI);
 /**
  * Error Handler.

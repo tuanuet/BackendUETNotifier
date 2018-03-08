@@ -15,6 +15,15 @@ const ThongBaoSchema = Schema({
         type: String,
         required: true
     },
+    link:{
+        type: String,
+        sparse: true,
+    },
+    description:{
+        type: String,
+        sparse: true,
+        require: true
+    },
     sender:{
         type: mongoose.Schema.ObjectId,
         refPath: 'kindOfSender',
@@ -41,10 +50,6 @@ const ThongBaoSchema = Schema({
         type: mongoose.Schema.ObjectId,
         ref:'PriorityNotify',
         required: true
-    },
-    link:{
-        type: String,
-        sparse: true
     },
     feedback:[
         {
@@ -124,6 +129,12 @@ ThongBaoSchema.statics.findByIdJoinAll = function(id) {
             { path:'receiver'}
         ]);
 };
+ThongBaoSchema.statics.fetching = function (topics, lastTime= Date.now()) {
+    return this
+        .aggregate([
+            {$match : { kindOfAnnouncement : { $in: topics }}},
+        ]).allowDiskUse(true);
 
+};
 module.exports = mongoose.model('Announcement',ThongBaoSchema);
 

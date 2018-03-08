@@ -29,6 +29,16 @@ const removeChucVi = alias => {
     str = str.trim();
     return str;
 };
+export const renderPromise = (res,view,body) => {
+    return new Promise((resolve,reject) => {
+        res.render(view,{data : body},(err,html) => {
+            if(err) return reject(err);
+            return resolve(html);
+        });
+    });
+
+};
+
 export const masterSnakeCase = (string) => {
     return _.snakeCase(changeAlias(string));
 };

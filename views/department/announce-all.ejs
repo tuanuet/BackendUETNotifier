@@ -1,4 +1,6 @@
 <% layout('../layout') -%>
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_editor.pkgd.min.css')%>
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_style.min.css')%>
 <div class="content-page">
     <!-- Start content -->
     <div class="content">
@@ -34,15 +36,12 @@
                                     <label for="title">Title*</label>
                                     <input type="text" name="title" parsley-trigger="change" required placeholder="Enter title" class="form-control" id="title">
                                 </div>
-                                <div class="form-group">
-                                    <label for="content">Content*</label>
-                                    <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
-                                </div>
 
                                 <div class="form-group">
-                                    <label for="link">Link</label>
-                                    <input id="link" name="link" type="text" placeholder="Link" class="form-control">
+                                    <label for="title">Description*</label>
+                                    <input type="text" name="description" parsley-trigger="change" required placeholder="Enter description" class="form-control" id="description">
                                 </div>
+
                                 <div class="form-group m-b-0">
                                     <label class="control-label">Attach file</label>
                                     <input type="file" name="file" class="filestyle" data-placeholder="No file">
@@ -69,6 +68,12 @@
                                         <%})%>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-b-0 p-0">
+                            <div class="form-group">
+                                <label for="content">Content*</label>
+                                <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
                             </div>
                         </div>
                         <div class="form-group text-right m-b-0">
@@ -115,8 +120,53 @@
 <script type="text/javascript" src="/assets/pages/autocomplete.js"></script>
 
 <script type="text/javascript" src="/assets/pages/jquery.form-advanced.init.js"></script>
+<!-- Include JS file. -->
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.pkgd.min.js'></script>
 
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('textarea#content').froalaEditor({
+            // Set the image upload parameter.
+            imageUploadParam: 'image',
+            // Set the image upload URL.
+            imageUploadURL: '/upload/image',
+            // Additional upload params.
+            imageUploadParams: {id: 'my_editor'},
+            // Set request type.
+            imageUploadMethod: 'POST',
+            // Set max image size to 5MB.
+            imageMaxSize: 5 * 1024 * 1024,
+            // Allow to upload PNG and JPG.
+            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+            //====================================================
+            // Set the file upload parameter.
+            fileUploadParam: 'file',
+            // Set the file upload URL.
+            fileUploadURL: '/upload/file',
+            // Additional upload params.
+            fileUploadParams: {id: 'my_editor'},
+            // Set request type.
+            fileUploadMethod: 'POST',
+            // Set max file size to 20MB.
+            fileMaxSize: 20 * 1024 * 1024,
+            // Allow to upload any file.
+            fileAllowedTypes: ['*'],
+            //===================================================
+            // Set the video upload parameter.
+            videoUploadParam: 'file',
+            // Set the video upload URL.
+            videoUploadURL: '/upload/file',
+            // Additional upload params.
+            videoUploadParams: {id: 'my_editor'},
+            // Set request type.
+            videoUploadMethod: 'POST',
+            // Set max video size to 50MB.
+            videoMaxSize: 50 * 1024 * 1024,
+            // Allow to upload MP4, WEBM and OGG
+            videoAllowedTypes: ['webm', 'jpg', 'ogg', 'mp4']
+        })
+    });
+</script>
 
 
 

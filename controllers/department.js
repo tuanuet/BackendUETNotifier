@@ -11,6 +11,7 @@ import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import RedisCourse from '../redis/Course';
 import _ from 'lodash';
 import {sendEveryTopic} from '../service/firebaseService';
+import * as helper from '../helper';
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
@@ -32,7 +33,7 @@ export const getAnnounceAll = async (req, res) => {
  * @returns {Promise.<void>}
  */
 export const postAnnounceAll = async (req, res) => {
-    /// lưu ten file vao db
+    // return;
     let file = null;
     try {
         if(req.file){
@@ -43,7 +44,7 @@ export const postAnnounceAll = async (req, res) => {
         }
         // save announcement
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify
+            title, content, link, kindOfAnnouncement, priorityNotify, description
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
@@ -52,6 +53,7 @@ export const postAnnounceAll = async (req, res) => {
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
+            description,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
         }).save();
 
@@ -98,7 +100,7 @@ export const postAnnounceClasses = async (req,res) => {
         }
         // save announcement
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify, classes
+            title, content, link, kindOfAnnouncement, priorityNotify, classes, description
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
@@ -108,6 +110,7 @@ export const postAnnounceClasses = async (req,res) => {
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
             receiver : classes,
+            description,
             kindOfReceiver: KINDOFRECEIVER[RECEIVER.CLASS]
         }).save();
 
@@ -159,14 +162,14 @@ export const postAnnounceCourses = async (req,res) => {
         }
         // save announcement
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify, courses
+            title, content, link, kindOfAnnouncement, priorityNotify, courses, description
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
-            file : file ? file.id : null,
+            file : file ? file.id : null, description,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.COURSE]
         }).save();
 
@@ -215,7 +218,7 @@ export const postAnnounceStudents = async (req,res) => {
         let students = studentInDbs.map(stu => stu._id);
 
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify
+            title, content, link, kindOfAnnouncement, priorityNotify, description
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
@@ -226,6 +229,7 @@ export const postAnnounceStudents = async (req,res) => {
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
             receiver : students,
+            description,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
         }).save();
 
