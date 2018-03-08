@@ -1,0 +1,15 @@
+MongoDB shell version v3.4.10
+connecting to: mongodb://127.0.0.1:27017/u
+MongoDB server version: 3.4.10
+Server has startup warnings: 
+2018-03-08T08:16:55.226+0700 I STORAGE  [initandlisten] 
+2018-03-08T08:16:55.226+0700 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2018-03-08T08:16:55.226+0700 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2018-03-08T08:16:55.475+0700 I CONTROL  [initandlisten] 
+2018-03-08T08:16:55.475+0700 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2018-03-08T08:16:55.475+0700 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2018-03-08T08:16:55.475+0700 I CONTROL  [initandlisten] 
+> ;[3G[J;[4G> [3G[J[3G> [3G[J[3G^C
+
+
+bye

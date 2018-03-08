@@ -129,12 +129,20 @@ ThongBaoSchema.statics.findByIdJoinAll = function(id) {
             { path:'receiver'}
         ]);
 };
-ThongBaoSchema.statics.fetching = function (topics, lastTime= Date.now()) {
+ThongBaoSchema.statics.fetching = function (topics, lastTime= new Date()) {
     return this
         .aggregate([
-            {$match : { kindOfAnnouncement : { $in: topics }}},
-        ]).allowDiskUse(true);
-
+            {
+                $match : {
+                    $and : [
+                        {kindOfAnnouncement : { $in: topics }},
+                        {createdAt : {$gte: lastTime}}
+                    ]
+                }
+            },
+            {$project: {_id : 1}},
+        ]).allowDiskUse(true)
+        .then(data => data.map(item => item._id));
 };
 module.exports = mongoose.model('Announcement',ThongBaoSchema);
 

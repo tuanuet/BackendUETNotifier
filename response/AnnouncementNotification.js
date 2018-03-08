@@ -1,6 +1,8 @@
 import {KIND_ANNOUNCEMENT} from '../constant';
-export default (tieuDe='', noiDung='', id='', idmucDoThongBao='', idloaiThongBao='', hasfile='', idSender='', nameSender='', priorityCode='', description='') => {
+
+export default (_id = '', tieuDe = '', noiDung = '', id = '', idmucDoThongBao = '', idloaiThongBao = '', hasfile = '', idSender = '', nameSender = '', priorityCode = '', description = '') => {
     return {
+        _id: _id.toString(),
         tieuDe: tieuDe,
         noiDung: noiDung,
         link: id.toString(),
@@ -11,6 +13,6 @@ export default (tieuDe='', noiDung='', id='', idmucDoThongBao='', idloaiThongBao
         nameSender: nameSender,
         typeNotification: KIND_ANNOUNCEMENT.toString(),
         description,
-        codeMucDoThongBao : priorityCode
+        codeMucDoThongBao: priorityCode
     };
 };

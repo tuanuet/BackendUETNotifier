@@ -119,8 +119,10 @@ export const getInformationCourseById = async (req,res) => {
 };
 
 export const fetchingNewsAndAnnouncement = async (req,res) => {
-    const time = null;
-    const topics = ['lich_thi'];
-    let announcements =await Announcement.fetching(topics,time);
-    res.jsonp(announcements);
+    const time = req.params.lastTime ? new Date(req.params.lastTime) : new Date('2018-03-07T06:19:13.079Z');
+    const announcementTopics = ['lich_thi'];
+    const newTopics = ['Tin Sinh Viên'];
+    let announcements =await Announcement.fetching(announcementTopics,time);
+    let news = await New.fetching(newTopics,time);
+    res.jsonp({announcements,news});
 };

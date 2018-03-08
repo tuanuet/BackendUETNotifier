@@ -1,40 +1,42 @@
 /* eslint-env node */
 import {NewNotification} from '../response';
 import * as helper from '../helper';
+
 var mongoose = require('mongoose');
 
 //model crawl dũ liệu trên sevêr cũ
 var TinTucSchema = new mongoose.Schema({
-    link:{
+    link: {
         type: String,
         unique: true,
         required: true
     },
-    title:{
+    title: {
         type: String,
         required: true
     },
-    content:{
-        type : String,
+    content: {
+        type: String,
         require: true
     },
-    imageLink :{
-        type : String,
-        require : true
+    imageLink: {
+        type: String,
+        require: true
     },
-    postAt : {
-        type : Date,
-        require :true,
-        default :Date.now()
+    postAt: {
+        type: Date,
+        require: true,
+        default: Date.now()
     },
-    tags : {
-        type : [String],
-        required : true,
+    tags: {
+        type: [String],
+        required: true,
     }
-},{
-    timestamps : true
+}, {
+    timestamps: true
 });
-TinTucSchema.methods.findLimitOffset = (param,offset,limit = 10) => {
+
+TinTucSchema.methods.findLimitOffset = (param, offset, limit = 10) => {
     return TinTucSchema
         .find(param)
         .sort({'postAt': -1})
@@ -44,7 +46,7 @@ TinTucSchema.methods.findLimitOffset = (param,offset,limit = 10) => {
 
 };
 
-TinTucSchema.methods.find = (param,limit = 10) => {
+TinTucSchema.methods.find = (param, limit = 10) => {
     return TinTucSchema
         .find(param)
         .limit(limit)
@@ -52,13 +54,13 @@ TinTucSchema.methods.find = (param,limit = 10) => {
 };
 
 TinTucSchema.methods.getDataNotification = function () {
-    return NewNotification({...{_id: this.id},...this._doc,...{tags : helper.getTagsOfNews(this.tags)}});
+    return NewNotification({...{_id: this.id}, ...this._doc, ...{tags: helper.getTagsOfNews(this.tags)}});
 };
 
 TinTucSchema.statics.findByTagName = function (tagName) {
     return this.find({
-        tags : {
-            $in : [tagName]
+        tags: {
+            $in: [tagName]
         }
     })
         .sort({'postAt': -1});
@@ -70,4 +72,21 @@ TinTucSchema.statics.findTenNews = function () {
         .sort({'postAt': -1});
 };
 
-module.exports = mongoose.model('New',TinTucSchema);
+TinTucSchema.statics.fetching = function (topics, lastTime = new Date()) {
+    return this
+        .aggregate([
+            {
+                $match: {
+                    $and: [
+                        {tags: {$in: topics}},
+                        {postAt: {$gte: lastTime}}
+                    ]
+                }
+            },
+            {$project: {_id: 1}},
+        ]).allowDiskUse(true)
+        .then(data => data.map(item => item._id));
+
+};
+
+module.exports = mongoose.model('New', TinTucSchema);
