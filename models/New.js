@@ -84,6 +84,7 @@ TinTucSchema.statics.fetching = function (topics, lastTime = new Date()) {
                 }
             },
             {$project: {_id: 1}},
+            {$limit : 30}
         ]).allowDiskUse(true)
         .then(data => data.map(item => item._id));
 

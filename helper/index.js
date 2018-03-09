@@ -71,3 +71,11 @@ export function renameKeys(obj, newKeys) {
     });
     return Object.assign({}, ...keyValues);
 }
+
+export function getTopicNameByCode(code) {
+    const _new =_.findLast(KIND_OF_NEW_LIST(), ({_id}) => _id === code);
+    if(_new){
+        return _new.name;
+    }
+    return undefined;
+}

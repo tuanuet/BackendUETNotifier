@@ -14,6 +14,7 @@ import * as response from '../response';
 import Mark from '../redis/Mark';
 const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
+import _ from 'lodash';
 
 export const postLogout = async (req,res) => {
     req.logout();
@@ -119,10 +120,22 @@ export const getInformationCourseById = async (req,res) => {
 };
 
 export const fetchingNewsAndAnnouncement = async (req,res) => {
-    const time = req.params.lastTime ? new Date(req.params.lastTime) : new Date('2018-03-07T06:19:13.079Z');
-    const announcementTopics = ['lich_thi'];
-    const newTopics = ['Tin Sinh Viên'];
-    let announcements =await Announcement.fetching(announcementTopics,time);
-    let news = await New.fetching(newTopics,time);
+    const {
+        lastTimeAnnouncement= new Date(),
+        lastTimeNew= new Date(),
+        kindAnnouncements= [], //lich_thi
+        kindNews= [] //lich_thi
+    } = req.body;
+
+    console.log(req.body);
+
+    const announcementTopics = kindAnnouncements;     //['lich_thi'];
+    const newTopics = _.map(kindNews,helper.getTopicNameByCode); //return ["Lịch Thi"]
+
+    let announcements =await Announcement.fetching(announcementTopics,new Date(lastTimeAnnouncement));
+    let news = await New.fetching(newTopics,new Date(lastTimeNew));
+
+    console.log(announcements,news);
+
     res.jsonp({announcements,news});
 };
