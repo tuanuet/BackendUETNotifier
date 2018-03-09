@@ -18,9 +18,12 @@ const upload = multer({storage});
 router.route('/')
     .get(departmentController.getDashboard);
 
+
+const cpUpload = upload.fields([{ name: 'file', maxCount: 1 }, { name: 'images', maxCount: 10 }]);
 router.route('/announce/all')
     .get(departmentController.getAnnounceAll)
-    .post(upload.single('file'),departmentController.postAnnounceAll);
+    .post(cpUpload,
+        departmentController.postAnnounceAll);
 
 router.route('/announce/classes')
     .get(departmentController.getAnnounceClasses)

@@ -51,6 +51,9 @@ const ThongBaoSchema = Schema({
         ref:'PriorityNotify',
         required: true
     },
+    descriptionImages:[{
+        type: String,
+    }],
     feedback:[
         {
             kindOfSenderFeedback:{

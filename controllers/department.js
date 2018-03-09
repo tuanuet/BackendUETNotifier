@@ -33,14 +33,19 @@ export const getAnnounceAll = async (req, res) => {
  * @returns {Promise.<void>}
  */
 export const postAnnounceAll = async (req, res) => {
-    // return;
-    let file = null;
+    let file = undefined;
+    let images = undefined;
     try {
-        if(req.file){
+        //check file
+        if(req.files.file && req.files.file.length === 1){
             file = await new File({
-                name: req.file.originalname,
-                link: `/department/${req.file.filename}`
+                name: req.files.file[0].originalname,
+                link: encodeURI(`/department/${req.files.file[0].filename}`)
             }).save();
+        }
+        //check image
+        if(req.files.images){
+            images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
         }
         // save announcement
         let {
@@ -54,6 +59,7 @@ export const postAnnounceAll = async (req, res) => {
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
             description,
+            descriptionImages: images,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
         }).save();
 
