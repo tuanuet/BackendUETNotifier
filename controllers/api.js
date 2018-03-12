@@ -127,15 +127,11 @@ export const fetchingNewsAndAnnouncement = async (req,res) => {
         kindNews= [] //lich_thi
     } = req.body;
 
-    console.log(req.body);
-
     const announcementTopics = kindAnnouncements;     //['lich_thi'];
     const newTopics = _.map(kindNews,helper.getTopicNameByCode); //return ["Lịch Thi"]
 
     let announcements =await Announcement.fetching(announcementTopics,new Date(lastTimeAnnouncement));
     let news = await New.fetching(newTopics,new Date(lastTimeNew));
-
-    console.log(announcements,news);
 
     res.jsonp({announcements,news});
 };
