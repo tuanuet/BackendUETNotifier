@@ -3,7 +3,7 @@ import Priority from '../models/PriorityNotify';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
-import {sendToTokens, sendTopic,sendMark} from '../service';
+import {sendToTokens, sendTopic, sendTopicNoContent,sendMark} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Course from '../models/Course';
@@ -65,8 +65,7 @@ export const postAnnounceAll = async (req, res) => {
 
         const message = await announce.getMessage();
         //todo : announce for student by kindOfAnnouncement
-        const response = await sendTopic(message,message.kindOfAnnouncement._id);
-        console.log('response',response);
+        const response = await sendTopicNoContent(message,message.kindOfAnnouncement._id);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {

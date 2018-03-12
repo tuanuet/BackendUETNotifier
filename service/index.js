@@ -3,6 +3,7 @@ import {
     sendToTokens,
     sendCourse,
     sendStudent,
+    sendTopicNoContent,
     sendMark
 } from './firebaseService';
 import {
@@ -22,5 +23,6 @@ export {
     getAllKindOfNews,
     getNewsInpage,
     parseDetailNew,
-    sendMark
+    sendMark,
+    sendTopicNoContent
 };
