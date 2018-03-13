@@ -45,7 +45,6 @@ export const getAnnouncementById = async (req, res, next) => {
     let announce = await Announcement.findByIdJoinAll(req.params.id);
     const decode = entities.decode(announce.content);
     announce['content'] = await helper.renderPromise(res, view, decode);
-    console.log(announce);
     res.json(announce);
 };
 
