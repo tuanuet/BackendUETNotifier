@@ -59,10 +59,21 @@ export const postReaction = async (req,res) => {
     try {
         const {_id,code} = req.body;
         const user = req.user;
+        const fieldInsert = `reaction.${[Constants.REACTION[code.toString()]]}`;
+
+        let {[fieldInsert]: insert,...removeUserInReaction} =
+            {
+                'reaction.angry': user._id,
+                'reaction.cry': user._id,
+                'reaction.love': user._id,
+                'reaction.wow': user._id,
+                'reaction.surprise': user._id,
+            };
 
         await Announcement.update({ _id }, {
-            $addToSet: { [`reaction.${[Constants.REACTION[code.toString()]]}`] : user._id}
-        });
+            $pull:removeUserInReaction,
+            $addToSet: { [fieldInsert] : user._id},
+        },{ multi: true });
 
         res.jsonp({
             success: true,
@@ -70,6 +81,7 @@ export const postReaction = async (req,res) => {
         });
 
     }catch (err) {
+        console.log(err);
         res.status(500).jsonp({
             success: false,
             message: 'Post reaction failure!'

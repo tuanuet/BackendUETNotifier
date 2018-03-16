@@ -46,5 +46,4 @@ router.post('/fetching/news-announcements',apiController.fetchingNewsAndAnnounce
 router.post('/fetch/reaction',passport.authenticate('jwt',{session: false}),passportMiddleware.mobileIsAuthenticated,apiController.fetchReactionAnnouncement);
 router.post('/reaction',passport.authenticate('jwt',{session: false}),passportMiddleware.mobileIsAuthenticated,studentController.postReaction);
 
-router.delete('/reaction',passport.authenticate('jwt',{session: false}),passportMiddleware.mobileIsAuthenticated,studentController.removeReaction);
 module.exports = router;
