@@ -1,6 +1,7 @@
 /* eslint-env node */
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
+import _ from 'lodash';
 import { KINDOFRECEIVER } from '../constant';
 const ThongBaoSchema = Schema({
     kindOfSender:{
@@ -54,6 +55,29 @@ const ThongBaoSchema = Schema({
     descriptionImages:[{
         type: String,
     }],
+
+    reaction:{
+        angry:[{
+            type: mongoose.Schema.ObjectId,
+            ref:'Student'
+        }],
+        cry:[{
+            type: mongoose.Schema.ObjectId,
+            ref:'Student'
+        }],
+        love:[{
+            type: mongoose.Schema.ObjectId,
+            ref:'Student'
+        }],
+        wow:[{
+            type: mongoose.Schema.ObjectId,
+            ref:'Student'
+        }],
+        surprise:[{
+            type: mongoose.Schema.ObjectId,
+            ref:'Student'
+        }]
+    },
     feedback:[
         {
             kindOfSenderFeedback:{
@@ -145,8 +169,47 @@ ThongBaoSchema.statics.fetching = function (topics, lastTime= new Date()) {
             },
             {$project: {_id : 1}},
             {$limit : 30}
-        ]).allowDiskUse(true)
+        ])
+        .allowDiskUse(true)
         .then(data => data.map(item => item._id));
+};
+ThongBaoSchema.statics.fetchReaction = function (ids,userId) {
+    return this
+        .aggregate([
+            {$match: {_id: {$in: ids.map(el => mongoose.Types.ObjectId(el) )}}},
+            {
+                $project: {
+                    angry: {
+                        length: {$size: {$ifNull: ['$reaction.angry',[]]}},
+                        isReact: {$in:[userId,{$ifNull: ['$reaction.angry',[]]}]}
+                    },
+                    cry:{
+                        length: {$size: {$ifNull: ['$reaction.cry',[]]}},
+                        isReact: {$in:[userId,{$ifNull: ['$reaction.cry',[]]}]}
+                    },
+                    love:{
+                        length: {$size: {$ifNull: ['$reaction.love',[]]}},
+                        isReact: {$in:[userId,{$ifNull: ['$reaction.love',[]]}]}
+                    },
+                    wow:{
+                        length: {$size: {$ifNull: ['$reaction.wow',[]]}},
+                        isReact: {$in:[userId,{$ifNull: ['$reaction.wow',[]]}]}
+                    },
+                    surprise:{
+                        length: {$size: {$ifNull: ['$reaction.surprise',[]]}},
+                        isReact: {$in:[userId,{$ifNull: ['$reaction.surprise',[]]}]}
+                    },
+                },
+            },
+        ])
+        .allowDiskUse(true)
+        .then(arrays => {
+            return _.map(ids,id => {
+                const index = _.findLastIndex(arrays,react => react._id == id);
+                if(index < 0) return null;
+                return arrays[index];
+            });
+        });
 };
 module.exports = mongoose.model('Announcement',ThongBaoSchema);
 

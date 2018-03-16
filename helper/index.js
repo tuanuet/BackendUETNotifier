@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import {KIND_OF_NEW_LIST} from '../constant';
+import * as Constant from '../constant';
+
 export const changeAlias = (alias) => {
     let str = alias;
     str = str.toLowerCase();
@@ -78,4 +80,8 @@ export function getTopicNameByCode(code) {
         return _new.name;
     }
     return undefined;
+}
+
+export function getAllCodeExept(code) {
+
 }

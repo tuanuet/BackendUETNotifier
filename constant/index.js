@@ -2,7 +2,13 @@ import _ from 'lodash';
 import * as helper from '../helper';
 export const KINDOFRECEIVER = ['All', 'Course', 'Class', 'Student'];
 export const RECEIVER = {ALL : 0, COURSE : 1, CLASS : 2, STUDENT : 3};
-
+export const REACTION = {
+    0: 'angry',
+    1: 'cry',
+    2: 'love',
+    3: 'wow',
+    4: 'surprise',
+};
 export const KIND_NEW_NOTIFICATION = 2;
 export const KIND_ANNOUNCEMENT = 1;
 export const KIND_MARK_ANNOUNCEMENT = 3;

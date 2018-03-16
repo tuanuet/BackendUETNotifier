@@ -134,3 +134,9 @@ export const fetchingNewsAndAnnouncement = async (req,res) => {
 
     res.jsonp({announcements,news});
 };
+export const fetchReactionAnnouncement = async (req,res) => {
+    const announceIds = req.body.ids;
+    const user = req.user;
+    const data = await Announcement.fetchReaction(announceIds,user._id);
+    res.jsonp(data);
+};
