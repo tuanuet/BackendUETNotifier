@@ -66,9 +66,9 @@ TinTucSchema.statics.findByTagName = function (tagName) {
         .sort({'postAt': -1});
 };
 
-TinTucSchema.statics.findTenNews = function () {
+TinTucSchema.statics.findTwentyNews = function () {
     return this.find({})
-        .limit(10)
+        .limit(20)
         .sort({'postAt': -1});
 };
 

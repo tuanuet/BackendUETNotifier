@@ -12,7 +12,7 @@ let job = new CronJob({
     onTick: function () {
         Promise.all([
             service.getNewsInpage(PAGE_CHECK),
-            New.findTenNews()
+            New.findTwentyNews()
         ])
             .then( data => Promise.resolve(_.differenceBy(data[0],data[1],'link')))
             .then( news => {
