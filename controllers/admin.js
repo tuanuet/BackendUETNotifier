@@ -30,32 +30,29 @@ export const getManagementAccount = async function (req, res) {
     }
 };
 export const updateAccount = async function(req, res) {
-    let role = (req.query.role );
+    let role = (req.params.role );
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
     req.assert('name', 'Name is not valid').len(1);
     req.assert('email', 'Email is not valid').isEmail();
-    req.assert('password', 'Password must be at least 4 characters long').len(4);
-    req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
     const errors = req.validationErrors();
     try {
         const Model = mongoose.model(stringModel);
         if (errors) throw new Error(errors);
-        let { email, password, name, id } = req.body;
-
-        await User.findOneAndUpdate({_id : id}, { email, password, name },{new: true});
-        let model = await Model.findOneAndUpdate({_id: id}, { email, password, name },{new: true});
-
+        let { email, name, id } = req.body;
+        console.log(req.body);
+        await User.findOneAndUpdate({_id : mongoose.Types.ObjectId(id)}, { email, name },{new: true});
+        let model = await Model.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)}, { email, name },{new: true});
         req.flash('success', `Update ${model.name} success!`);
     } catch (e) {
         req.flash('errors', e.toString());
     } finally {
-        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account/${stringModel.toLocaleLowerCase()}`);
     }
 };
 export const deleteAccount = async function (req, res){
-    const role = (req.query.role);
+    const role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
         const { id } = req.body;
@@ -65,11 +62,11 @@ export const deleteAccount = async function (req, res){
     } catch (err) {
         req.flash('errors', err);
     } finally {
-        res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
+        res.redirect(`/admin/manage/account/${stringModel.toLocaleLowerCase()}`);
     }
 };
 export const postAccount = async function (req, res) {
-    const role = (req.query.role);
+    const role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
     req.assert('name', 'Name is not valid').len(1);
