@@ -55,6 +55,7 @@
     "lodash": "4.17.4",
     "lusca": "1.5.2",
     "method-override": "2.3.10",
+    "mobile-detect": "^1.4.1",
     "moment": "2.19.2",
     "mongoose": "4.11.1",
     "mongoose-datatable": "1.0.6",

@@ -3,6 +3,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 let JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
+const MobileDetect = require('mobile-detect');
 require('dotenv').load({ path: '.env' });
 
 const User = require('../models/User');
@@ -66,7 +67,23 @@ export const isAuthenticated = (req, res, next) => {
     req.flash('errors','You don\'t have permission');
     res.redirect('/user/login');
 };
-
+const test = 'Mozilla/5.0 (Linux; U; Android 4.0.3; en-in; SonyEricssonMT11i' +
+    ' Build/4.1.A.0.562) AppleWebKit/534.30 (KHTML, like Gecko)' +
+    ' Version/4.0 Mobile Safari/534.30';
+export const detectClientAuthenticated = (req,res,next) => {
+    const md = new MobileDetect(test||req.headers['user-agent']);
+    if(md.mobile()){
+        return passport.authenticate('jwt',{session: false})(req,res,next);
+    }
+    return isAuthenticated(req,res,next);
+};
+export const validateAuthenticated = (req,res,next) => {
+    const md = new MobileDetect(test||req.headers['user-agent']);
+    if(md.mobile()){
+        return isAuthenticated(req,res,next);
+    }
+    return next();
+};
 /**
  * Login Required middleware.
  */
