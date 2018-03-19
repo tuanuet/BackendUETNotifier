@@ -32,20 +32,18 @@ router.route('/feedback')
         passportMiddleware.validateAuthenticated,async (req,res) => {
             try {
                 const user = req.user;
-                const {announcementId,kindSender,content,isSub,rootId} = req.body;
+                const {announcementId,content,isSub,rootId} = req.body;
 
                 let feedBack = new Feedback({
                     announcementId,
-                    kindSender,
+                    kindSender: user.role,
                     content,
                     sender: user._id,
                     subFeedback: isSub === true ? rootId : null
                 });
                 await feedBack.save();
-                res.json({
-                    success: true,
-                    message: 'Insert success!',
-                });
+                const respFeedBack = await Feedback.findByIdAndPopulate(feedBack._id);
+                res.jsonp(respFeedBack);
             } catch (err) {
                 res.status(403).json({
                     success: true,

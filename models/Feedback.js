@@ -37,5 +37,10 @@ FeedbackSchema.statics.findByAnnouncementId= function (announcementId) {
         { path:'sender'}
     ]);
 };
+FeedbackSchema.statics.findByIdAndPopulate = function (_id) {
+    return this.findById(_id).populate([
+        { path:'sender'}
+    ]);
+};
 
 module.exports = mongoose.model('Feedback', FeedbackSchema);
