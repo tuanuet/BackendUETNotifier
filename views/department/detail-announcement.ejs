@@ -1,0 +1,204 @@
+<% layout('../layout') -%>
+<% stylesheet("https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_style.min.css")%>
+<% stylesheet("/css/detail-announcement.css")%>
+
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-box table-responsive">
+                        <h4 class="m-t-0 header-title"><b>Announcement</b></h4>
+                        <div class="table-box opport-box">
+                            <div class="table-detail">
+                                <div class="member-info">
+                                    <h4 class="m-t-0">Tiêu đề: <b><%= announcement.title%></b></h4>
+                                    <p class="text-dark m-b-5"><b>Miêu tả: </b><b><%= announcement.description%></b></p>
+                                    <p class="text-dark m-b-5"><b>Tên người đăng: </b> <b class="text-muted"><%= announcement.sender.name%></b></p>
+                                    <p class="text-dark m-b-0"><b>Thời gian: </b> <b class="text-muted"><%= announcement.createdAt%></b></p>
+                                </div>
+                            </div>
+
+                            <div class="table-detail">
+                                <h4 class="m-t-0">&nbsp;</h4>
+                                <p class="text-dark m-b-5"><b>Loại thông báo:</b> <b class="text-muted"><%= announcement.kindOfAnnouncement.name%></b></p>
+                                <p class="text-dark m-b-5"><b>Mức độ:</b> <b class="text-muted"><%= announcement.priorityNotify.name%></b></p>
+                                <p class="text-dark m-b-0"><b>Loại người nhận:</b> <b class="text-muted">
+                                        <%=announcement.kindOfReceiver%>
+                                    </b></p>
+                            </div>
+                        </div>
+                        <H4>Có <b><%= `${announcement.reaction.surprise.length +
+                                announcement.reaction.wow.length +
+                                announcement.reaction.love.length+
+                                announcement.reaction.angry.length+
+                                announcement.reaction.cry.length}` %></b> lượt bày tỏ cảm xúc</H4>
+                        <div class="fr-view">
+                            <%- announcement.content %>
+                        </div>
+                    </div>
+
+                </div> <!-- end col -->
+                <div class="col-lg-12">
+                    <div class="card-box">
+                        <!--area textbox chat-->
+                        <label>Gửi cho: <span id="send-to"></span> <span class="remove">X</span></label>
+                        <div class="comment-wrap">
+                            <div class="photo">
+                                <div class="avatar" style="background-image: url('https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/128.jpg')"></div>
+                            </div>
+                            <div class="comment-block">
+                                <form action="">
+                                    <textarea name="content" cols="30" rows="3" placeholder="Add comment..."></textarea>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="comments-container">
+                            <ul id="comments-list" class="comments-list">
+                                <% _.each(feedbacks,feedback => { %>
+                                    <% if(_.isNull(feedback.subFeedback)){ %>
+                                    <li data-id="<%= feedback._id%>">
+                                    <div class="comment-main-level">
+                                        <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+                                        <div class="comment-box">
+                                            <div class="comment-head">
+                                                <h6 class="comment-name by-author"><a href="http://creaticode.com/blog"><%= `${feedback.sender.name} (${feedback.sender.code})` %></a></h6><span class="badge-kind-sender"><%= feedback.kindSender%></span>
+                                                <span class="timer"><%= helper.getTimer(feedback.createdAt)%></span>
+                                                <i data-value="<%= feedback._id%>" class="fa fa-reply"></i>
+                                            </div>
+                                            <div class="comment-content">
+                                                <p><%= feedback.content %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="comments-list reply-list">
+                                        <%
+                                            const subs = _(feedbacks)
+                                                    .filter(item => item.subFeedback)
+                                                    .filter(item => item.subFeedback.toString() === feedback._id.toString())
+                                                    .value();
+                                        %>
+                                        <% _.each(subs,sub => { %>
+                                        <li data-id="<%= sub._id%>">
+                                            <!-- Avatar -->
+                                            <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
+                                            <div class="comment-box">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name by-author"><a href="http://creaticode.com/blog"><%= `${sub.sender.name} (${sub.sender.code})` %></a></h6><span class="badge-kind-sender"><%= sub.kindSender%></span>
+                                                    <span class="timer"><%= helper.getTimer(sub.createdAt)%></span>
+                                                    <i data-value="<%= sub.subFeedback%>" class="fa fa-reply"></i>
+                                                </div>
+                                                <div class="comment-content">
+                                                    <p><%= sub.content %></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <% })%>
+                                    </ul>
+                                </li>
+                                    <%}%>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div><!-- /col-sm-5 -->
+            </div>
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+    <footer class="footer text-right">
+        © 2017. All rights reserved.
+    </footer>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var rootId = "";
+        $(document).on('click','.fa-reply',function () {
+            var _rootId = $(this).attr('data-value').toString();
+            rootId = _rootId;
+            var _name = $(this).parent().find('.by-author a').text()
+            $('#send-to').text(_name);
+        })
+
+        $(document).on('click','.remove',function () {
+            rootId = "";
+            $('#send-to').text("");
+        })
+        $('textarea[name=content]').keypress(function(e) {
+            if(e.which == 13) {
+                var _rootId = rootId;
+                var _data = {
+                    announcementId : "<%= idAnnounce%>",
+                    content: $('textarea[name=content]').val(),
+                    isSub: _rootId !== "",
+                    rootId: _rootId
+                }
+
+                $.ajax({
+                    method: 'POST',
+                    data: _data,
+                    url: `/test/feedback`,
+                    success: function (feedback) {
+                        var block;
+                        if(_rootId !== ""){
+                            block= subBlock(feedback);
+                            $("li[data-id='" + _rootId + "']").find('ul').append(block);
+                        } else {
+                            block = parentBlock(feedback);
+                            $("li[data-id='" + _rootId + "']").parent().append(block);
+                        }
+                        rootId = "";
+                        $('#send-to').text("");
+                        $('textarea[name=content]').val("")
+                    }
+                });
+            }
+        });
+
+        function parentBlock(feedback) {
+            return `
+            <li data-id="${feedback._id}">
+            <div class="comment-main-level">
+                <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+                <div class="comment-box">
+                    <div class="comment-head">
+                        <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${feedback.sender.name} (${feedback.sender.code})</a></h6><span class="badge-kind-sender">${feedback.kindSender}</span>
+                        <span class="timer">${feedback.createdAt}</span>
+                        <i data-value="${feedback._id}" class="fa fa-reply"></i>
+                    </div>
+                    <div class="comment-content">
+                        <p>${feedback.content}</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="comments-list reply-list">
+
+            </ul>
+            </li>`
+        }
+        function subBlock(sub) {
+            return `
+            <li data-id="${sub._id}">
+                <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
+                <div class="comment-box">
+                <div class="comment-head">
+                <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${sub.sender.name} (${sub.sender.code})</a></h6><span class="badge-kind-sender">${sub.kindSender}</span>
+                <span class="timer">${sub.createdAt}</span>
+                <i data-value="${sub.subFeedback}" class="fa fa-reply"></i>
+                </div>
+                <div class="comment-content">
+                <p>${sub.content}</p>
+                </div>
+                </div>
+                </li>
+            `;
+        }
+    });
+</script>
+
+
+
+
+

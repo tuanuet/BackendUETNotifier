@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {KIND_OF_NEW_LIST} from '../constant';
 import * as Constant from '../constant';
+import moment from 'moment';
 
 export const changeAlias = (alias) => {
     let str = alias;
@@ -30,6 +31,9 @@ const removeChucVi = alias => {
     str = str.replace(/PGS.TS./g, '');
     str = str.trim();
     return str;
+};
+export const getTimer = (time) => {
+    return moment(time).format('HH:mm:ss MMMM Do YYYY');
 };
 export const renderPromise = (res,view,body) => {
     return new Promise((resolve,reject) => {

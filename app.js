@@ -7,7 +7,7 @@ const logger = require('morgan');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const lusca = require('lusca');
-
+import _ from 'lodash';
 const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
@@ -18,6 +18,7 @@ const sass = require('node-sass-middleware');
 var methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+import * as helper from './helper';
 const dataTable = require('mongoose-datatable');
 mongoose.plugin(dataTable.init);
 /**
@@ -95,6 +96,8 @@ app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
     res.locals.user = req.user;
+    res.locals._ = _;
+    res.locals.helper = helper;
     next();
 });
 app.use((req, res, next) => {

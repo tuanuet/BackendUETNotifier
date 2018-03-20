@@ -74,19 +74,21 @@
                 "targets": -1,
                 "data": null,
             }],
+            order: [[ 4, "desc" ]],
             columns:[
                 {data: '_id', name: '_id',"visible": false},
                 {data: 'sender', name: 'sender',visible: false},
-                {data: 'title', name: 'title',searchable: true, type: "string",
+                {data: 'title', name: 'title',searchable: true, type: "string",sort: 'text',
                     fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html("<a href='/department/manage/announce/"+oData._id+"'>"+oData.title+"</a>");
                 }},
-                {data: 'content',name :'content',searchable: true,
+                {data: 'description',name :'description',searchable: true,
                     fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<a href='/department/manage/announce/"+oData._id+"'>"+oData.content+"</a>")}},
+                        console.log(oData)
+                        $(nTd).html("<a href='/department/manage/announce/"+oData._id+"'>"+oData.description+"</a>")}},
                 {data: 'priorityNotify.name',name : 'priority',},
                 {data: 'kindOfReceiver',name : 'kindOfReceiver',},
-                {data: 'createdAt', name: 'createdAt'},
+                {data: 'createdAt', name: 'createdAt',},
 
             ],
         });

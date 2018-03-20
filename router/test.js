@@ -33,21 +33,21 @@ router.route('/feedback')
             try {
                 const user = req.user;
                 const {announcementId,content,isSub,rootId} = req.body;
-
                 let feedBack = new Feedback({
                     announcementId,
                     kindSender: user.role,
                     content,
                     sender: user._id,
-                    subFeedback: isSub === true ? rootId : null
+                    subFeedback: isSub === 'true' || isSub === true ? rootId : null
                 });
+
                 await feedBack.save();
                 const respFeedBack = await Feedback.findByIdAndPopulate(feedBack._id);
                 res.jsonp(respFeedBack);
             } catch (err) {
                 res.status(403).json({
                     success: true,
-                    message: 'Insert success!',
+                    message: 'Insert failure!',
                 });
             }
         })

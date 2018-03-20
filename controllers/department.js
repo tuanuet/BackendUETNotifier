@@ -6,6 +6,7 @@ import Announcement from '../models/Announcement';
 import {sendToTokens, sendTopic, sendTopicNoContent,sendMark} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
+import Feedback from '../models/Feedback';
 import Course from '../models/Course';
 import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import RedisCourse from '../redis/Course';
@@ -317,6 +318,12 @@ export const postMarks = async (req ,res) => {
     }
 };
 
-export const getAnnounce = (req,res) => {
-    res.send(req.url);
+export const getAnnounce =async (req,res) => {
+    let announcement = await Announcement.findByIdJoinAll(req.params.idAnnounce);
+    let feedbacks = await Feedback.findByAnnouncementId(req.params.idAnnounce);
+    res.render('department/detail-announcement',{
+        announcement,
+        feedbacks,
+        idAnnounce: req.params.idAnnounce
+    });
 };
