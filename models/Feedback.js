@@ -42,5 +42,17 @@ FeedbackSchema.statics.findByIdAndPopulate = function (_id) {
         { path:'sender'}
     ]);
 };
+FeedbackSchema.statics.getCountByAnnouncementIds = function (ids) {
+    return this.aggregate([
+        {$match: {announcementId: {$in: ids.map(el => mongoose.Types.ObjectId(el) )}}},
+        {
+            $group : {
+                _id: '$announcementId',
+                feedbackCount: {$sum: 1},
+            }
+        }
+    ])
+        .allowDiskUse(true);
+};
 
 module.exports = mongoose.model('Feedback', FeedbackSchema);

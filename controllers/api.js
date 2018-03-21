@@ -15,6 +15,7 @@ import Mark from '../redis/Mark';
 const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
 import _ from 'lodash';
+import Feedback from '../models/Feedback';
 
 export const postLogout = async (req,res) => {
     req.logout();
@@ -138,5 +139,17 @@ export const fetchReactionAnnouncement = async (req,res) => {
     const announceIds = req.body.ids;
     const user = req.user;
     const data = await Announcement.fetchReaction(announceIds,user._id);
-    res.jsonp(data);
+    const totalFeedBacks = await Feedback.getCountByAnnouncementIds(announceIds);
+    const responseData =
+        _(req.body.ids)
+            .map(id => {
+                const react = _.findLast(data,react => react._id.toString() === id.toString());
+                const count = _.findLast(totalFeedBacks,count => count._id.toString() === id.toString());
+                return {
+                    ...react,
+                    ...(count ? count : {feedBackCount: 0}),
+                };
+            })
+            .value();
+    res.jsonp(responseData);
 };
