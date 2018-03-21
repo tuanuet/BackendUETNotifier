@@ -147,7 +147,7 @@
                             $("li[data-id='" + _rootId + "']").find('ul').append(block);
                         } else {
                             block = parentBlock(feedback);
-                            $("li[data-id='" + _rootId + "']").parent().append(block);
+                            $("#comments-list").append(block);
                         }
                         rootId = "";
                         $('#send-to').text("");
