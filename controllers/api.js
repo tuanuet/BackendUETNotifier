@@ -50,8 +50,8 @@ export const getAnnouncementById = async (req, res, next) => {
 };
 
 export const getAvatarByUserId = async (req, res, next) => {
-    console.log(path.resolve(__dirname, '../public/assets/images/avatar-1.jpg'));
-    res.sendFile(path.resolve(__dirname, '../public/assets/images/avatar-1.jpg'));
+    const avatar = path.resolve(__dirname, '../public/images/logo2_new.png');
+    res.sendFile(avatar);
 };
 /**
  *  API FOR ANDROID
@@ -61,7 +61,7 @@ export const getNewsPagination = async (req, res) => {
         const idTag = req.query.loaitintuc;
         const offset = parseInt(req.query.offset);
         if (idTag === 'tat_ca_tin_tuc') {
-            return res.json(await New.find().sort({'createdAt': -1, 'postAt': -1,}).skip(offset).limit(NEW_LIMIT));
+            return res.json(await New.find().sort({'postAt': -1}).skip(offset).limit(NEW_LIMIT));
         }
         const tag = helper.getNameTagBySnake(idTag);
         let news = await New.findByTagName(tag.name).skip(offset).limit(NEW_LIMIT);
@@ -93,16 +93,10 @@ export const getCourse = async (req, res) => {
 
 export const getMark = async (req, res) => {
     const idCourse = req.params.idCourse;
-    // let course = await Course.findOne({
-    //     _id : idCourse
-    // });
-
-    //todo : test
-    let course = await Course.find({});
+    //todo: FIX HERE ==============================================================
+    let course = await Course.findCourseAndLecturerById(idCourse);
     let data = await Mark.getMarkByKeyCourse(idCourse);
-    // let data = _(redisData).map();
-
-    return res.json(response.MarkResponse(course[0],data));
+    return res.json(response.MarkResponse(course,data));
 
 };
 

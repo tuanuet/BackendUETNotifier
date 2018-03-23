@@ -63,7 +63,7 @@ TinTucSchema.statics.findByTagName = function (tagName) {
             $in: [tagName]
         }
     })
-        .sort({'createdAt': -1,'postAt': -1});
+        .sort({'postAt': -1});
 };
 
 TinTucSchema.statics.findTwentyNews = function () {

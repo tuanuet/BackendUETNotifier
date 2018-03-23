@@ -10,35 +10,38 @@
                 <div class="col-lg-12">
                     <div class="card-box table-responsive">
                         <h4 class="m-t-0 header-title"><b>Announcement</b></h4>
-                        <div class="table-box opport-box">
-                            <div class="table-detail">
-                                <div class="member-info">
-                                    <h4 class="m-t-0">Tiêu đề: <b><%= announcement.title%></b></h4>
-                                    <p class="text-dark m-b-5"><b>Miêu tả: </b><b><%= announcement.description%></b></p>
-                                    <p class="text-dark m-b-5"><b>Tên người đăng: </b> <b class="text-muted"><%= announcement.sender.name%></b></p>
-                                    <p class="text-dark m-b-0"><b>Thời gian: </b> <b class="text-muted"><%= announcement.createdAt%></b></p>
-                                </div>
-                            </div>
 
-                            <div class="table-detail">
-                                <h4 class="m-t-0">&nbsp;</h4>
-                                <p class="text-dark m-b-5"><b>Loại thông báo:</b> <b class="text-muted"><%= announcement.kindOfAnnouncement.name%></b></p>
-                                <p class="text-dark m-b-5"><b>Mức độ:</b> <b class="text-muted"><%= announcement.priorityNotify.name%></b></p>
-                                <p class="text-dark m-b-0"><b>Loại người nhận:</b> <b class="text-muted">
-                                        <%=announcement.kindOfReceiver%>
-                                    </b></p>
+                        <div class="col-lg-6">
+                            <div class="member-info">
+                                <h4 class="m-t-0">Tiêu đề: <b><%= announcement.title%></b></h4>
+                                <p class="text-dark m-b-5"><b>Miêu tả: </b><%= announcement.description%></p>
+                                <p class="text-dark m-b-5"><b>Tên người đăng: </b><%= announcement.sender.name%></p>
+                                <p class="text-dark m-b-0"><b>Thời gian: </b><%= announcement.createdAt%></p>
                             </div>
                         </div>
-                        <H4>Có <b><%= `${announcement.reaction.surprise.length +
-                                announcement.reaction.wow.length +
-                                announcement.reaction.love.length+
-                                announcement.reaction.angry.length+
-                                announcement.reaction.cry.length}` %></b> lượt bày tỏ cảm xúc</H4>
-                        <div class="fr-view">
-                            <%- announcement.content %>
+
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0">&nbsp;</h4>
+                            <p class="text-dark m-b-5"><b>Loại thông báo:</b> <%= announcement.kindOfAnnouncement.name%></p>
+                            <p class="text-dark m-b-5"><b>Mức độ:</b><%= announcement.priorityNotify.name%></p>
+                            <p class="text-dark m-b-0"><b>Loại người nhận:</b><%=announcement.kindOfReceiver%></p>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <p class="text-dark m-b-5">Có <b><%= `${announcement.reaction.surprise.length +
+                                    announcement.reaction.wow.length +
+                                    announcement.reaction.love.length+
+                                    announcement.reaction.angry.length+
+                                    announcement.reaction.cry.length}` %></b> lượt bày tỏ cảm xúc</p>
+                        </div>
+
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <br>
+                            <div class="fr-view">
+                                <%- announcement.content %>
+                            </div>
                         </div>
                     </div>
-
                 </div> <!-- end col -->
                 <div class="col-lg-12">
                     <div class="card-box">
@@ -102,11 +105,9 @@
                             </ul>
                         </div>
                     </div>
-
-                </div><!-- /col-sm-5 -->
+                </div>
             </div>
         </div> <!-- container -->
-
     </div> <!-- content -->
     <footer class="footer text-right">
         © 2017. All rights reserved.

@@ -299,8 +299,8 @@ export const postMarks = async (req ,res) => {
             // sendTo topic
 
             const results = await Promise.all([
-                //todo:sendMark(announce,course.getKeyCourse()),
-                sendMark(notifiMarkData,'int_4050'),
+                sendMark(notifiMarkData,course.getKeyCourse()),
+                // sendMark(notifiMarkData,'int_4050'),
                 course.save()
             ]);
             return results[1];
@@ -312,6 +312,7 @@ export const postMarks = async (req ,res) => {
             idCourses
         });
     } catch (err){
+        console.log(err);
         res.status(500).json({
             success :  false
         });
