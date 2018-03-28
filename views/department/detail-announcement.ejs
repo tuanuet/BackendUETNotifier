@@ -49,7 +49,7 @@
                         <label>Gửi cho: <span id="send-to"></span> <span class="remove">X</span></label>
                         <div class="comment-wrap">
                             <div class="photo">
-                                <div class="avatar" style="background-image: url('https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/128.jpg')"></div>
+                                <div class="avatar" style="background-image: url('/images/logo2_new.png')"></div>
                             </div>
                             <div class="comment-block">
                                 <form action="">
@@ -63,11 +63,11 @@
                                     <% if(_.isNull(feedback.subFeedback)){ %>
                                     <li data-id="<%= feedback._id%>">
                                     <div class="comment-main-level">
-                                        <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+                                        <div class="comment-avatar"><img src= <%= feedback.sender._id.toString() === user._id.toString() ? "/images/logo2_new.png" : "/images/user.png"%> alt=""></div>
                                         <div class="comment-box">
                                             <div class="comment-head">
-                                                <h6 class="comment-name by-author"><a href="http://creaticode.com/blog"><%= `${feedback.sender.name} (${feedback.sender.code})` %></a></h6><span class="badge-kind-sender"><%= feedback.kindSender%></span>
-                                                <span class="timer"><%= helper.getTimer(feedback.createdAt)%></span>
+                                                <h6 class="comment-name by-author"><a href="#"><%= `${feedback.sender.name} (${feedback.sender.code?  feedback.sender.code : ''})` %></a></h6><span class="badge-kind-sender"><%= feedback.kindSender%></span>
+                                                <span class="timer"><%= helper.getMomentTime(feedback.createdAt,true)%></span>
                                                 <i data-value="<%= feedback._id%>" class="fa fa-reply"></i>
                                             </div>
                                             <div class="comment-content">
@@ -85,11 +85,11 @@
                                         <% _.each(subs,sub => { %>
                                         <li data-id="<%= sub._id%>">
                                             <!-- Avatar -->
-                                            <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
+                                            <div class="comment-avatar"><img src="<%= sub.sender._id.toString() === user._id.toString() ? "/images/logo2_new.png" : "/images/user.png"%>" alt=""></div>
                                             <div class="comment-box">
                                                 <div class="comment-head">
-                                                    <h6 class="comment-name by-author"><a href="http://creaticode.com/blog"><%= `${sub.sender.name} (${sub.sender.code})` %></a></h6><span class="badge-kind-sender"><%= sub.kindSender%></span>
-                                                    <span class="timer"><%= helper.getTimer(sub.createdAt)%></span>
+                                                    <h6 class="comment-name by-author"><a href="#"><%= `${sub.sender.name} (${sub.sender.code?  sub.sender.code: ''})` %></a></h6><span class="badge-kind-sender"><%= sub.kindSender%></span>
+                                                    <span class="timer"><%= helper.getMomentTime(sub.createdAt,true)%></span>
                                                     <i data-value="<%= sub.subFeedback%>" class="fa fa-reply"></i>
                                                 </div>
                                                 <div class="comment-content">
@@ -165,7 +165,7 @@
                 <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
                 <div class="comment-box">
                     <div class="comment-head">
-                        <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${feedback.sender.name} (${feedback.sender.code})</a></h6><span class="badge-kind-sender">${feedback.kindSender}</span>
+                        <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${feedback.sender.name} (${feedback.sender.code?  feedback.sender.code : ''})</a></h6><span class="badge-kind-sender">${feedback.kindSender}</span>
                         <span class="timer">${feedback.createdAt}</span>
                         <i data-value="${feedback._id}" class="fa fa-reply"></i>
                     </div>
@@ -185,7 +185,7 @@
                 <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
                 <div class="comment-box">
                 <div class="comment-head">
-                <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${sub.sender.name} (${sub.sender.code})</a></h6><span class="badge-kind-sender">${sub.kindSender}</span>
+                <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">${sub.sender.name} (${sub.sender.code?  sub.sender.code :  ''})</a></h6><span class="badge-kind-sender">${sub.kindSender}</span>
                 <span class="timer">${sub.createdAt}</span>
                 <i data-value="${sub.subFeedback}" class="fa fa-reply"></i>
                 </div>

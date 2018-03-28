@@ -98,6 +98,7 @@ app.use((req, res, next) => {
     res.locals.user = req.user;
     res.locals._ = _;
     res.locals.helper = helper;
+    res.locals.appName = process.env.APP_NAME;
     next();
 });
 app.use((req, res, next) => {

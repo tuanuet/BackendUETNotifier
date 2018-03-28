@@ -86,6 +86,20 @@ export function getTopicNameByCode(code) {
     return undefined;
 }
 
-export function getAllCodeExept(code) {
+export const getMomentTime = (date, timeFormat = false) => {
+    let timeStr = timeFormat ? moment(date).format('YYYY/MM/DD HH:mm') : moment(date).format('YYYY/MM/DD');
 
-}
+    const current = moment();
+    const minuteDiff = current.diff(date, 'minutes');
+    const hourDiff = current.diff(date, 'hours');
+
+    if (minuteDiff < 1) {
+        timeStr = 'vài giây trước';
+    } else if (minuteDiff < 60) {
+        timeStr = minuteDiff + ' phút trước';
+    } else if (minuteDiff < 24 * 60) {
+        timeStr = hourDiff + 'giở trước';
+    }
+
+    return timeStr;
+};
