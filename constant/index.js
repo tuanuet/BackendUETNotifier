@@ -12,6 +12,7 @@ export const REACTION = {
 export const KIND_NEW_NOTIFICATION = 2;
 export const KIND_ANNOUNCEMENT = 1;
 export const KIND_MARK_ANNOUNCEMENT = 3;
+export const KIND_FEEDBACK_NOTIFICATION = 4;
 
 export const NEW_LIMIT = 20;
 

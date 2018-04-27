@@ -6,6 +6,10 @@ import * as firebaseService from '../config/firebase';
 import * as helper from '../helper';
 import * as passportMiddleware from '../config/passport';
 import Feedback from '../models/Feedback';
+import Student from '../models/Student';
+import Announcement from '../models/Announcement';
+import * as Response from '../response';
+const MobileDetect = require('mobile-detect');
 
 router.get('/sendNewsNotification',async (req,res) => {
     let news = await New.find({});
@@ -43,6 +47,12 @@ router.route('/feedback')
 
                 await feedBack.save();
                 const respFeedBack = await Feedback.findByIdAndPopulate(feedBack._id);
+                //User # Student
+                if(user.role !== 'Student'){
+                    const announcement = await Announcement.findById(announcementId);
+                    const message = await firebaseService.toTopic(announcement.kindOfAnnouncement,Response.FeedbackNotification(respFeedBack));
+                    console.log(Response.FeedbackNotification(respFeedBack));
+                }
                 res.jsonp(respFeedBack);
             } catch (err) {
                 res.status(403).json({

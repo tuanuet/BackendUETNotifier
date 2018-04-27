@@ -5,18 +5,17 @@
         <div class="container">
 
             <!-- Page-Title -->
+            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : ( user.role === 'Lecturer' ? 'Giảng viên' : 'Admin') ) %>
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="page-title"><%= user.role%></h4>
+                    <h4 class="page-title"><%= role %></h4>
                     <ol class="breadcrumb">
                         <li>
-                            <a href="#"><%= user.role%></a>
+                            <a href="#"><%= role %></a>
                         </li>
-                        <li>
-                            <a href="#">Manage</a>
-                        </li>
+
                         <li class="active">
-                            Announcement
+                            Lịch sử
                         </li>
                     </ol>
                 </div>

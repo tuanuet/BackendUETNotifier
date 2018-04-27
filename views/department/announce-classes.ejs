@@ -1,4 +1,5 @@
 <% layout('../layout') -%>
+<% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : ( user.role === 'Lecturer' ? 'Giảng viên' : 'Admin') ) %>
 <div class="content-page">
     <!-- Start content -->
     <div class="content">
@@ -7,16 +8,16 @@
             <!-- Page-Title -->
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="page-title">Customers</h4>
+                    <h4 class="page-title"><%= role %></h4>
                     <ol class="breadcrumb">
                         <li>
-                            <a href="#">Admin</a>
+                            <a href="#"><%= role %></a>
                         </li>
                         <li>
-                            <a href="#">Manage</a>
+                            <a href="#">Thông báo</a>
                         </li>
                         <li class="active">
-                            Classes
+                            Lớp môn học
                         </li>
                     </ol>
                 </div>
@@ -24,18 +25,18 @@
 
             <div class="row">
                 <div class="card-box">
-                    <h4 class="m-t-0 header-title"><b>Send Annoucement for classes </b></h4>
+
                     <hr/>
 
                     <form action="/department/announce/classes" enctype="multipart/form-data" method="post" data-parsley-validate novalidate>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="title">Title*</label>
+                                    <label for="title">Tiêu đề *</label>
                                     <input type="text" name="title" parsley-trigger="change" required placeholder="Enter title" class="form-control" id="title">
                                 </div>
                                 <div class="form-group">
-                                    <label for="content">Content*</label>
+                                    <label for="content">Nội dung *</label>
                                     <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
                                 </div>
 
@@ -44,14 +45,14 @@
                                     <input id="link" name="link" type="text" placeholder="Link" class="form-control">
                                 </div>
                                 <div class="form-group m-b-0">
-                                    <label class="control-label">Attach file</label>
+                                    <label class="control-label">Tệp đính kèm </label>
                                     <input type="file" name="file" class="filestyle" data-placeholder="No file">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>
-                                        Kind Announcement
+                                        Loại thông báo
                                     </label>
                                     <select class="selectpicker show-tick" name="kindOfAnnouncement" data-style="btn-white">
                                         <% kindOfAnnouncement.forEach(function (item) {%>
@@ -61,7 +62,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>
-                                        Priority
+                                        Mức độ khẩn cấp
                                     </label>
                                     <select class="selectpicker show-tick" name="priorityNotify" data-style="btn-white">
                                         <% priority.forEach(function (item) {%>
@@ -71,7 +72,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>
-                                        Classes
+                                        Lớp chính
                                     </label>
                                     <select multiple="multiple" class="multi-select" id="my_multi_select1" name="classes[]" data-plugin="multiselect">
                                         <% classes.forEach(function (item) { %>
@@ -84,10 +85,10 @@
 
                         <div class="form-group text-right m-b-0">
                             <button class="btn btn-primary waves-effect waves-light" type="submit">
-                                Submit
+                                Gửi
                             </button>
                             <button type="reset" class="btn btn-default waves-effect waves-light m-l-5">
-                                Cancel
+                                Hủy
                             </button>
                         </div>
 
