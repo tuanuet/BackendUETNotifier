@@ -130,20 +130,25 @@ export const fetchingNewsAndAnnouncement = async (req,res) => {
     res.jsonp({announcements,news});
 };
 export const fetchReactionAnnouncement = async (req,res) => {
-    const announceIds = req.body.ids;
-    const user = req.user;
-    const data = await Announcement.fetchReaction(announceIds,user._id);
-    const totalFeedBacks = await Feedback.getCountByAnnouncementIds(announceIds);
-    const responseData =
-        _(req.body.ids)
-            .map(id => {
-                const react = _.findLast(data,react => react._id.toString() === id.toString());
-                const count = _.findLast(totalFeedBacks,count => count._id.toString() === id.toString());
-                return {
-                    ...react,
-                    ...(count ? count : {feedBackCount: 0}),
-                };
-            })
-            .value();
-    res.jsonp(responseData);
+    try{
+        const announceIds = req.body.ids;
+        const user = req.user;
+        const data = await Announcement.fetchReaction(announceIds,user._id);
+        const totalFeedBacks = await Feedback.getCountByAnnouncementIds(announceIds);
+        const responseData =
+            _(req.body.ids)
+                .map(id => {
+                    const react = _.findLast(data,react => react._id.toString() === id.toString());
+                    const count = _.findLast(totalFeedBacks,count => count._id.toString() === id.toString());
+                    return {
+                        ...react,
+                        ...(count ? count : {feedBackCount: 0}),
+                    };
+                })
+                .value();
+        res.jsonp(responseData);
+    } catch (e) {
+        console.log(e);
+    }
+
 };
