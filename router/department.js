@@ -27,15 +27,15 @@ router.route('/announce/all')
 
 router.route('/announce/classes')
     .get(departmentController.getAnnounceClasses)
-    .post(upload.single('file'),departmentController.postAnnounceClasses);
+    .post(cpUpload,departmentController.postAnnounceClasses);
 
 router.route('/announce/courses')
     .get(departmentController.getAnnounceCourses)
-    .post(upload.single('file'),departmentController.postAnnounceCourses);
+    .post(cpUpload,departmentController.postAnnounceCourses);
 
 router.route('/announce/students')
     .get(departmentController.getAnnounceStudents)
-    .post(upload.single('file'),departmentController.postAnnounceStudents);
+    .post(cpUpload,departmentController.postAnnounceStudents);
 
 router.get('/manage/announce/history',departmentController.getHistoryAnnounce);
 router.get('/manage/announce/history/data-table',departmentController.getHistoryAnnounceDatatable);
