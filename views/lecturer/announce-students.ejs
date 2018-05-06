@@ -7,7 +7,7 @@
         <div class="container">
 
             <!-- Page-Title -->
-            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : ( user.role === 'Lecturer' ? 'Giảng viên' : 'Admin') ) %>
+            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : 'Admin' ) %>
             <div class="row">
                 <div class="col-sm-12">
                     <h4 class="page-title"><%= role %></h4>
@@ -19,7 +19,7 @@
                             <a href="#">Thông báo</a>
                         </li>
                         <li class="active">
-                            Lớp môn học
+                            Sinh viên
                         </li>
                     </ol>
                 </div>
@@ -27,11 +27,10 @@
 
             <div class="row">
                 <div class="card-box">
-                    <h4 class="m-t-0 header-title"><b>Send Annoucement for classes </b></h4>
+                    <h4 class="m-t-0 header-title"><b>Send Annoucement for some students </b></h4>
                     <hr/>
 
-                    <form action="/department/announce/courses" enctype="multipart/form-data" method="post" data-parsley-validate novalidate>
-
+                    <form action="/lecturer/announce/students" enctype="multipart/form-data" method="post" data-parsley-validate novalidate>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -78,24 +77,18 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>
-                                        Lớp môn học
-                                    </label>
-                                    <select class="multi-select" multiple="" name="courses[]" id="my_multi_select3" >
-                                        <% courses.forEach(function (item) { %>
-                                        <option value="<%= item.id %>"><%= `${item.id} ${item.name}` %></option>
-                                        <%})%>
-                                    </select>
+                                    <label for="link">Students code by separator (,) no space</label>
+                                    <input id="link" name="students" type="text" placeholder="code,code,..." class="form-control">
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-12 m-b-0 p-0">
                             <div class="form-group">
                                 <label for="content">Nội dung*</label>
                                 <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
                             </div>
                         </div>
-
                         <div class="form-group text-right m-b-0">
                             <button class="btn btn-primary waves-effect waves-light" type="submit">
                                 Submit
@@ -108,7 +101,6 @@
                     </form>
 
                 </div>
-
             </div>
         </div> <!-- container -->
 
@@ -122,6 +114,7 @@
         $('form').parsley();
     });
 </script>
+
 
 <script src="/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
 <script src="/assets/plugins/switchery/js/switchery.min.js"></script>
@@ -143,7 +136,6 @@
 <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.pkgd.min.js'></script>
 
 <script type="text/javascript" src='/js/main.js'></script>
-
 
 
 

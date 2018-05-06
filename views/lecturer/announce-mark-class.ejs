@@ -1,0 +1,133 @@
+<% layout('../layout') -%>
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container">
+
+            <!-- Page-Title -->
+            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : 'Admin' ) %>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="page-title"><%= role %></h4>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="#"><%= role %></a>
+                        </li>
+                        <li>
+                            <a href="#">Thông báo</a>
+                        </li>
+                        <li class="active">
+                            Điểm
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-box table-responsive">
+                        <div class="form-group m-b-0">
+                            <label class="control-label">Chọn tệp chuẩn file excel</label>
+                            <input id="file" type="file"  accept=".xlsx, .xls" name="file" class="filestyle" multiple data-placeholder="No file">
+                        </div>
+                        <div id="btn-submit" class="form-group m-b-0">
+
+                        </div>
+
+                        <div id="table"></div>
+
+                    </div>
+                </div> <!-- end col -->
+            </div>
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+    <footer class="footer text-right">
+        © 2017. All rights reserved.
+    </footer>
+</div>
+<script src="/js/lib/xlsx.min.js"></script>
+<script src="/js/parseXLSX.js"></script>
+<script src="/js/lib/lodash.js"></script>
+<script>
+
+    $(document).ready(function () {
+        function getLabelCourse(idCourse){
+            return _.snakeCase(idCourse)
+        }
+
+        let courses = [];
+
+        $("#file").change(function(e) {
+            courses = [];
+
+            $("#btn-submit").append('<button id="pushnotification" type="button" class="btn btn-primary" name="file">Push Notification All</button>')
+            for (let  i = 0; i < this.files.length; ++i) {
+                var reader = new FileReader();
+                let name = this.files[i].name.toLowerCase().trim();
+                reader.onload = function (e) {
+
+                    var data = e.target.result;
+                    var workbook = XLSX.read(data, {type: 'binary'});
+
+                    /* DO SOMETHING WITH workbook HERE */
+                    process(workbook, function (thead, tbody, json) {
+                        courses.push(json)
+
+                        //di for div
+                        var label = getLabelCourse(json.informationClass.idCourse)
+                        //append new div
+                        $('#table').append('<div id="'+label+'"></div>')
+                        //append inside newDiv
+                        $('#'+label).append('<hr /><h4 class="m-t-0 header-title"><b>'+json.informationClass.courseName+'</b></h4>' +
+                            '                        <p class="text-muted font-13 m-b-30">\n' +
+                            '                             Giảng Viên : '+json.informationClass.lecturer+
+                            '                        </p>')
+                        $('#'+label).append('<table id="datatable-fixed-col" class="'+label + ' table table-striped table-bordered"></table>')
+                        $("."+label).dataTable({
+                            data: json.points,
+                            columns: json.headers.map(function (item) {
+                                return {name: item,title : item}
+                            })
+                        })
+
+                        $('#'+label).append('<button id="pushnotification'+i +'" type="button" class="btn btn-primary" name="file">Push '+ json.informationClass.idCourse+'</button>')
+
+                        $(document).on('click',"#table #pushnotification"+i,function(){
+                            $.post('/lecturer/announce/mark',{data : [json]},function (res) {
+                                var idCourses = res.idCourses;
+                                idCourses.forEach(function (idCourse) {
+                                    $("#"+idCourse).remove();
+                                    $('#pushnotification'+i).remove();
+                                    $("#file").val("");
+                                })
+                                courses = _(courses).filter(function (item) {
+                                    return getLabelCourse(item.informationClass.idCourse) !== idCourses[0];
+                                }).value();
+                                if(courses.length !== 0){
+                                    $('#pushnotification').remove();
+                                }
+                            });
+                        })
+                    });
+                };
+                reader.readAsBinaryString(this.files[i]);
+            }
+
+
+        })
+
+        $(document).on('click',"#pushnotification", function () {
+
+            $.post('/department/announce/mark',{data : courses},function (res) {
+                var idCourses = res.idCourses;
+                idCourses.forEach(function (idCourse) {
+                    $("#"+idCourse).remove();
+                    $('#pushnotification').remove();
+                    $("#file").val("");
+                })
+            });
+        })
+    })
+
+</script>
+
