@@ -1,4 +1,6 @@
 <% layout('../layout') -%>
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_editor.pkgd.min.css')%>
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/css/froala_style.min.css')%>
 <div class="content-page">
     <!-- Start content -->
     <div class="content">
@@ -29,58 +31,68 @@
                     <hr/>
 
                     <form action="/department/announce/courses" enctype="multipart/form-data" method="post" data-parsley-validate novalidate>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="title">Title*</label>
+                                    <label for="title">Tiêu đề *</label>
                                     <input type="text" name="title" parsley-trigger="change" required placeholder="Enter title" class="form-control" id="title">
-                                </div>
-                                <div class="form-group">
-                                    <label for="content">Content*</label>
-                                    <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="link">Link</label>
-                                    <input id="link" name="link" type="text" placeholder="Link" class="form-control">
+                                    <label for="title">Mô tả ngắn *</label>
+                                    <input type="text" name="description" parsley-trigger="change" required placeholder="Enter description" class="form-control" id="description">
                                 </div>
+
                                 <div class="form-group m-b-0">
-                                    <label class="control-label">Attach file</label>
+                                    <label class="control-label">Tệp đính kèm </label>
                                     <input type="file" name="file" class="filestyle" data-placeholder="No file">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>
-                                        Kind Announcement
+                                        Loại thông báo
                                     </label>
                                     <select class="selectpicker show-tick" name="kindOfAnnouncement" data-style="btn-white">
                                         <% kindOfAnnouncement.forEach(function (item) {%>
-                                            <option value="<%=item.id%>"><%= item.name%></option>
+                                        <option value="<%=item.id%>"><%= item.name%></option>
                                         <%})%>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>
-                                        Priority
+                                        Mức độ khẩn cấp
                                     </label>
                                     <select class="selectpicker show-tick" name="priorityNotify" data-style="btn-white">
                                         <% priority.forEach(function (item) {%>
-                                            <option value="<%=item.id%>"><%= item.name%></option>
+                                        <option value="<%=item.id%>"><%= item.name%></option>
                                         <%})%>
                                     </select>
                                 </div>
+                                <div class="form-group" style="margin-top: 25px">
+                                    <label class="control-label">Ảnh minh họa</label>
+                                    <input type="file" name="images" class="filestyle" multiple accept="image/*" data-placeholder="No file">
+                                </div>
+
+                            </div>
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>
                                         Lớp môn học
                                     </label>
                                     <select class="multi-select" multiple="" name="courses[]" id="my_multi_select3" >
                                         <% courses.forEach(function (item) { %>
-                                            <option value="<%= item.id %>"><%= `${item.id} ${item.name}` %></option>
+                                        <option value="<%= item.id %>"><%= `${item.id} ${item.name}` %></option>
                                         <%})%>
                                     </select>
-
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-b-0 p-0">
+                            <div class="form-group">
+                                <label for="content">Nội dung*</label>
+                                <textarea name="content" parsley-trigger="change" required placeholder="Enter content" class="form-control" id="content"></textarea>
                             </div>
                         </div>
 
@@ -127,6 +139,10 @@
 <script type="text/javascript" src="/assets/pages/autocomplete.js"></script>
 
 <script type="text/javascript" src="/assets/pages/jquery.form-advanced.init.js"></script>
+<!-- Include JS file. -->
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.7.5/js/froala_editor.pkgd.min.js'></script>
+
+<script type="text/javascript" src='/js/main.js'></script>
 
 
 

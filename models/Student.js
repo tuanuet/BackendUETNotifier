@@ -56,11 +56,39 @@ SinhVienSchema.statics.findOneJoinAll = function(params) {
 SinhVienSchema.statics.findStudentByClasses = function (idClasses) {
     return this.find({ class : { $in: idClasses}});
 };
+
+SinhVienSchema.statics.findTokensByClasses = async function (idClasses) {
+    const students = await this.find({ class : { $in: idClasses}});
+    return students.reduce( (prev,student) => {
+        if(!student.token) return prev;
+        prev.push(student.token);
+        return prev;
+    },[]);
+};
+
 SinhVienSchema.statics.findStudentByCourses = function (idCourses) {
     return this.find({ courses : { $in: idCourses }});
 };
 SinhVienSchema.statics.findByArrayId = function (studentIds) {
     return this.find({ code: {$in : studentIds}});
+};
+
+SinhVienSchema.statics.findTokensByCourses = async function (courses) {
+    const students = await this.find({ courses : { $in: courses}});
+    return students.reduce( (prev,student) => {
+        if(!student.token) return prev;
+        prev.push(student.token);
+        return prev;
+    },[]);
+};
+
+SinhVienSchema.statics.findTokensByCodes = async function (codes) {
+    const students = await this.find({ code : { $in: codes}});
+    return students.reduce( (prev,student) => {
+        if(!student.token) return prev;
+        prev.push(student.token);
+        return prev;
+    },[]);
 };
 
 //retrieve token by id

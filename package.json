@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "start": "babel-node app.js",
-    "start:w": "nodemon app.js --exec babel-node --presets es2015,stage-0",
+    "start:w": "nodemon app.js --ignore './public' --exec babel-node --presets es2015,stage-0",
     "start:seed": "babel-node ./seed/dropdb.js && babel-node app.js seed",
     "postinstall": "npm rebuild node-sass",
     "start:prod": "pm2 start app.js --interpreter ./node_modules/.bin/babel-node",
@@ -67,6 +67,7 @@
     "node-sass-middleware": "0.11.0",
     "node-uuid": "^1.4.8",
     "nodemailer": "3.1.7",
+    "nodemon": "^1.17.4",
     "passport": "0.3.2",
     "passport-jwt": "3.0.1",
     "passport-local": "1.0.0",

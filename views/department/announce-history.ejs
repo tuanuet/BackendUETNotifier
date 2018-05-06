@@ -55,7 +55,6 @@
 
 <script>
     $(document).ready(function () {
-
         var table = $('#datatable-fixed-col').dataTable({
             searching: true,
             processing:true,
@@ -73,7 +72,7 @@
                 {data: 'title', name: 'title',searchable: true, type: "string",sort: 'text',
                     fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html("<a href='/department/manage/announce/"+oData._id+"'>"+oData.title+"</a>");
-                }},
+                    }},
                 {data: 'description',name :'description',searchable: true,
                     fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                         console.log(oData)
@@ -84,6 +83,7 @@
 
             ],
         });
+
     });
 
 </script>

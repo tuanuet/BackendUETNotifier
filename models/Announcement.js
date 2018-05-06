@@ -31,7 +31,7 @@ const ThongBaoSchema = Schema({
         required: true
     },
     receiver:[{
-        type: mongoose.Schema.ObjectId,
+        type: String,
         refPath: 'kindOfReceiver',
     }],
     kindOfReceiver:{

@@ -4,7 +4,10 @@ import {
     sendCourse,
     sendStudent,
     sendTopicNoContent,
-    sendMark
+    sendMark,
+    sendClassesNoContent,
+    sendCoursesNoContent,
+    sendToCodesNoContent
 } from './firebaseService';
 import {
     getAllKindOfNews,
@@ -19,6 +22,9 @@ export {
     sendToTokens,
     sendCourse,
     sendStudent,
+    sendClassesNoContent,
+    sendCoursesNoContent,
+    sendToCodesNoContent,
     getAllNews,
     getAllKindOfNews,
     getNewsInpage,

@@ -3,7 +3,15 @@ import Priority from '../models/PriorityNotify';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
-import {sendToTokens, sendTopic, sendTopicNoContent,sendMark} from '../service';
+import {
+    sendToTokens,
+    sendTopic,
+    sendTopicNoContent,
+    sendMark,
+    sendClassesNoContent,
+    sendCoursesNoContent,
+    sendToCodesNoContent
+} from '../service';
 import Class from '../models/Class';
 import Student from '../models/Student';
 import Feedback from '../models/Feedback';
@@ -11,8 +19,6 @@ import Course from '../models/Course';
 import {KINDOFRECEIVER,RECEIVER} from '../constant';
 import RedisCourse from '../redis/Course';
 import _ from 'lodash';
-import {sendEveryTopic} from '../service/firebaseService';
-import * as helper from '../helper';
 
 export const getDashboard = (req, res) => {
     res.render('department/dashboard');
@@ -38,14 +44,14 @@ export const postAnnounceAll = async (req, res) => {
     let images = undefined;
     try {
         //check file
-        if(req.files.file && req.files.file.length === 1){
+        if(req.files && req.files.file && req.files.file.length === 1){
             file = await new File({
                 name: req.files.file[0].originalname,
                 link: encodeURI(`/department/${req.files.file[0].filename}`)
             }).save();
         }
         //check image
-        if(req.files.images){
+        if(req.files && req.files.images){
             images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
         }
         // save announcement
@@ -95,18 +101,23 @@ export const getAnnounceClasses = async (req,res) => {
 };
 
 export const postAnnounceClasses = async (req,res) => {
-    /// lưu ten file vao db
-    let file = null;
+    let file = undefined;
+    let images = undefined;
     try {
-        if(req.file){
+        //check file
+        if(req.files && req.files.file && req.files.file.length === 1){
             file = await new File({
-                name: req.file.originalname,
-                link: `/department/${req.file.filename}`
+                name: req.files.file[0].originalname,
+                link: encodeURI(`/department/${req.files.file[0].filename}`)
             }).save();
+        }
+        //check image
+        if(req.files && req.files.images){
+            images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
         }
         // save announcement
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify, classes, description
+            title, content, link, kindOfAnnouncement, priorityNotify, description, classes
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
@@ -117,22 +128,17 @@ export const postAnnounceClasses = async (req,res) => {
             file : file ? file.id : null,
             receiver : classes,
             description,
-            kindOfReceiver: KINDOFRECEIVER[RECEIVER.CLASS]
+            descriptionImages: images,
+            kindOfReceiver : KINDOFRECEIVER[RECEIVER.CLASS]
         }).save();
 
         const message = await announce.getMessage();
-        //todo : announce for student by classes
-        //todo : find all student in class
-        let students = await Student.findStudentByClasses(classes);
-        //todo : get token in student
-        let tokens = students.map(item =>{
-            return item.token;
-        });
-        const response = await sendToTokens(message,tokens);
-        console.log('response',response);
+        //todo : announce for student by kindOfAnnouncement
+        const response = await sendClassesNoContent(message,classes);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {
+        console.log(err);
         req.flash('errors', err.message || err.toString());
         console.log(err.message);
     }
@@ -157,38 +163,48 @@ export const getAnnounceCourses = async (req,res) => {
 };
 
 export const postAnnounceCourses = async (req,res) => {
-    //lưu ten file vao db
-    let file = null;
+
+    let file = undefined;
+    let images = undefined;
     try {
-        if(req.file){
+        //check file
+        if(req.files && req.files.file && req.files.file.length === 1){
             file = await new File({
-                name: req.file.originalname,
-                link: `/department/${req.file.filename}`
+                name: req.files.file[0].originalname,
+                link: encodeURI(`/department/${req.files.file[0].filename}`)
             }).save();
+        }
+        //check image
+        if(req.files && req.files.images){
+            images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
         }
         // save announcement
         let {
-            title, content, link, kindOfAnnouncement, priorityNotify, courses, description
+            title, content, link, kindOfAnnouncement, priorityNotify, description, courses
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
+
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
-            file : file ? file.id : null, description,
+            file : file ? file.id : null,
+            receiver : courses,
+            description,
+            descriptionImages: images,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.COURSE]
         }).save();
 
         const message = await announce.getMessage();
         //todo : announce for student by kindOfAnnouncement
-        const response = await sendEveryTopic(message,[message.kindOfAnnouncement._id,...courses]);
-        console.log('response',response);
+        const response = await sendCoursesNoContent(message,courses);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {
+        console.log(err);
         req.flash('errors', err.message || err.toString());
-        console.log(err.message);
     }
+
     res.redirect('/department/announce/courses');
 };
 
@@ -208,53 +224,49 @@ export const getAnnounceStudents = async (req,res) => {
 };
 
 export const postAnnounceStudents = async (req,res) => {
-    //lưu ten file vao db
-    let file = null;
+
+    let file = undefined;
+    let images = undefined;
     try {
-        if(req.file){
+        //check file
+        if(req.files && req.files.file && req.files.file.length === 1){
             file = await new File({
-                name: req.file.originalname,
-                link: `/department/${req.file.filename}`
+                name: req.files.file[0].originalname,
+                link: encodeURI(`/department/${req.files.file[0].filename}`)
             }).save();
         }
+        //check image
+        if(req.files && req.files.images){
+            images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
+        }
         // save announcement
-
         let studentCodes = req.body.students.split(',');
-        let studentInDbs = await Student.findByArrayId(studentCodes);
-        let students = studentInDbs.map(stu => stu._id);
-
         let {
             title, content, link, kindOfAnnouncement, priorityNotify, description
         } = req.body;
         let sender = req.user.id;
         let kindOfSender = req.user.role;
 
-        //create annouce
         const announce = await new Announcement({
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
-            receiver : students,
+            receiver : studentCodes,
             description,
+            descriptionImages: images,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]
         }).save();
 
         const message = await announce.getMessage();
-        // announce for student by courses
-
-        // get token in student
-        let tokens = studentInDbs.map(student =>{
-            return student.token;
-        });
-        //send fcm
-        const response = await sendToTokens(message,tokens);
-        console.log('response',response);
+        //todo : announce for student by kindOfAnnouncement
+        const response = await sendToCodesNoContent(message,studentCodes);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {
-        req.flash('errors', err.message || err.toString());
         console.log(err);
+        req.flash('errors', err.message || err.toString());
     }
+
     res.redirect('/department/announce/students');
 };
 
@@ -268,7 +280,9 @@ export const getHistoryAnnounceDatatable = (req, res) => {
             sender : req.user._id
         }
     };
+
     Announcement.dataTable(req.query,opts,function (err,data) {
+        if(err) console.log('error',err);
         res.json(data);
     });
 };
