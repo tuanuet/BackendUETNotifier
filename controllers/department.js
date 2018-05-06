@@ -251,7 +251,6 @@ export const postAnnounceStudents = async (req,res) => {
             title,content,link,kindOfAnnouncement,
             priorityNotify,sender,kindOfSender,
             file : file ? file.id : null,
-            receiver : studentCodes,
             description,
             descriptionImages: images,
             kindOfReceiver : KINDOFRECEIVER[RECEIVER.STUDENT]

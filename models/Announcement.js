@@ -121,7 +121,9 @@ ThongBaoSchema.statics.findOneJoinAll = function (params){
         { path:'file'  },
         { path: 'kindOfAnnouncement' },
         { path: 'priorityNotify' },
+        { path:'feedback.senderFeedback'},
         { path:'sender' },
+        { path:'receiver'}
     ]);
 };
 
