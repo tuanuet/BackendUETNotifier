@@ -240,7 +240,7 @@ export const postAnnounceStudents = async (req,res) => {
             images = _.map(req.files.images,image => encodeURI(`/department/${image.filename}`));
         }
         // save announcement
-        let studentCodes = req.body.students.split(',');
+        let studentCodes = req.body.students.split(',').map(s => s.trim());
         let {
             title, content, link, kindOfAnnouncement, priorityNotify, description
         } = req.body;
