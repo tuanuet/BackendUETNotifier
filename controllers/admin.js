@@ -359,6 +359,7 @@ export const deleteKindOfNew = async (req, res) => {
         res.redirect('/admin/manage/kindofnew');
     }
 };
+
 /**
  * get,post,put,delete manage New
  */
@@ -378,6 +379,11 @@ export const deleteNew = async (req, res) => {
     } finally {
         res.redirect('/admin/manage/new');
     }
+};
+export const newDatatable = async (req, res) => {
+    New.dataTable(req.query, function (err, data) {
+        res.json(data);
+    });
 };
 /**
  * get,post,put,delete manage Kind of Announcement

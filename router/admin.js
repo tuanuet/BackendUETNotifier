@@ -51,21 +51,14 @@ router.route('/manage/major')
     .put(adminController.updateMajor)
     .delete(adminController.deleteMajor);
 
+
 /**
- * get, edit, post, delete kindofnew
- */
-router.route('/manage/kindofnew')
-    .get(adminController.getKindOfNews)
-    .post(adminController.postKindOfNew)
-    .put(adminController.updateKindOfNew)
-    .delete(adminController.deleteKindOfNew);
-/**
- * get, edit, post, delete kindofnew
+ * get, edit, post, delete new
  */
 router.route('/manage/new')
     .get(adminController.getNews)
     .delete(adminController.deleteNew);
-
+router.get('/manage/new/datatable',adminController.newDatatable);
 /**
  * get, edit, post, delete kindofannouncement
  */
