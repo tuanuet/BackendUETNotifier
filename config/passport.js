@@ -106,15 +106,14 @@ export const reqIsAdmin= function (req,res,next) {
 };
 
 export const reqIsLecture = function (req,res,next) {
-    if (req.user.role === 'Lecturer')
+    if (req.user.role === 'Lecturer' || req.user.role === 'Admin')
         return next();
 
-    console.log(req.user.role);
     req.flash('errors','You don\'t have permission');
     res.redirect(`/${req.user.role.toLowerCase()}`);
 };
 export const reqIsDepartment = function (req,res,next) {
-    if (req.user.role === 'Department')
+    if (req.user.role === 'Department' || req.user.role === 'Admin')
         return next();
 
     req.flash('errors','You don\'t have permission');
@@ -122,7 +121,7 @@ export const reqIsDepartment = function (req,res,next) {
 
 };
 export const reqIsFaculty = function (req,res,next) {
-    if (req.user.role === 'Faculty')
+    if (req.user.role === 'Faculty' || req.user.role === 'Admin')
         return next();
     req.flash('errors','You don\'t have permission');
     res.redirect(`/${req.user.role.toLowerCase()}`);

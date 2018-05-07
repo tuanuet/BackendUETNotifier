@@ -8,13 +8,14 @@ import Class from '../models/Class';
 import Course from '../models/Course';
 import Term from '../models/Term';
 import Major from '../models/Major';
+import Announcement from '../models/Announcement';
 import KindOfNew from '../models/KindOfNew';
 import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import moment from 'moment';
 import New from '../models/New';
 
 
-export const getDashboard = async (req,res) => {
+export const getDashboard = async (req, res) => {
     res.render('admin/dashboard');
 };
 /**
@@ -29,8 +30,8 @@ export const getManagementAccount = async function (req, res) {
         res.redirect(`/admin/manage/account/${role}`);
     }
 };
-export const updateAccount = async function(req, res) {
-    let role = (req.params.role );
+export const updateAccount = async function (req, res) {
+    let role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
 
     req.assert('name', 'Name is not valid').len(1);
@@ -40,10 +41,10 @@ export const updateAccount = async function(req, res) {
     try {
         const Model = mongoose.model(stringModel);
         if (errors) throw new Error(errors);
-        let { email, name, id } = req.body;
+        let {email, name, id} = req.body;
         console.log(req.body);
-        await User.findOneAndUpdate({_id : mongoose.Types.ObjectId(id)}, { email, name },{new: true});
-        let model = await Model.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)}, { email, name },{new: true});
+        await User.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)}, {email, name}, {new: true});
+        let model = await Model.findOneAndUpdate({_id: mongoose.Types.ObjectId(id)}, {email, name}, {new: true});
         req.flash('success', `Update ${model.name} success!`);
     } catch (e) {
         req.flash('errors', e.toString());
@@ -51,13 +52,13 @@ export const updateAccount = async function(req, res) {
         res.redirect(`/admin/manage/account/${stringModel.toLocaleLowerCase()}`);
     }
 };
-export const deleteAccount = async function (req, res){
+export const deleteAccount = async function (req, res) {
     const role = (req.params.role);
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     try {
-        const { id } = req.body;
+        const {id} = req.body;
         const Model = mongoose.model(stringModel);
-        await Model.findOneAndRemove({ _id: id });
+        await Model.findOneAndRemove({_id: id});
         req.flash('success', 'Delete success!');
     } catch (err) {
         req.flash('errors', err);
@@ -79,23 +80,23 @@ export const postAccount = async function (req, res) {
         let {email, password, name} = req.body;
         const Model = mongoose.model(stringModel);
         if (errors) throw new Error(errors);
-        let user = await new User({email, password, role: stringModel }).save();
+        let user = await new User({email, password, role: stringModel}).save();
         let model = await new Model({_id: user.id, name}).save();
 
-        req.flash('success',`Create ${model.name}success!`);
+        req.flash('success', `Create ${model.name}success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
-    }finally {
+    } finally {
         res.redirect(`/admin/manage/account?role=${stringModel.toLocaleLowerCase()}`);
     }
 };
-export const accountDatatable = async function (req,res) {
+export const accountDatatable = async function (req, res) {
 
     const role = (req.params.role.toLocaleLowerCase());
     const stringModel = role.charAt(0).toUpperCase() + role.slice(1);
     const Model = mongoose.model(stringModel);
 
-    Model.dataTable(req.query,function (err,data) {
+    Model.dataTable(req.query, function (err, data) {
         res.json(data);
     });
 
@@ -104,44 +105,44 @@ export const accountDatatable = async function (req,res) {
 /**
  * get,post,put,delete manage class
  */
-export const getClasses = async (req,res) => {
+export const getClasses = async (req, res) => {
     let classes = await Class.find({});
-    res.render('admin/management-class',{classes});
+    res.render('admin/management-class', {classes});
 };
-export const postClass = async (req,res) => {
+export const postClass = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name } = req.body;
+        let {name} = req.body;
         let clas = await new Class({name}).save();
-        req.flash('success',`Create ${clas.name}success!`);
-    }catch (err) {
-        req.flash('errors', err.name || err.toString());
-    } finally {
-        res.redirect('/admin/manage/class');
-    }
-};
-export const updateClass = async (req,res) => {
-    req.assert('name', 'Name is not valid').len(1);
-    const errors = req.validationErrors();
-    try {
-        if (errors) throw new Error(errors);
-        let { name, id } = req.body;
-        let clas = await Class.findOneAndUpdate({_id : id},{name},{new : true});
-        req.flash('success',`Update ${clas.name} success!`);
+        req.flash('success', `Create ${clas.name}success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/class');
     }
 };
-export const deleteClass = async (req,res) => {
+export const updateClass = async (req, res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
     try {
-        let { id } = req.body;
+        if (errors) throw new Error(errors);
+        let {name, id} = req.body;
+        let clas = await Class.findOneAndUpdate({_id: id}, {name}, {new: true});
+        req.flash('success', `Update ${clas.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/class');
+    }
+};
+export const deleteClass = async (req, res) => {
+    try {
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let clas = await Class.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${clas.name} success!`);
+        let clas = await Class.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${clas.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
@@ -149,94 +150,107 @@ export const deleteClass = async (req,res) => {
     }
 };
 
+export const classDatatable = async (req, res) => {
+    Class.dataTable(req.query, function (err, data) {
+        res.json(data);
+    });
+};
+
 /**
  * get,post,put,delete manage course
  */
-export const getCourses = async (req,res) => {
+export const getCourses = async (req, res) => {
     let courses = await Course.find({});
-    res.render('admin/management-course',{courses});
+    res.render('admin/management-course', {courses});
 };
-export const postCourse = async (req,res) => {
+export const postCourse = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name } = req.body;
+        let {name} = req.body;
         let course = await new Course({name}).save();
-        req.flash('success',`Create ${course.name} success!`);
-    }catch (err) {
+        req.flash('success', `Create ${course.name} success!`);
+    } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/course');
     }
 };
-export const updateCourse = async (req,res) => {
+export const updateCourse = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name, id } = req.body;
-        let course = await Course.findOneAndUpdate({_id : id},{name},{new : true});
-        req.flash('success',`Update ${course.name} success!`);
+        let {name, id} = req.body;
+        let course = await Course.findOneAndUpdate({_id: id}, {name}, {new: true});
+        req.flash('success', `Update ${course.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/course');
     }
 };
-export const deleteCourse = async (req,res) => {
+export const deleteCourse = async (req, res) => {
     try {
-        let { id } = req.body;
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let course = await Course.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${course.name} success!`);
+        let course = await Course.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${course.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/course');
     }
 };
+
+export const courseDatatable = async (req, res) => {
+    Course.dataTable(req.query, function (err, data) {
+        res.json(data);
+    });
+};
+
 /**
  * get,post,put,delete manage term
  */
-export const getTerms = async (req,res) => {
+export const getTerms = async (req, res) => {
     let terms = await Term.find({});
-    res.render('admin/management-term',{terms});
+    res.render('admin/management-term', {terms});
 };
-export const postTerm = async (req,res) => {
+export const postTerm = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name } = req.body;
+        let {name} = req.body;
         let term = await new Term({name}).save();
-        req.flash('success',`Create ${term.name} success!`);
-    }catch (err) {
-        req.flash('errors', err.name || err.toString());
-    } finally {
-        res.redirect('/admin/manage/term');
-    }
-};
-export const updateTerm = async (req,res) => {
-    req.assert('name', 'Name is not valid').len(1);
-    const errors = req.validationErrors();
-    try {
-        if (errors) throw new Error(errors);
-        let { name, id } = req.body;
-        let term = await Term.findOneAndUpdate({_id : id},{name},{new : true});
-        req.flash('success',`Update ${term.name} success!`);
+        req.flash('success', `Create ${term.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/term');
     }
 };
-export const deleteTerm = async (req,res) => {
+export const updateTerm = async (req, res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
     try {
-        let { id } = req.body;
+        if (errors) throw new Error(errors);
+        let {name, id} = req.body;
+        let term = await Term.findOneAndUpdate({_id: id}, {name}, {new: true});
+        req.flash('success', `Update ${term.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/term');
+    }
+};
+export const deleteTerm = async (req, res) => {
+    try {
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let term = await Term.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${term.name} success!`);
+        let term = await Term.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${term.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
@@ -247,44 +261,44 @@ export const deleteTerm = async (req,res) => {
 /**
  * get,post,put,delete manage Major
  */
-export const getMajors= async (req,res) => {
+export const getMajors = async (req, res) => {
     let majors = await Major.find({});
-    res.render('admin/management-major',{majors});
+    res.render('admin/management-major', {majors});
 };
-export const postMajor = async (req,res) => {
+export const postMajor = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name } = req.body;
+        let {name} = req.body;
         let major = await new Major({name}).save();
-        req.flash('success',`Create ${major.name} success!`);
-    }catch (err) {
-        req.flash('errors', err.name || err.toString());
-    } finally {
-        res.redirect('/admin/manage/major');
-    }
-};
-export const updateMajor = async (req,res) => {
-    req.assert('name', 'Name is not valid').len(1);
-    const errors = req.validationErrors();
-    try {
-        if (errors) throw new Error(errors);
-        let { name, id } = req.body;
-        let major = await Major.findOneAndUpdate({_id : id},{name},{new : true});
-        req.flash('success',`Update ${major.name} success!`);
+        req.flash('success', `Create ${major.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/major');
     }
 };
-export const deleteMajor= async (req,res) => {
+export const updateMajor = async (req, res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
     try {
-        let { id } = req.body;
+        if (errors) throw new Error(errors);
+        let {name, id} = req.body;
+        let major = await Major.findOneAndUpdate({_id: id}, {name}, {new: true});
+        req.flash('success', `Update ${major.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/major');
+    }
+};
+export const deleteMajor = async (req, res) => {
+    try {
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let major = await Major.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${major.name} success!`);
+        let major = await Major.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${major.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
@@ -296,49 +310,49 @@ export const deleteMajor= async (req,res) => {
  * get,post,put,delete manage Kind of New
  */
 const UrlReg = new RegExp('^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?');
-export const getKindOfNews= async (req,res) => {
+export const getKindOfNews = async (req, res) => {
     let kindofnews = await KindOfNew.find({});
-    res.render('admin/management-kindofnew',{kindofnews});
+    res.render('admin/management-kindofnew', {kindofnews});
 };
-export const postKindOfNew = async (req,res) => {
+export const postKindOfNew = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     req.assert('link', 'Link is not valid').len(5);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name, link } = req.body;
-        if(!UrlReg.test(link)) throw new Error('link is not valid');
-        let kindofnew = await new KindOfNew({name,link}).save();
-        req.flash('success',`Create ${kindofnew.name} success!`);
-    }catch (err) {
+        let {name, link} = req.body;
+        if (!UrlReg.test(link)) throw new Error('link is not valid');
+        let kindofnew = await new KindOfNew({name, link}).save();
+        req.flash('success', `Create ${kindofnew.name} success!`);
+    } catch (err) {
         console.log(err);
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/kindofnew');
     }
 };
-export const updateKindOfNew = async (req,res) => {
+export const updateKindOfNew = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     req.assert('link', 'Link is not valid').len(5);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name, id ,link } = req.body;
-        if(!UrlReg.test(link)) throw new Error('link is not valid');
-        let kindofnew = await KindOfNew.findOneAndUpdate({_id : id},{name,link},{new : true});
-        req.flash('success',`Update ${kindofnew.name} success!`);
+        let {name, id, link} = req.body;
+        if (!UrlReg.test(link)) throw new Error('link is not valid');
+        let kindofnew = await KindOfNew.findOneAndUpdate({_id: id}, {name, link}, {new: true});
+        req.flash('success', `Update ${kindofnew.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/kindofnew');
     }
 };
-export const deleteKindOfNew= async (req,res) => {
+export const deleteKindOfNew = async (req, res) => {
     try {
-        let { id } = req.body;
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let kindofnew = await KindOfNew.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${kindofnew.name} success!`);
+        let kindofnew = await KindOfNew.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${kindofnew.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
@@ -348,17 +362,17 @@ export const deleteKindOfNew= async (req,res) => {
 /**
  * get,post,put,delete manage New
  */
-export const getNews = async (req,res) => {
-    console.log('Body getNews: ',req.body);
+export const getNews = async (req, res) => {
+    console.log('Body getNews: ', req.body);
     let news = await New.find({});
-    res.render('admin/management-new',{news});
+    res.render('admin/management-new', {news});
 };
-export const deleteNew = async (req,res) => {
+export const deleteNew = async (req, res) => {
     try {
-        let { id } = req.body;
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let _new = await New.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${_new.title} success!`);
+        let _new = await New.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${_new.title} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
@@ -366,50 +380,69 @@ export const deleteNew = async (req,res) => {
     }
 };
 /**
- * get,post,put,delete manage Kind of New
+ * get,post,put,delete manage Kind of Announcement
  */
 
-export const getKindOfAnnouncements= async (req,res) => {
+export const getKindOfAnnouncements = async (req, res) => {
     let kindofannouncements = await KindOfAnnouncement.find({});
-    res.render('admin/management-kindofannouncement',{kindofannouncements});
+    res.render('admin/management-kindofannouncement', {kindofannouncements});
 };
-export const postKindOfAnnouncement = async (req,res) => {
+export const postKindOfAnnouncement = async (req, res) => {
     req.assert('name', 'Name is not valid').len(1);
     const errors = req.validationErrors();
     try {
         if (errors) throw new Error(errors);
-        let { name } = req.body;
-        let kindofannouncement = await new KindOfAnnouncement({name}).save();
-        req.flash('success',`Create ${kindofannouncement.name} success!`);
-    }catch (err) {
-        req.flash('errors', err.name || err.toString());
-    } finally {
-        res.redirect('/admin/manage/kindofannouncement');
-    }
-};
-export const updateKindOfAnnouncement = async (req,res) => {
-    req.assert('name', 'Name is not valid').len(1);
-    const errors = req.validationErrors();
-    try {
-        if (errors) throw new Error(errors);
-        let { name, id } = req.body;
-        let kindofannouncement = await KindOfAnnouncement.findOneAndUpdate({_id : id},{name},{new : true});
-        req.flash('success',`Update ${kindofannouncement.name} success!`);
+        let {id, name} = req.body;
+        let kindofannouncement = await new KindOfAnnouncement({_id: id, name}).save();
+        req.flash('success', `Create ${kindofannouncement.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/kindofannouncement');
     }
 };
-export const deleteKindOfAnnouncement= async (req,res) => {
+export const updateKindOfAnnouncement = async (req, res) => {
+    req.assert('name', 'Name is not valid').len(1);
+    const errors = req.validationErrors();
     try {
-        let { id } = req.body;
+        if (errors) throw new Error(errors);
+        let {name, id} = req.body;
+        let kindofannouncement = await KindOfAnnouncement.findOneAndUpdate({_id: id}, {name}, {new: true});
+        req.flash('success', `Update ${kindofannouncement.name} success!`);
+    } catch (err) {
+        req.flash('errors', err.name || err.toString());
+    } finally {
+        res.redirect('/admin/manage/kindofannouncement');
+    }
+};
+export const deleteKindOfAnnouncement = async (req, res) => {
+    try {
+        let {id} = req.body;
         if (!id) throw new Error('Invalid id');
-        let kindofannouncement = await KindOfAnnouncement.findOneAndRemove({_id : id});
-        req.flash('success',`Delete ${kindofannouncement.name} success!`);
+        let kindofannouncement = await KindOfAnnouncement.findOneAndRemove({_id: id});
+        req.flash('success', `Delete ${kindofannouncement.name} success!`);
     } catch (err) {
         req.flash('errors', err.name || err.toString());
     } finally {
         res.redirect('/admin/manage/kindofannouncement');
     }
+};
+
+export const kindOfAnnouncementDatatable = async (req, res) => {
+    KindOfAnnouncement.dataTable(req.query, function (err, data) {
+        res.json(data);
+    });
+};
+
+/**
+ * get,post,put,delete manage Kind of Announcement
+ */
+export const getAnnouncement = async (req, res) => {
+    res.render('admin/management-announcement');
+};
+
+export const announcementDatatable = async (req, res) => {
+    Announcement.dataTable(req.query, function (err, data) {
+        res.json(data);
+    });
 };

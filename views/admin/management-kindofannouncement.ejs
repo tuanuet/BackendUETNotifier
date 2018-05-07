@@ -24,63 +24,23 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card-box">
-
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <form role="form">
-                                    <div class="form-group contact-search m-b-30">
-                                        <input type="text" id="search" class="form-control" placeholder="Search...">
-                                        <button type="submit" class="btn btn-white"><i class="fa fa-search"></i></button>
-                                    </div> <!-- form-group -->
-                                </form>
-                            </div>
-                            <div class="col-sm-4">
-                                <a href="#custom-modal" class="btn btn-default btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
-                                   data-overlaySpeed="200" data-overlayColor="#36404a" data-from="admin" id="btn-add-admin"><i class="md md-add"></i> Add Admin</a>
-                            </div>
-                        </div>
-
+                        <button class="btn btn-primary waves-effect waves-light btn-add" data-toggle="modal" data-target="#modal-add" data-animation="fadein" data-plugin="custommodal" data-overlayspeed="200" data-overlaycolor="#36404a">Add KindOfAnnouncement<i class="fa fa-pencil"></i></button>
                         <div class="table-responsive">
-                            <table class="table table-hover mails m-0 table table-actions-bar">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        <div class="checkbox checkbox-primary checkbox-single">
-                                            <input id="action-checkbox" type="checkbox">
-                                            <label for="action-checkbox"></label>
-                                        </div>
-                                    </th>
-                                    <th class="hidden">ID</th>
-                                    <th>Name</th>
-                                    <th>Created at</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover mails m-0 table table-actions-bar">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Created at</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
 
-                                <tbody>
-                                <% kindofannouncements.forEach(function(kindofannouncement){ %>
-                                <tr>
-                                    <td>
-                                        <div class="checkbox checkbox-primary">
-                                            <input id="checkbox14" type="checkbox">
-                                            <label for="checkbox14"></label>
-                                        </div>
-                                    </td>
-                                    <td class="id hidden"><%= kindofannouncement.id %></td>
-                                    <td class="name"><%= kindofannouncement.name %></td>
-                                    <td>
-                                        <%= kindofannouncement.createdAt%>
-                                    </td>
-                                    <td>
-                                        <a href="#custom-modal" data-id=<%= kindofannouncement.id%> data-from="admin" class="table-action-btn btn-edit" data-animation="fadein" data-plugin="custommodal"
-                                           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-edit open-modal-edit"></i></a>
-                                        <a href="#dialog" data-id=<%= kindofannouncement.id%> data-from="admin" class="table-action-btn btn-delete" data-animation="fadein" data-plugin="custommodal"
-                                           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-close"></i></a>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                                </tbody>
-                            </table>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- end col -->
@@ -94,78 +54,140 @@
 </div>
 
 
-<!-- Modal -->
-<div id="custom-modal" class="modal-demo">
-    <button type="button" class="close" onclick="Custombox.close();">
-        <span>&times;</span><span class="sr-only">Close</span>
-    </button>
-    <h4 class="custom-modal-title">Edit</h4>
-    <div class="custom-modal-text text-left">
-
-        <form role="form" id="form_modal" method="post">
-            <input type="hidden" name="id" id="form_id" value="">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="form-name" name="name" placeholder="Enter name">
-            </div>
-
-            <button type="submit" data-from= id="add-admin" class="btn btn-default waves-effect waves-light">Save</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10" onclick="Custombox.close();">Cancel</button>
-            <span id="message"></span>
-        </form>
+<div id="modal-add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form role="form" class="form_modal" id="form_add" method="post" action="/admin/manage/kindofannouncement?_method=POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Add</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name" class="control-label">ID</label>
+                                <input type="text" class="form-control" name="id" placeholder="Enter ID">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name" class="control-label">Name</label>
+                                <input type="text" class="form-control" name="name" placeholder="Enter name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span id="messageE"></span>
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Save changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
+<div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form role="form" class="form_modal" id="form_edit" method="post" action="/admin/manage/kindofannouncement?_method=PUT">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name" class="control-label">ID</label>
+                                <input type="text" class="form-control" id="id" name="id" placeholder="Enter ID">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name" class="control-label">Name</label>
+                                <input type="text" class="form-control" id="editName" name="name" placeholder="Enter name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span id="messageE"></span>
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-<!-- MODAL delete row-->
-<div id="dialog" class="modal-demo">
-    <button type="button" class="close" onclick="Custombox.close();">
-        <span>&times;</span><span class="sr-only">Close</span>
-    </button>
-    <h4 class="custom-modal-title modal-delete">Edit</h4>
-    <div class="custom-modal-text text-left">
+<div id="modal-delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form role="form" class="form_modal" id="form_delete" method="post" action="/admin/manage/kindofannouncement?_method=DELETE">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Delete</h4>
+                </div>
 
-        <form role="form" id="delete_modal" method="post">
-            <input type="hidden" name="id" id="delete_id" value=""/>
-            <h3>Are you sure to delete this row?</h3>
-            <button type="submit" id="add-admin" class="btn btn-default waves-effect waves-light">Sure!</button>
-            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10" onclick="Custombox.close();">Let me think</button>
-        </form>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteId" name="id">
+                    <h3>Are you sure to delete this row?</h3>
+                </div>
+                <div class="modal-footer">
+                    <span id="messageE"></span>
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Save changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <script>
 
-    $('.btn-edit').click(function () {
-        var from = $(this).data('from');
-        $('#form_modal').attr('action','/admin/manage/kindofannouncement?_method=PUT');
-        $('.custom-modal-title').html('Edit class');
-        var id = $(this).attr('data-id');
-        $('#form_id').val(id);
-        var name = $(this).parent().parent().find('.name').html();
+    $(document).ready(function () {
+        var table = $('#datatable').dataTable({
+            processing:true,
+            serverSide: true,
+            ajax: '/admin/manage/kindofannouncement/datatable',
+            columnDefs: [{
+                "targets": -1,
+                "data": null,
+                "defaultContent": '' +
+                '<button class="btn btn-primary waves-effect waves-light btn-edit" data-toggle="modal" data-target="#con-close-modal" data-animation="fadein" data-plugin="custommodal" data-overlayspeed="200" data-overlaycolor="#36404a"><i class="fa fa-pencil"></i></button>' +
+                '<button class="btn btn-danger waves-effect waves-light btn-delete" data-toggle="modal" data-target="#modal-delete" data-animation="fadein" data-plugin="custommodal" data-overlayspeed="200" data-overlaycolor="#36404a"><i class="fa fa-remove"></i></button>' +
+                '',
+            }],
+            columns:[
+                {data: '_id', name: '_id',},
+                {data: 'name', name: 'name'},
+                {data: 'createdAt', name: 'createdAt'},
+                {data: 'action', name: 'action'},
+            ],
+        });
 
-        $('#form-name').val(name.trim());
-    });
+        $(document).on('click','.btn-edit',function () {
+            var _idTd = $(this).parent().parent().find('td')[0];
+            var _nameTd = $(this).parent().parent().find('td')[1];
+            var _id = $(_idTd).text();
+            var _name = $(_nameTd).text();
 
+            $('#id').val(_id)
+            $('#editName').val(_name)
+        })
 
-    $('#btn-add-admin').click(function () {
-        resetForm();
-        var from = $(this).attr('data-from');
-        $('#form_modal').attr('action','/admin/manage/kindofannouncement');
-        $('.custom-modal-title').attr('method','post');
-        $('#form-name').val('');
-    });
+        $(document).on('click','.btn-delete',function () {
+            var _idTd = $(this).parent().parent().find('td')[0];
 
-    resetForm = function () {
-        $('#warning-message').html('');
-        $('#message').html('');
-    };
+            var _id = $(_idTd).text();
 
-    $('.btn-delete').click(function () {
-        var from = $(this).attr('data-from');
-        $('.modal-delete').html("Delete row");
-        $('#delete_modal').attr('action','/admin/manage/kindofannouncement?_method=DELETE');
-        $('#delete_modal').attr('method','post');
-        var id = $(this).attr('data-id');
-        $('#delete_id').val(id);
+            $('#deleteId').val(_id)
+        })
     });
 </script>

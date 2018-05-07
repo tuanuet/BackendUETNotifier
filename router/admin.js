@@ -22,6 +22,7 @@ router.route('/manage/class')
     .post(adminController.postClass)
     .put(adminController.updateClass)
     .delete(adminController.deleteClass);
+router.get('/manage/class/datatable',adminController.classDatatable);
 
 /**
  * get, edit, post, delete class
@@ -31,7 +32,7 @@ router.route('/manage/course')
     .post(adminController.postCourse)
     .put(adminController.updateCourse)
     .delete(adminController.deleteCourse);
-
+router.get('/manage/course/datatable',adminController.courseDatatable);
 /**
  * get, edit, post, delete term
  */
@@ -73,4 +74,12 @@ router.route('/manage/kindofannouncement')
     .post(adminController.postKindOfAnnouncement)
     .put(adminController.updateKindOfAnnouncement)
     .delete(adminController.deleteKindOfAnnouncement);
+router.get('/manage/kindofannouncement/datatable',adminController.kindOfAnnouncementDatatable);
+
+/**
+ * get, edit, post, delete announcement
+ */
+router.route('/manage/announcement')
+    .get(adminController.getAnnouncement)
+router.get('/manage/announcement/datatable',adminController.announcementDatatable);
 module.exports = router;
