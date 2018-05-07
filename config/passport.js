@@ -102,28 +102,29 @@ export const reqIsAdmin= function (req,res,next) {
     if (req.user.role === 'Admin')
         return next();
     req.flash('errors','You don\'t have permission');
-    res.redirect('/user/login');
+    res.redirect(`/${req.user.role.toLowerCase()}`);
 };
 
 export const reqIsLecture = function (req,res,next) {
     if (req.user.role === 'Lecturer')
         return next();
 
+    console.log(req.user.role);
     req.flash('errors','You don\'t have permission');
-    res.redirect('/user/login');
+    res.redirect(`/${req.user.role.toLowerCase()}`);
 };
 export const reqIsDepartment = function (req,res,next) {
     if (req.user.role === 'Department')
         return next();
 
     req.flash('errors','You don\'t have permission');
-    res.redirect('/user/login');
+    res.redirect(`/${req.user.role.toLowerCase()}`);
 
 };
 export const reqIsFaculty = function (req,res,next) {
     if (req.user.role === 'Faculty')
         return next();
     req.flash('errors','You don\'t have permission');
-    res.redirect('/user/login');
+    res.redirect(`/${req.user.role.toLowerCase()}`);
 
 };

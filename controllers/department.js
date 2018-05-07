@@ -4,8 +4,6 @@ import KindOfAnnouncement from '../models/KindOfAnnouncement';
 import File from '../models/File';
 import Announcement from '../models/Announcement';
 import {
-    sendToTokens,
-    sendTopic,
     sendTopicNoContent,
     sendMark,
     sendClassesNoContent,
@@ -13,7 +11,6 @@ import {
     sendToCodesNoContent
 } from '../service';
 import Class from '../models/Class';
-import Student from '../models/Student';
 import Feedback from '../models/Feedback';
 import Course from '../models/Course';
 import {KINDOFRECEIVER,RECEIVER} from '../constant';
@@ -73,6 +70,7 @@ export const postAnnounceAll = async (req, res) => {
         const message = await announce.getMessage();
         //todo : announce for student by kindOfAnnouncement
         const response = await sendTopicNoContent(message,message.kindOfAnnouncement._id);
+        console.log(response);
 
         req.flash('success','Push Announcement success!');
     } catch (err) {
@@ -260,6 +258,7 @@ export const postAnnounceStudents = async (req,res) => {
         //todo : announce for student by kindOfAnnouncement
         const response = await sendToCodesNoContent(message,studentCodes);
 
+
         req.flash('success','Push Announcement success!');
     } catch (err) {
         console.log(err);
@@ -300,6 +299,7 @@ export const postMarks = async (req ,res) => {
             // create Announcement
             let notifiMarkData = await (new Announcement({
                 title : 'Thông báo điểm thi',
+                description : `Đã có điểm thi môn ${c.informationClass.courseName}`,
                 content : `Đã có điểm thi môn ${c.informationClass.courseName}`,
                 link: `${course.getKeyCourse()}`,
                 kindOfAnnouncement : null,

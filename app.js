@@ -136,10 +136,10 @@ app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
         title : 'Home'
     });
 });
-app.use('/admin',admin);
-app.use('/department',department);
-app.use('/lecturer',lecturer);
-app.use('/faculty',faculty);
+app.use('/admin',middlewarePassport.reqIsAdmin,admin);
+app.use('/department',middlewarePassport.reqIsDepartment,department);
+app.use('/lecturer',middlewarePassport.reqIsLecture,lecturer);
+app.use('/faculty',middlewarePassport.reqIsFaculty,faculty);
 app.use('/user',user);
 app.use('/api',api);
 app.use('/student',passport.authenticate('jwt', {session: false}),student);

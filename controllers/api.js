@@ -138,7 +138,7 @@ export const fetchReactionAnnouncement = async (req,res) => {
         const responseData =
             _(req.body.ids)
                 .map(id => {
-                    const react = _.findLast(data,react => react._id.toString() === id.toString());
+                    const react = _.findLast(data,react => react && react._id.toString() === id.toString());
                     const count = _.findLast(totalFeedBacks,count => count._id.toString() === id.toString());
                     return {
                         ...react,
@@ -148,6 +148,10 @@ export const fetchReactionAnnouncement = async (req,res) => {
                 .value();
         res.jsonp(responseData);
     } catch (e) {
+        res.status(404).jsonp({
+            success: false,
+            message: e.message
+        });
         console.log(e);
     }
 

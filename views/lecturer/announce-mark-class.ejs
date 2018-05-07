@@ -5,7 +5,7 @@
         <div class="container">
 
             <!-- Page-Title -->
-            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : 'Admin' ) %>
+            <% const role = user.role === 'Department' ? 'Phòng ban' : (user.role === 'Faculty'? 'Khoa' : ( user.role === 'Lecturer' ? 'Giảng viên' : 'Admin') ) %>
             <div class="row">
                 <div class="col-sm-12">
                     <h4 class="page-title"><%= role %></h4>

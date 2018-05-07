@@ -15,7 +15,7 @@ import _ from 'lodash';
 import Feedback from '../models/Feedback';
 
 export const getDashboard = async (req,res) => {
-    res.redirect('/');
+    res.render('lecturer/dashboard');
 };
 
 export const getManageCourses = async (req,res) => {
@@ -193,6 +193,7 @@ export const postMarks = async (req ,res) => {
             // create Announcement
             let notifiMarkData = await (new Announcement({
                 title : 'Thông báo điểm thi',
+                description : `Đã có điểm thi môn ${c.informationClass.courseName}`,
                 content : `Đã có điểm thi môn ${c.informationClass.courseName}`,
                 link: `${course.getKeyCourse()}`,
                 kindOfAnnouncement : null,
