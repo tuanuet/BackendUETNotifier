@@ -132,9 +132,7 @@ const upload = require('./router/upload');
 const testAPI = require('./router/test');
 
 app.get('/',middlewarePassport.isAuthenticated, (req,res) => {
-    res.render('index', {
-        title : 'Home'
-    });
+    res.redirect(`/${req.user.role.toLowerCase()}`);
 });
 app.use('/admin',middlewarePassport.reqIsAdmin,admin);
 app.use('/department',middlewarePassport.reqIsDepartment,department);
